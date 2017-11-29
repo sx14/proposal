@@ -22,16 +22,18 @@ for i = 1:10
         [net,last_hier] = grow_lines(i, net, I, curr_flow, curr_hier);
         last_flow = curr_flow;
     else
-        [net,last_hier] = grow_lines(i, net, I, curr_flow, curr_hier,last_hier, last_flow);
+        curr_flow2 = load(fullfile(mcg_root, 'demos','flow2',flow_name));
+        curr_flow2  = curr_flow2.flow; 
+        [net,last_hier] = grow_lines(i, net, I, curr_flow, curr_hier, curr_flow2, last_hier, last_flow);
         last_flow = curr_flow;
 %         show = show_frame(show, net, last_hier, i);
     end
     hiers{i,1} = last_hier;
     org_imgs{i,1} = I;
-    if i > 3
+    if i > 4
         show_line(net, show, hiers, i, i, org_imgs);
     end
-    long_lines = find(net.lines(:,i,3) >= (i-1));
+    long_lines = find(net.lines(:,i,3) >= (i));
     X = sprintf('Frame %d finished. %d lines.',i, size(long_lines,1));
     disp(X)
 end
