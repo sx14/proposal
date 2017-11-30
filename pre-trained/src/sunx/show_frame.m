@@ -12,10 +12,11 @@ lost_line_color_index = line_color;
 lost_line_color_index(long_lines') = 0;         % 剩下的是断掉的串的颜色
 lost_line_color_index(lost_line_color_index == 0) = [];
 color_line(lost_line_color_index,4) = 0;     % 将断掉的串的颜色设置为未分配状态
+long_lines = sort(long_lines,1,'ascend');
 for i = 1:size(long_lines,1)
-    if i == (small_sp_sum+1)
-        pause = input('All small sp, continue?');
-    end
+%     if long_lines(i,1) > (small_sp_sum)
+%         pause = input('All small sp, continue?');
+%     end
     color_index = line_color(long_lines(i,1));
     if color_index == 0 % 新串未分配颜色
         for j = 1:size(color_line,1)
@@ -33,15 +34,14 @@ for i = 1:size(long_lines,1)
         show.line_color = line_color;
         show.color_line = color_line;
         imshow(uint8(mask)), title('Mask')
-        if i >= (small_sp_sum+1)
+        if long_lines(i,1) > (small_sp_sum)
             X = sprintf('SP %d.',sp);
             pause = input(X);
         end
         
     end
 end
-% figure;
-% imshow(uint8(mask)), title('Mask')
+close all;
 
 
 function mask = fill_color(sp, mask, color, hier, small_sp_sum)

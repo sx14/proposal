@@ -26,8 +26,11 @@ if nargin > 5   % 不是第一帧<<<
     new_2_last_match_sp_iou = cal_IOU(new_sp_pixels, last_sp_pixels, new_2_last_match_sp);
     % ===== 将新一帧匹配的超像素连进串里 =====
 %     net = grow_curr_frame(net, last_2_new_match_sp_iou, frame);
-    net = grow_curr_frame_cross(net, last_2_new_match_sp_iou,new_2_last_match_sp_iou, frame);
-    
+%     net = grow_curr_frame_cross_or(net, last_2_new_match_sp_iou,new_2_last_match_sp_iou, frame);
+%     net = grow_curr_frame_cross_or(net, last_2_new_match_sp_iou,last_2_new_match_sp_iou', frame);
+%     net = grow_curr_frame_cross_and(net, last_2_new_match_sp_iou,new_2_last_match_sp_iou, frame);
+    net = grow_curr_frame_cross_or_net(net, last_2_new_match_sp_iou,new_2_last_match_sp_iou, frame);
+
 
 else    % 是第一帧
     % 将第一帧的所有超像素全部加入lines

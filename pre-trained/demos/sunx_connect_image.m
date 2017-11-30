@@ -26,11 +26,11 @@ for i = 1:10
         curr_flow2  = curr_flow2.flow; 
         [net,last_hier] = grow_lines(i, net, I, curr_flow, curr_hier, curr_flow2, last_hier, last_flow);
         last_flow = curr_flow;
-%         show = show_frame(show, net, last_hier, i);
     end
     hiers{i,1} = last_hier;
     org_imgs{i,1} = I;
     if i > 4
+%         show_frame(show, net, hiers{i}, i);
         show_line(net, show, hiers, i, i, org_imgs);
     end
     long_lines = find(net.lines(:,i,3) >= (i));

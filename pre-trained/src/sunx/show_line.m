@@ -27,8 +27,8 @@ for i = 1:size(long_lines,2)
             org_img(:,:,2) = org_g;
             org_img(:,:,3) = org_b;
             figure;
-            imshow(org_imgs{j,1});hold on;
-            h = imshow(org_img);hold on;
+            imshow(org_imgs{j,1});hold on;  % 先放原图
+            h = imshow(org_img);hold on;    % 带黑色mask的原图
             set(h,'alphaData',0.8);
         end
     end
@@ -38,14 +38,16 @@ for i = 1:size(long_lines,2)
 end
 
 function mask = get_binary_mask(sp, mask, hier, small_sp_sum)
-if sp > small_sp_sum    % 组合过的sp
-    % 递归将sp包含的像素位置置1
-    conbine = hier.ms_struct(sp-small_sp_sum);
-    for i = 1:size(conbine.children,2)
-        mask = get_binary_mask(conbine.children(1,i),mask,hier, small_sp_sum);
+for i = 1:size(sp)
+    if sp(i) > small_sp_sum    % 组合过的sp
+        % 递归将sp包含的像素位置置1
+        conbine = hier.ms_struct(sp(i)-small_sp_sum);
+        for i = 1:size(conbine.children,2)
+            mask = get_binary_mask(conbine.children(1,i),mask,hier, small_sp_sum);
+        end
+    else    % 未组合过的sp
+        % 直接置1
+        sp_mask = hier.leaves_part == sp(i);
+        mask(sp_mask) = 1;
     end
-else    % 未组合过的sp
-    % 直接置1
-    sp_mask = hier.leaves_part == sp;
-    mask(sp_mask) = 1;
 end
