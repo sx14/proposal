@@ -5,15 +5,15 @@
 clear all;close all;home;
 net.lines = zeros(600,100,3);   % 记录每一帧每一个sp属于哪个串
 net.bundles = cell(600,100);    % 记录了相似的超像素集合
-imgs = dir(fullfile(mcg_root, 'demos','video','*.jpg'));
+imgs = dir(fullfile(mcg_root, 'demos3','video','*.jpg'));
 % for i = 1:length(imgs)-1
 for i = 6:7
     num1=num2str(i,'%04d');
     img_name_1 = [num1,'.jpg'];
-    I = imread(fullfile(mcg_root, 'demos','video',img_name_1));
+    I = imread(fullfile(mcg_root, 'demos3','video',img_name_1));
     curr_flow = zeros(size(I,1), size(I,2),2);
     hier_name = [num1,'.mat'];
-    curr_hier = load(fullfile(mcg_root, 'demos','hier',hier_name));
+    curr_hier = load(fullfile(mcg_root, 'demos3','hier',hier_name));
     curr_hier  = curr_hier.hier;
     show.image = I;
     show.color_line = init_color(512);
@@ -23,6 +23,5 @@ for i = 6:7
     X = sprintf('Frame %d finished.',i);
     disp(X)
     pause = input('continue?');
-    close all;
 end
 

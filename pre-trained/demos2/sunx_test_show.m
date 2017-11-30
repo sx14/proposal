@@ -23,6 +23,5 @@ for i = 6:7
     X = sprintf('Frame %d finished.',i);
     disp(X)
     pause = input('continue?');
-    close all;
 end
 

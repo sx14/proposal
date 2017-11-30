@@ -1,5 +1,8 @@
 function show = show_frame(show, net, hier, frame)
 figure;
+set(gcf, 'position', [1000 1080 900 1080]);
+subplot(2,1,1)
+imshow(show.image);
 mask = zeros(size(hier.leaves_part,1),size(hier.leaves_part,2),3);
 small_sp_sum = max(max(hier.leaves_part));
 color_line = show.color_line;   % 颜色索引串号
@@ -14,9 +17,9 @@ lost_line_color_index(lost_line_color_index == 0) = [];
 color_line(lost_line_color_index,4) = 0;     % 将断掉的串的颜色设置为未分配状态
 long_lines = sort(long_lines,1,'ascend');
 for i = 1:size(long_lines,1)
-%     if long_lines(i,1) > (small_sp_sum)
-%         pause = input('All small sp, continue?');
-%     end
+    if long_lines(i,1) == (small_sp_sum+1)
+        p = input('All small sp, continue?');
+    end
     color_index = line_color(long_lines(i,1));
     if color_index == 0 % 新串未分配颜色
         for j = 1:size(color_line,1)
@@ -33,12 +36,14 @@ for i = 1:size(long_lines,1)
         mask = fill_color(sp, mask, color_line(color_index,1:3),hier, small_sp_sum);
         show.line_color = line_color;
         show.color_line = color_line;
-        imshow(uint8(mask)), title('Mask')
-        if long_lines(i,1) > (small_sp_sum)
-            X = sprintf('SP %d.',sp);
-            pause = input(X);
-        end
-        
+        subplot(2,1,2);
+        imshow(uint8(mask));
+        pause(0.05);
+%         if long_lines(i,1) > (small_sp_sum)
+%             %         if long_lines(i,1) > 0
+%             X = sprintf('SP %d.',sp);
+%             p = input(X);
+%         end
     end
 end
 close all;
