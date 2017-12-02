@@ -1,5 +1,5 @@
 % direction 方向：0表示光流last -> new；1表示光流new -> last
-function match = get_match(last_flow, last_leaves, last_sp_pixel_mat, new_leaves, direction)
+function match = get_match(last_flow, last_leaves, new_leaves)
 match = zeros(max(max(last_leaves)),max(max(new_leaves)));
 last_round_flow = round(last_flow);
 % r:last;c:new
@@ -14,8 +14,4 @@ for i = 1:size(last_flow,1)
             match(last_label,match_label) = match(last_label,match_label) + 1;
         end
     end
-end
-
-for c = 1:size(match,2)
-    match(:,c) = match(:,c)./last_sp_pixel_mat(:,2);
 end

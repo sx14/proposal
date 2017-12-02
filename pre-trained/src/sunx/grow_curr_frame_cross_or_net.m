@@ -1,17 +1,15 @@
 function net = grow_curr_frame_cross_or_net(net, match_sp_iou, back_match_sp_iou,frame)
-threshold = 0.45;
+threshold = 0.5;
 lines = net.lines;
 bundles = net.bundles;
-% 双向or匹配，阈值较高（0.5）
 % 正向匹配：遍历last_2_new匹配矩阵的每一行（即前一帧的每一个sp与当前帧所有sp的iou）
 match_sp_iou(match_sp_iou < threshold) = 0;
 for i = 1:size(match_sp_iou,1)
     match_org_sp_i = match_sp_iou(i,:);
-%     all_index = find(match_org_sp_i > 0);         % 当前帧所有超过阈值的sp的index
     [max_iou, max_index] = max(match_org_sp_i);         % iou最大的sp
     % 当前帧第max_index个sp已经连入某一条，说明前一帧的两个sp很相似，将它们绑定起来
-    if max_iou > 0 && abs(max_iou - lines(max_index,frame,2)) <= 0.1
-        org_sp_index = find(lines(:,frame-1,1) == lines(max_index,frame,1));
+    if max_iou(1) > 0 && abs(max_iou(1) - lines(max_index(1),frame,2)) <= 0.1
+        org_sp_index = find(lines(:,frame-1,1) == lines(max_index(1),frame,1));
         bundle1 = bundles{org_sp_index,frame-1};
         bundle2 = bundles{i,frame-1};
         similar_sps = unique([bundle1(:);bundle2(:)]);
@@ -19,17 +17,15 @@ for i = 1:size(match_sp_iou,1)
             bundles{org_sp_index(j),frame-1} = similar_sps;
         end
         bundles{i,frame-1} = similar_sps;
-%         lines(similar_sps, frame-1, 1) = lines(org_sp_index, frame-1, 1);
-%         lines(similar_sps, frame-1, 2) = 1;
         for j = 1:size(similar_sps,1)
-            if lines(similar_sps(j), frame-1, 3) == 1
+            if lines(similar_sps(j), frame-1, 3) == 1   % 只将长度为1的sp收集进来
                 lines(similar_sps(j), frame-1, 1) = lines(org_sp_index(1), frame-1, 1);
                 lines(similar_sps(j), frame-1, 2) = 1;
             end
         end
-    elseif max_iou > 0 && max_iou > lines(max_index,frame,2)
+    elseif max_iou(1) > 0 && max_iou(1) > lines(max_index,frame,2)
         lines(max_index,frame,1) = lines(i,frame-1,1);      % 标上匹配的串号
-        lines(max_index,frame,2) = max_iou;                 % 标上与第frame帧，第max_index个sp的iou
+        lines(max_index,frame,2) = max_iou(1);                 % 标上与第frame帧，第max_index个sp的iou
         lines(max_index,frame,3) = lines(i,frame-1,3)+1;    % 标上串当前的长度
         %         all_index = [all_index(:);bundles{max_index,frame}(:)];   % 将所有前一帧可以与当前帧当前sp连的sp记录下来
         bundles{max_index,frame} = max_index;               % 将所有可以连的当前帧sp记录下来

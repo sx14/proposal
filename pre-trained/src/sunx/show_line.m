@@ -7,35 +7,35 @@ X = sprintf('Long line sum: %d.',size(long_lines,1));
 disp(X);
 figure;
 for i = 1:size(long_lines,1)
-    for j =  end_frame:end_frame
-        hier = hiers{j};
-        lines = net.lines(:,j,1);
-        [sp,~,v] = find(lines == long_lines(i));
-        if size(v,1) == 0
-            continue;
-        else
-            mask_b = zeros(size(hier.leaves_part,1),size(hier.leaves_part,2));
-            mask_b = ~get_binary_mask(sp, mask_b, hier, max(max(hier.leaves_part)));
-            org_img = org_imgs{j,1};
-            org_r = org_img(:,:,1);
-            org_g = org_img(:,:,2);
-            org_b = org_img(:,:,3);
-            org_r(mask_b) = mask_color(1);
-            org_g(mask_b) = mask_color(2);
-            org_b(mask_b) = mask_color(3);
-            org_img(:,:,1) = org_r;
-            org_img(:,:,2) = org_g;
-            org_img(:,:,3) = org_b;
-            imshow(org_imgs{j,1});hold on;  % 先放原图
-            h = imshow(org_img);            % 带黑色mask的原图
-            set(h,'alphaData',0.8)
-        end
+    hier = hiers{end_frame};
+    lines = net.lines(:,end_frame,1);
+    [sp,~,v] = find(lines == long_lines(i));
+    if size(v,1) == 0
+        continue;
+    else
+        mask_b = zeros(size(hier.leaves_part,1),size(hier.leaves_part,2));
+        mask_b = ~get_binary_mask(sp, mask_b, hier, max(max(hier.leaves_part)));
+        org_img = org_imgs{end_frame,1};
+        org_r = org_img(:,:,1);
+        org_g = org_img(:,:,2);
+        org_b = org_img(:,:,3);
+        org_r(mask_b) = mask_color(1);
+        org_g(mask_b) = mask_color(2);
+        org_b(mask_b) = mask_color(3);
+        org_img(:,:,1) = org_r;
+        org_img(:,:,2) = org_g;
+        org_img(:,:,3) = org_b;
+        X = sprintf('Line ID: %d.',long_lines(i));
+        disp(X);
+        imshow(org_imgs{end_frame,1});hold on;  % 先放原图
+        h = imshow(org_img);            % 带黑色mask的原图
+        set(h,'alphaData',0.8)
     end
     pause(pause_time);
-%     if long_lines(i) > 700
-%         X = sprintf('Line: %d, continue?', long_lines(i));
-%         pause = input(X);
-%     end
+    %     if long_lines(i) > 700
+    %         X = sprintf('Line: %d, continue?', long_lines(i));
+    %         pause = input(X);
+    %     end
 end
 input('Close?');
 close all;

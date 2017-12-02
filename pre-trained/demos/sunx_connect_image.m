@@ -7,7 +7,7 @@ show.color_line = init_color(512);
 show.line_color = zeros(6000,1);
 hiers = cell(10,1);
 org_imgs = cell(10,1);
-start_frame = 9;
+start_frame = 1;
 end_frame = 19;
 for i = start_frame:end_frame
     num1=num2str(i,'%04d');
@@ -21,20 +21,20 @@ for i = start_frame:end_frame
     curr_hier = load(fullfile(mcg_root, 'demos','hier',hier_name));
     curr_hier  = curr_hier.hier;
     if i == start_frame
-        [net,last_hier] = grow_lines(i, net, I, curr_flow, curr_hier);
+        [net,last_hier] = grow_lines(i, net, curr_hier);
         last_flow = curr_flow;
     else
         curr_flow2 = load(fullfile(mcg_root, 'demos','flow2',flow_name));
         curr_flow2  = curr_flow2.flow; 
-        [net,last_hier] = grow_lines(i, net, I, curr_flow, curr_hier, curr_flow2, last_hier, last_flow);
+        [net,last_hier] = grow_lines(i, net, curr_hier, curr_flow2, last_hier, last_flow);
         last_flow = curr_flow;
     end
     hiers{i,1} = last_hier;
     org_imgs{i,1} = I;
-    if (i-start_frame+1) > 5
-%         show_frame(show, net, hiers{i}, i);
-        show_line(net, hiers, 4, i, org_imgs, [0,0,0], 0.5);
-    end
+%     if (i-start_frame+1) > 5
+% %         show_frame(show, net, hiers{i}, i);
+%         show_line(net, hiers, i, i, org_imgs, [0,0,0], 0.8);
+%     end
     lines = net.lines(:,i,1);
     long_lines = lines(net.lines(:,i,3) == (i-start_frame+1));
     all_long_lines(i,long_lines) = long_lines;
@@ -42,7 +42,7 @@ for i = start_frame:end_frame
     disp(X);
 end
 all_long_lines = sparse(all_long_lines);
-spy(all_long_lines);
+% spy(all_long_lines);
 % show_line(net, show, hiers, 4, 5, org_imgs);
 
 
