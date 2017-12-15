@@ -109,7 +109,6 @@ lps = [];   % ?? leaves_parts
 ms  = cell(n_hiers,1);  % ?? merging-sequence
 ths = cell(n_hiers,1);  % ?? threshold
 for ii=1:n_hiers
-    % 这里不好理解
     % Transform the UCM to a hierarchy
     curr_hier = ucm2hier(all_ucms(:,:,ii),flow);
     ths{ii}.start_ths = curr_hier.start_ths';   % ths??threshold??

@@ -33,12 +33,12 @@ for i = start_frame:end_frame
     org_imgs{i,1} = I;
     if (i-start_frame+1) > 4
 %         show_frame(show, net, hiers{i}, i);
-        show_line(net, hiers, i, i, org_imgs, [0,0,0], 0.8);
+        show_line(net, hiers, i, i, org_imgs, [0,0,0]);
     end
     lines = net.lines(:,i,1);
     long_lines = lines(net.lines(:,i,3) == (i-start_frame+1));
     all_long_lines(i,long_lines) = long_lines;
-    X = sprintf('Frame %d finished. %d lines.',i, size(long_lines,1));
+    X = sprintf('Frame %d finished. %d:%d lines.',i, size(long_lines,1), size(unique(long_lines),1));
     disp(X);
 end
 all_long_lines = sparse(all_long_lines);

@@ -21,20 +21,20 @@ for i = 1:9
     curr_hier = load(fullfile(mcg_root, 'demos_static','hier',hier_name));
     curr_hier  = curr_hier.hier;
     if i == 1
-        [net,last_hier] = grow_lines(i, net, I, curr_flow, curr_hier);
+        [net,last_hier] = grow_lines(i, net, curr_hier);
         last_flow = curr_flow;
     else
-        curr_flow2 = load(fullfile(mcg_root, 'demos_static','flow2',flow_name));
-        curr_flow2  = curr_flow2.flow; 
-        [net,last_hier] = grow_lines(i, net, I, curr_flow, curr_hier, curr_flow2, last_hier, last_flow);
+        curr_flow2 = load(fullfile(mcg_root, 'demos_easy','flow2',flow_name));
+        curr_flow2  = curr_flow2.flow;
+        [net,last_hier] = grow_lines(i, net, curr_hier, curr_flow2, last_hier, last_flow);
         last_flow = curr_flow;
     end
     hiers{i,1} = last_hier;
     org_imgs{i,1} = I;
-%     if i > 4
+    if i > 4
 %         show_frame(show, net, hiers{i}, i);
-        show_line(net, hiers, i, i, org_imgs, [0,0,0], 0.5);
-%     end
+        show_line(net, hiers, i, i, org_imgs, [0,0,0]);
+    end
     lines = net.lines(:,i,1);
     long_lines = lines(net.lines(:,i,3) == i);
     all_long_lines(i,long_lines) = long_lines;

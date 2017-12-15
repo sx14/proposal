@@ -8,7 +8,8 @@ small_sp_sum = max(max(hier.leaves_part));
 color_line = show.color_line;   % 颜色索引串号
 line_color = show.line_color;   % 串号索引颜色
 length = net.lines(:,frame,3);  % 当前帧上所有串的长度
-long_line_index = find(length > floor(frame/2));    % 长度超过一半帧数的串的index(sp)
+% long_line_index = find(length > floor(frame/2));    % 长度超过一半帧数的串的index(sp)
+long_line_index = find(length == 1);
 all_lines = net.lines(:,frame,1);               % 当前帧上所有串号
 long_lines = all_lines(long_line_index');       % 当前帧上长串的串号
 lost_line_color_index = line_color;
@@ -18,7 +19,7 @@ color_line(lost_line_color_index,4) = 0;     % 将断掉的串的颜色设置为
 long_lines = sort(long_lines,1,'ascend');
 for i = 1:size(long_lines,1)
     if long_lines(i,1) == (small_sp_sum+1)
-        p = input('All small sp, continue?');
+        input('All small sp, continue?');
     end
     color_index = line_color(long_lines(i,1));
     if color_index == 0 % 新串未分配颜色
@@ -38,15 +39,12 @@ for i = 1:size(long_lines,1)
         show.color_line = color_line;
         subplot(2,1,2);
         imshow(uint8(mask));
-        pause(0.05);
-%         if long_lines(i,1) > (small_sp_sum)
-%             %         if long_lines(i,1) > 0
-%             X = sprintf('SP %d.',sp);
-%             p = input(X);
-%         end
+        if long_lines(i,1) > (small_sp_sum)
+            X = sprintf('SP %d.',sp);
+            input(X);
+        end
     end
 end
-close all;
 
 
 function mask = fill_color(sp, mask, color, hier, small_sp_sum)

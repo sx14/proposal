@@ -32,6 +32,9 @@ addpath(mcg_root);
 addpath(fullfile(mcg_root,'lib'));
 addpath(fullfile(mcg_root,'scripts'));
 addpath(fullfile(mcg_root,'datasets'));
+addpath(fullfile(mcg_root,'run/sunx'));
+addpath(fullfile(mcg_root,'run/conbine'));
+addpath(fullfile(mcg_root,'run/new_hier'));
 addpath(genpath(fullfile(mcg_root,'src')));
 
 %% Check that the needed functions are compiled

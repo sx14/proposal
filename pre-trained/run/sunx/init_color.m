@@ -1,4 +1,9 @@
 function color_v = init_color(color_sum)
+% color_v = zeros(color_sum,3);
+% color_v(:,1) = randperm(color_sum);
+% color_v(:,2) = randperm(color_sum);
+% color_v(:,3) = randperm(color_sum);
+% color_v = (color_v - 1);
 step = ceil(color_sum^(1/3));
 color_i = 1;
 color_v = zeros(color_sum,4);

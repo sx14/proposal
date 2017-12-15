@@ -1,8 +1,8 @@
 function conbine_mat = get_conbine_mat(hier)
 leaves = hier.leaves_part;
-small_sp_amount = max(max(leaves));                % 上一帧底层超像素个数
-all_level_sp_amount = size(hier.start_ths,1);     % 上一帧各层超像素总数
-conbine_mat = zeros(all_level_sp_amount, small_sp_amount); % 超像素组合矩阵
+small_sp_amount = max(max(leaves));                                 % 上一帧底层超像素个数
+all_level_sp_amount = size(hier.ms_struct,2) + small_sp_amount;     % 上一帧各层超像素总数
+conbine_mat = zeros(all_level_sp_amount, small_sp_amount);          % 超像素组合矩阵
 for i=1:small_sp_amount
     conbine_mat(i,i) = 1;
 end
