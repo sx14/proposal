@@ -3,7 +3,7 @@
 function [recall, smT_IoU] = run(base_path, package_dir, video_dir,annotation_path, output_path)
 video_path = fullfile(base_path, package_dir, video_dir);
 if exist(fullfile(video_path),'dir')
-    show_cands = false;
+    show_cands = true;
     resize_img(video_path, 0);
     cal_flow(video_path, 0);
     cal_flow2(video_path, 0);

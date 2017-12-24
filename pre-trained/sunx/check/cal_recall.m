@@ -31,7 +31,7 @@ for j = 1:size(cands,1)         % 每一个候选轨迹
         end
         hit_frame_sum = 0;
         hit_IoU_sum = 0;
-        for f = u_start:u_length % 每一帧，看是否击中??????这是不是u_end
+        for f = u_start:u_end % 每一帧，看是否击中??????这是不是u_end
             annotations = frame_annotations{f};
             if i > length(annotations)      % 当前帧上没有第i个object
                 continue;

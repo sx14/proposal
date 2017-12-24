@@ -17,9 +17,11 @@ for f = 1:length(hiers)
     frame_cand_scores = regRF_predict(feats,rf_regressor);
     scores(:,f) = frame_cand_scores;
 end
-scores = sort(scores,'descend');
+scores = sort(scores,2,'descend');
 top_k = floor(length(hiers) * 0.2);
-avg_scores = sum(scores(:,top_k)) / top_k;
+temp = scores(:,1:top_k);
+temp1 = sum(scores(:,1:top_k),2);
+avg_scores = sum(scores(:,1:top_k),2) / top_k;
 
 
 function sp_cand = get_sp_cand(cands,line_frame_sp_mat,frame)

@@ -3,15 +3,15 @@ base_path = '/home/sunx/dataset/ImageNet/train';
 package_dir = 'chosen0';
 annotation_path = '/home/sunx/dataset/ImageNet/Annotations/ILSVRC2015_VID_train_0000';
 output_path = '/home/sunx/output/ours';
-run(base_path, package_dir, '/ILSVRC2015_train_00001000',[annotation_path,'/ILSVRC2015_train_00001000'],output_path);   % 乌龟1 find all | good
-% run([dataset_path,'/ILSVRC2015_train_00001001'],[annotation_path,'/ILSVRC2015_train_00001001'],'JPEG','hier',true);   % 乌龟2 bad | 太难了，candidate 7万
-% run([dataset_path,'/ILSVRC2015_train_00001002'],[annotation_path,'/ILSVRC2015_train_00001002'],'JPEG','hier',true);   % 乌龟4 find all | normal 分割不理想
-% run([dataset_path,'/ILSVRC2015_train_00005001'],[annotation_path,'/ILSVRC2015_train_00005001'],'JPEG','hier',true);   % 狗 find all | normal 头和身体不相邻
+% run(base_path, package_dir, '/ILSVRC2015_train_00001000',[annotation_path,'/ILSVRC2015_train_00001000'],output_path);   % 乌龟1 find all | good
+% run(base_path,package_dir,'/ILSVRC2015_train_00001001',[annotation_path,'/ILSVRC2015_train_00001001'],output_path);   % 乌龟2 bad | 太难了，candidate 7万
+% run(base_path,package_dir,'/ILSVRC2015_train_00001002',[annotation_path,'/ILSVRC2015_train_00001002'],output_path);   % 乌龟4 find all | normal 分割不理想
+% run(base_path,package_dir,'/ILSVRC2015_train_00005001',[annotation_path,'/ILSVRC2015_train_00005001'],output_path);   % 狗 find all | normal 头和身体不相邻
 % run([dataset_path,'/ILSVRC2015_train_00005003'],[annotation_path,'/ILSVRC2015_train_00005003'],'JPEG','hier',true);   % 狗2 find all | good
 % run([dataset_path,'/ILSVRC2015_train_00005004'],[annotation_path,'/ILSVRC2015_train_00005004'],'JPEG','hier',true);   % 狗3 find all | normal
 % run([dataset_path,'/ILSVRC2015_train_00005005'],[annotation_path,'/ILSVRC2015_train_00005005'],'JPEG','hier',true);   % * 狗4 failed | 跑太远太小了，匹配失败
 % run([dataset_path,'/ILSVRC2015_train_00005012'],[annotation_path,'/ILSVRC2015_train_00005012'],'JPEG','hier',true);   % 狗5 failed | 分割问题
-% run([dataset_path,'/ILSVRC2015_train_00008005'],[annotation_path,'/ILSVRC2015_train_00008005'],'JPEG','hier',true);   % * 黑牛1 find all | not good 分割问题
+run(base_path,package_dir,'/ILSVRC2015_train_00008005',[annotation_path,'/ILSVRC2015_train_00008005'],output_path);   % * 黑牛1 find all | not good 分割问题
 % run([dataset_path,'/ILSVRC2015_train_00010000'],[annotation_path,'/ILSVRC2015_train_00010000'],'JPEG','hier',true);   % 多个自行车 failed | 太难了
 % run([dataset_path,'/ILSVRC2015_train_00012009'],[annotation_path,'/ILSVRC2015_train_00012009'],'JPEG','hier',true);   % 两匹马 find all | not good 匹配误差还是分割有待排查
 % run([dataset_path,'/ILSVRC2015_train_00008008'],[annotation_path,'/ILSVRC2015_train_00008008'],'JPEG','hier',true);   % 黑牛3 find all | good 
