@@ -1,6 +1,6 @@
 function [recall,smT_IoU,hit] = cal_recall(ground_truth_info, frame_annotations,hiers,cands,line_info,line_frame_sp_mat,org_width,org_height)
 ground_truth_object_sum = size(ground_truth_info,1);
-hit = zeros(ground_truth_object_sum,2); % 击中每个ground truth 的candidate（T-IoU最大的一个）
+hit = zeros(ground_truth_object_sum,3); % 击中每个ground truth 的candidate id , T_IoU , avg_IoU
 output_info = sprintf('candidate sum: %d object sum: %d', size(cands,1), size(ground_truth_info,1));
 disp(output_info);
 for j = 1:size(cands,1)         % 每一个候选轨迹
@@ -30,7 +30,8 @@ for j = 1:size(cands,1)         % 每一个候选轨迹
             continue;
         end
         hit_frame_sum = 0;
-        for f = u_start:u_length % 每一帧，看是否击中
+        hit_IoU_sum = 0;
+        for f = u_start:u_length % 每一帧，看是否击中??????这是不是u_end
             annotations = frame_annotations{f};
             if i > length(annotations)      % 当前帧上没有第i个object
                 continue;
@@ -85,13 +86,20 @@ for j = 1:size(cands,1)         % 每一个候选轨迹
                 IoU = intersection_region / (cand_region + ground_region - intersection_region);
                 if IoU >= 0.5
                     hit_frame_sum = hit_frame_sum + 1;
+                    hit_IoU_sum = hit_IoU_sum + IoU;
                 end
             end
         end
         T_IoU = hit_frame_sum / u_length;
+        avg_IoU = hit_IoU_sum / hit_frame_sum;
         if hit(i,2) < T_IoU     % 更新最匹配的cand
             hit(i,1) = j;
             hit(i,2) = T_IoU;
+            hit(i,3) = avg_IoU;
+        elseif hit(i,2) == T_IoU && avg_IoU > hit(i,3)
+            hit(i,1) = j;
+            hit(i,2) = T_IoU;
+            hit(i,3) = avg_IoU;
         end
     end
 end

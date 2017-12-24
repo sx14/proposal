@@ -1,16 +1,14 @@
 % 处理单个视频
 % show_cands:是否要显示candidate
-function run(video_path,annotation_path, img_suffix, hier, show_cands)
+function [recall, smT_IoU] = run(base_path, package_dir, video_dir,annotation_path, output_path)
+video_path = fullfile(base_path, package_dir, video_dir);
 if exist(fullfile(video_path),'dir')
-    resize_img(video_path, 'resized', img_suffix, 0);
-    cal_flow(video_path, 'flow', 'resized', img_suffix, 0);
-    cal_flow2(video_path,'flow2','resized', img_suffix, 0);
-    if strcmp(hier,'hier')
-        cal_hier(video_path,'hier','resized','flow',img_suffix, 0);
-    else
-        cal_hier_by_slic(video_path,'slic','resized','flow',img_suffix, 0);
-    end
-    get_result_for_one_video(video_path, annotation_path, 'resized','flow','flow2',hier, img_suffix,show_cands);
+    show_cands = false;
+    resize_img(video_path, 0);
+    cal_flow(video_path, 0);
+    cal_flow2(video_path, 0);
+    cal_hier(video_path, 0);
+    [recall, smT_IoU] = get_result_for_one_video(base_path, package_dir, video_dir, annotation_path,show_cands,output_path);
     disp(['Finish:',video_path]);
 else
     error(['Orginal video not found:',video_path]);

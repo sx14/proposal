@@ -31,8 +31,8 @@ for f = 1:length(org_imgs)
         % =========== 画 candidates ============
         cand = hit(h,1);
         max_T_IoU = hit(h,2);
-        %         if cand ~= 0 && max_T_IoU > 0.5
-        if cand ~= 0
+%         if cand ~= 0 && max_T_IoU > 0.5
+                    if cand ~= 0
             lines = cands(cand,:);
             sps = line_sp(lines(lines > 0));
             sps = sps(sps > 0);
@@ -50,7 +50,7 @@ for f = 1:length(org_imgs)
         end
     end
     imshow(I),title(['frame: ',num2str(f)]);
-        pause(0.5);
-%     input('next');
+    pause(0.2);
+    %     input('next');
 end
 close;

@@ -1,5 +1,9 @@
 % 持久化所有的层次结构
-function cal_hier(video_path, hier_dir_name, resize_dir_name, flow_dir_name, img_suffix, re_cal)
+function cal_hier(video_path, re_cal)
+hier_dir_name = 'hier';
+resize_dir_name = 'resized';
+img_suffix = 'JPEG';
+flow_dir_name = 'flow';
 if ~exist(fullfile(video_path, hier_dir_name),'dir')
     mkdir(fullfile(video_path), hier_dir_name);
 end

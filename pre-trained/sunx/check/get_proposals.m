@@ -1,0 +1,34 @@
+function proposals = get_proposals(hiers,cands,line_frame_sp_mat,cand_info,package_dir,video_dir)
+all_scores = get_cand_scores(hiers, cands, line_frame_sp_mat);
+[~, ids] = sort(all_scores,'descend');
+last_one = min(size(ids,1),1000);
+cands = cands(ids,:);
+proposals = cell(last_one,1);
+for i = 1:last_one  % 为每一个proposal提取box
+    cand_id = ids(i);
+    cand_lines = cands(i,:);
+    cand_lines = cand_lines(cand_lines > 0);
+    start_frame = cand_info(cand_id,2);
+    end_frame = cand_info(cand_id,3);
+    boxes = zeros(length(hiers),4);
+    for f = start_frame:end_frame
+        hier = hiers{f};
+        cand_sps = line_frame_sp_mat(cand_lines,f);
+        cand_sps = cand_sps(cand_sps > 0);
+        sp_boxes = hier.sp_boxes;
+        cand_sps_boxes = sp_boxes(cand_sps,:);
+        all_max_x = cand_sps_boxes(:,1);
+        all_min_x = cand_sps_boxes(:,2);
+        all_max_y = cand_sps_boxes(:,3);
+        all_min_y = cand_sps_boxes(:,4);
+        cand_max_y = max(all_max_y);
+        cand_min_y = min(all_min_y);
+        cand_max_x = max(all_max_x);
+        cand_min_x = min(all_min_x);
+        boxes(f,:) = [cand_max_x,cand_min_x,cand_max_y,cand_min_y];
+    end
+    proposal.boxes = boxes;
+    proposal.package = package_dir;
+    proposal.video = video_dir;
+    proposals{i} = proposal;
+end

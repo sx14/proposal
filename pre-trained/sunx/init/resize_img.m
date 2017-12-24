@@ -1,4 +1,6 @@
-function resize_img(video_path, resize_dir_name, suffix , re_cal)
+function resize_img(video_path, re_cal)
+resize_dir_name = 'resized';
+suffix = 'JPEG';
 if ~exist(fullfile(video_path, resize_dir_name),'dir')
     mkdir(fullfile(video_path), resize_dir_name);
 end

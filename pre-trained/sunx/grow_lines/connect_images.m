@@ -3,7 +3,12 @@
 % hier:每一帧的层次结构
 % org_imgs:每一帧的图像(resized)
 % adjacent_sp_mat:每一帧各层次sp的相邻矩阵
-function [net,hiers,org_imgs,adjacent_sp_mats] = connect_images(video_path, resize_dir_name, flow_dir_name, flow2_dir_name, hier_dir_name, img_suffix, show_start_frame)
+function [net,hiers,org_imgs,adjacent_sp_mats] = connect_images(video_path, show_start_frame)
+resize_dir_name = 'resized';
+flow_dir_name = 'flow';
+flow2_dir_name = 'flow2';
+hier_dir_name = 'hier';
+img_suffix = 'JPEG';
 imgs = dir(fullfile(video_path, resize_dir_name ,['*.',img_suffix]));
 show.color_line = init_color(512);
 show.line_color = zeros(6000,1);

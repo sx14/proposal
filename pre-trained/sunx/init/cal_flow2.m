@@ -1,5 +1,8 @@
 % 持久化所有的反向光流
-function cal_flow2(video_path, flow_dir_name, resize_dir_name, img_suffix, re_cal)
+function cal_flow2(video_path, re_cal)
+flow_dir_name = 'flow2';
+resize_dir_name = 'resized';
+img_suffix = 'JPEG';
 if ~exist(fullfile(video_path, flow_dir_name),'dir')
     mkdir(fullfile(video_path), flow_dir_name);
 end

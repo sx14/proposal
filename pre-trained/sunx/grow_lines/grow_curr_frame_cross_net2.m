@@ -11,12 +11,12 @@ forward_match_sp_ratio(~match) = 0;
 backward_match_sp_ratio((~match)') = 0;
 match_ratio = (forward_match_sp_ratio + backward_match_sp_ratio')/2;
 % =====================OK=======================
-for i = 1:size(match_ratio,1)
-    %     [~,cand_sp,~] = find(match(i,:) == 1);  % 候选
+for i = 1:size(match_ratio,1)  
     [max_ratio, ~] = max(match_ratio(i,:));
     if max_ratio == 0
         continue;
     end
+%     [~,cand_sp,~] = find(match(i,:) == 1);  % 候选
     [~,cand_sp,~] = find(match_ratio(i,:) >= max_ratio - 0.1);  % 候选
     mask = zeros(size(lines(:,frame,1)));
     mask(cand_sp',1) = 1;   % 标识所有候选的匹配sp
