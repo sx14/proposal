@@ -1,78 +1,46 @@
-function [recall,smT_IoU,hit] = cal_recall(ground_truth_info, frame_annotations,hiers,cands,line_info,line_frame_sp_mat,org_width,org_height)
+function [recall,smT_IoU,hit] = cal_recall(ground_truth_info, frame_annotations,proposals)
 ground_truth_object_sum = size(ground_truth_info,1);
 hit = zeros(ground_truth_object_sum,3); % 击中每个ground truth 的candidate id , T_IoU , avg_IoU
-output_info = sprintf('candidate sum: %d object sum: %d', size(cands,1), size(ground_truth_info,1));
-disp(output_info);
-for j = 1:size(cands,1)         % 每一个候选轨迹
-    output_info = sprintf('candidate id: %d', j);
-    disp(output_info);
+for j = 1:size(proposals,1)             % 每一个候选轨迹
+    proposal = proposals{j,1};
+    proposal_end = proposal.end_frame;
+    proposal_start = proposal.start_frame;
+    boxes = proposal.boxes;
     for i = 1:ground_truth_object_sum   % 每一个标注出来的物体
         ground_start = ground_truth_info(i,2);
         ground_end = ground_truth_info(i,3);
-        cand = cands(j,:);          % 候选轨迹
-        cand_start = +inf;
-        cand_end = 0;
-        for k = 1:length(cand)
-            line_label = cand(1,k);
-            if line_label > 0
-                line_start = line_info(line_label,2);
-                line_end = line_info(line_label,3);
-                cand_start = min(cand_start,line_start);
-                cand_end = max(cand_end,line_end);
-            end
-        end
-        % 并长 = 同时出现ground_truth 和 candidate 的帧数
-        cand_length = cand_end - cand_start + 1;
-        u_start  = min(ground_start,cand_start);
-        u_end = max(ground_end, cand_end);
+        % 并长 = 同时出现ground_truth 和 proposal 的帧数
+        proposal_length = proposal_end - proposal_start + 1;
+        u_start  = min(ground_start,proposal_start);
+        u_end = max(ground_end, proposal_end);
         u_length = u_end - u_start + 1;
-        if cand_length / u_length < 0.5
+        if proposal_length / u_length < 0.5
             continue;
         end
         hit_frame_sum = 0;
         hit_IoU_sum = 0;
-        for f = u_start:u_end % 每一帧，看是否击中??????这是不是u_end
-            annotations = frame_annotations{f};
-            if i > length(annotations)      % 当前帧上没有第i个object
+        for f = u_start:u_end % 每一帧，看是否击中
+            if f < proposal_start || f > proposal_end   % 当前帧上没有proposal
                 continue;
             end
-            cand_sps = [];
-            for k = 1:length(cand)  % 组成candidate的每一个串
-                line = cand(1,k);
-                if line ~= 0
-                    sp = line_frame_sp_mat(line,f);
-                    if sp ~= 0
-                        cand_sps = cat(1,cand_sps,sp);
-                    end
-                end
-            end
-            if isempty(cand_sps)           % 当前帧上没有第j个candidate
+            objects = frame_annotations{f};
+            if i > length(objects)                      % 当前帧上没有object
                 continue;
             end
             % 当前帧上既有object 又有 candidate，计算两个框的IoU看是否达标
-            hier = hiers{f};
-            annotation = annotations(i);
-            if isempty(annotation.id)   % 该帧没有该物体
+            object_annotation = objects(i);
+            if isempty(object_annotation.id)            % 该帧没有该物体
                 continue;
             end
-            resized_leaves_part = hier.leaves_part;
-            sp_boxes = hier.sp_boxes;
-            resized_long_edge = max(size(resized_leaves_part));
-            org_long_edge = max(org_width,org_height);
-            resize_ratio = org_long_edge / resized_long_edge;
-            cand_sps_boxes = sp_boxes(cand_sps,:);
-            all_max_x = cand_sps_boxes(:,1);
-            all_min_x = cand_sps_boxes(:,2);
-            all_max_y = cand_sps_boxes(:,3);
-            all_min_y = cand_sps_boxes(:,4);
-            cand_max_y = round(max(all_max_y) * resize_ratio);
-            cand_min_y = round(min(all_min_y) * resize_ratio);
-            cand_max_x = round(max(all_max_x) * resize_ratio);
-            cand_min_x = round(min(all_min_x) * resize_ratio);
-            ground_max_y = annotation.y_max;
-            ground_min_y = annotation.y_min;
-            ground_max_x = annotation.x_max;
-            ground_min_x = annotation.x_min;
+            box = boxes(f,:);
+            cand_max_y = box(1);
+            cand_min_y = box(2);
+            cand_max_x = box(3);
+            cand_min_x = box(4);
+            ground_max_y = object_annotation.y_max;
+            ground_min_y = object_annotation.y_min;
+            ground_max_x = object_annotation.x_max;
+            ground_min_x = object_annotation.x_min;
             cand_region = (cand_max_x - cand_min_x) * (cand_max_y - cand_min_y);
             ground_region = (ground_max_x - ground_min_x) * (ground_max_y - ground_min_y);
             intersection_r = min(cand_max_x,ground_max_x);
@@ -84,7 +52,7 @@ for j = 1:size(cands,1)         % 每一个候选轨迹
             if intersection_width > 0 && intersection_height > 0    % 两个框相交
                 intersection_region = intersection_height * intersection_width;
                 IoU = intersection_region / (cand_region + ground_region - intersection_region);
-                if IoU >= 0.5
+                if IoU >= 0.5   % 命中单帧
                     hit_frame_sum = hit_frame_sum + 1;
                     hit_IoU_sum = hit_IoU_sum + IoU;
                 end

@@ -7,7 +7,11 @@ diag = eye(size(basic_adjacent_mat));
 basic_adjacent_mat = basic_adjacent_mat + diag; % 让自己与自己相邻
 adjacent_sp_mat = conbine_mat * basic_adjacent_mat * conbine_mat';
 adjacent_sp_mat = adjacent_sp_mat & adjacent_sp_mat;    % 变为0/1矩阵
-% 消去组合后的超像素与自己的子超像素相邻
-adjacent_sp_mat(:,1:size(basic_adjacent_mat,2)) = xor(adjacent_sp_mat(:,1:size(basic_adjacent_mat,2)),conbine_mat);
-adjacent_sp_mat(1:size(basic_adjacent_mat,1),:) = xor(adjacent_sp_mat(1:size(basic_adjacent_mat,1),:),conbine_mat');
-adjacent_sp_mat = adjacent_sp_mat - eye(size(adjacent_sp_mat));
+% % 消去组合后的超像素与自己的子超像素相邻
+% adjacent_sp_mat(:,1:size(basic_adjacent_mat,2)) = xor(adjacent_sp_mat(:,1:size(basic_adjacent_mat,2)),conbine_mat);
+% adjacent_sp_mat(1:size(basic_adjacent_mat,1),:) = xor(adjacent_sp_mat(1:size(basic_adjacent_mat,1),:),conbine_mat');
+% adjacent_sp_mat = adjacent_sp_mat - eye(size(adjacent_sp_mat));
+
+full_conbine_mat = conbine_mat * conbine_mat';
+full_conbine_mat = full_conbine_mat & full_conbine_mat;
+adjacent_sp_mat = xor(adjacent_sp_mat,full_conbine_mat);

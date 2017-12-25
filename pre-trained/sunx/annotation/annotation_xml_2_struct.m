@@ -1,6 +1,6 @@
 % 读取一个视频每一帧的标注xml
 % annotations:cell数组，每一个装一帧，每一帧包含多个annotation(bbox)
-function [ground_truth_info, annotations, org_height, org_width] = annotation_xml_2_struct(annotation_path)
+function [ground_truth_info, annotations] = annotation_xml_2_struct(annotation_path)
 xml_files = dir(fullfile(annotation_path, '*.xml'));
 frame = cell(length(xml_files),1);
 ground_truth_info = zeros(20,4);    % ground-truth id , start_frame, end_frame, length
@@ -8,13 +8,6 @@ for i = 0:length(xml_files)-1
     num=num2str(i,'%06d');
     xml_name = [num,'.xml'];
     xml = xmlread(fullfile(annotation_path,xml_name));
-    if i == 0
-        img_size = xml.getElementsByTagName('size').item(0);
-        width = img_size.getElementsByTagName('width').item(0);
-        height = img_size.getElementsByTagName('height').item(0);
-        org_width = str2double(width.getTextContent());
-        org_height = str2double(height.getTextContent());
-    end
     object_xmls = xml.getElementsByTagName('object');
     annotations(20)=struct('id',[],'x_max',[],'x_min',[],'y_max',[],'y_min',[],'occluded',[],'generated',[]);
     for j = 0:object_xmls.getLength-1

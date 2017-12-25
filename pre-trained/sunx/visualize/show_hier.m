@@ -1,4 +1,4 @@
-function sunx_test_show(video_path, img_suffix, hier)
+function show_hier(video_path, img_suffix, hier)
 % 测试
 % 假设：前后帧相同，光流全0
 % 预期：前后帧所有超像素全部成功连接，对应颜色相同

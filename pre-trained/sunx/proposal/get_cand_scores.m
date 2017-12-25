@@ -1,4 +1,4 @@
-function avg_scores = get_cand_scores(hiers, cands, line_frame_sp_mat)
+function avg_scores = get_cand_scores(hiers, cands, line_frame_sp_mat, cand_info)
 rf_regressor = loadvar(fullfile(mcg_root, 'datasets', 'models', 'scg_rand_forest_train2012.mat'),'rf');
 scores = zeros(size(cands,1),length(hiers));
 for f = 1:length(hiers)
@@ -18,10 +18,26 @@ for f = 1:length(hiers)
     scores(:,f) = frame_cand_scores;
 end
 scores = sort(scores,2,'descend');
-top_k = floor(length(hiers) * 0.2);
-temp = scores(:,1:top_k);
-temp1 = sum(scores(:,1:top_k),2);
-avg_scores = sum(scores(:,1:top_k),2) / top_k;
+% top_k = floor(length(hiers) * 0.2);
+% temp = scores(:,1:top_k);
+% temp1 = sum(scores(:,1:top_k),2);
+% avg_scores = sum(scores(:,1:top_k),2) / top_k;
+avg_scores = zeros(size(cand_info,1),1);
+for i = size(cand_info,1)
+    c_length = cand_info(i,4);
+    weights = zeros(c_length,1);
+    mid = floor((c_length + 1) / 2);
+    weights(1:mid,1) = mid;
+    if mod(c_length,2) == 0
+        weights(mid+1:end,1) = mid - 1 : -1 : 0;
+    else
+        weights(mid:end,1) = mid - 1 : -1 : 0;
+    end
+    cand_scores = scores(i,c_length);
+    s = sum(cand_scores .* weights) / sum(weights);
+    avg_scores(i,1) = s;
+end
+
 
 
 function sp_cand = get_sp_cand(cands,line_frame_sp_mat,frame)
