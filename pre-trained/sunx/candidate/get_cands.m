@@ -1,6 +1,6 @@
 % cands:将sp串进行组合
 % cands_info:串组合的信息：id / start_frame / end_frame / length
-function [cands,cand_info] = cal_bundle_cands(org_line_labels,long_line_info, new_line_labels, adjacent_sp_mats)
+function [cands,cand_info] = get_cands(org_line_labels,long_line_info, new_line_labels, adjacent_sp_mats)
 long_line_adjacent_mat = cal_adjacent_line_2(org_line_labels, long_line_info, adjacent_sp_mats, new_line_labels);
 half_long_line_adjacent_mat = tril(long_line_adjacent_mat);
 [new_lines1,new_lines_2,~] = find(half_long_line_adjacent_mat > 0);
