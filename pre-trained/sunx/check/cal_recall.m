@@ -33,14 +33,14 @@ for j = 1:size(proposals,1)             % 每一个候选轨迹
                 continue;
             end
             box = boxes(f,:);
-            cand_max_y = box(1);
-            cand_min_y = box(2);
-            cand_max_x = box(3);
-            cand_min_x = box(4);
-            ground_max_y = object_annotation.y_max;
-            ground_min_y = object_annotation.y_min;
+            cand_max_x = box(1);
+            cand_min_x = box(2);
+            cand_max_y = box(3);
+            cand_min_y = box(4);
             ground_max_x = object_annotation.x_max;
             ground_min_x = object_annotation.x_min;
+            ground_max_y = object_annotation.y_max;
+            ground_min_y = object_annotation.y_min;
             cand_region = (cand_max_x - cand_min_x) * (cand_max_y - cand_min_y);
             ground_region = (ground_max_x - ground_min_x) * (ground_max_y - ground_min_y);
             intersection_r = min(cand_max_x,ground_max_x);

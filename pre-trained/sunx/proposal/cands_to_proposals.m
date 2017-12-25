@@ -25,10 +25,10 @@ for i = 1:last_one  % 为每一个proposal提取box
         all_min_x = cand_sps_boxes(:,2);
         all_max_y = cand_sps_boxes(:,3);
         all_min_y = cand_sps_boxes(:,4);
-        cand_max_y = round(max(all_max_y) * resize_ratio);
-        cand_min_y = round(min(all_min_y) * resize_ratio);
         cand_max_x = round(max(all_max_x) * resize_ratio);
         cand_min_x = round(min(all_min_x) * resize_ratio);
+        cand_max_y = round(max(all_max_y) * resize_ratio);
+        cand_min_y = round(min(all_min_y) * resize_ratio);
         boxes(f,:) = [cand_max_x,cand_min_x,cand_max_y,cand_min_y];
     end
     proposal.start_frame = start_frame;
