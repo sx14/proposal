@@ -23,7 +23,7 @@ scores = sort(scores,2,'descend');
 % temp1 = sum(scores(:,1:top_k),2);
 % avg_scores = sum(scores(:,1:top_k),2) / top_k;
 avg_scores = zeros(size(cand_info,1),1);
-for i = size(cand_info,1)
+for i = 1:size(cand_info,1)
     c_length = cand_info(i,4);
     weights = zeros(c_length,1);
     mid = floor((c_length + 1) / 2);
@@ -34,7 +34,7 @@ for i = size(cand_info,1)
         weights(mid:end,1) = mid - 1 : -1 : 0;
     end
     cand_scores = scores(i,c_length);
-    s = sum(cand_scores .* weights) / sum(weights);
+    s = sum(cand_scores' .* weights) / sum(weights);
     avg_scores(i,1) = s;
 end
 
