@@ -3,7 +3,7 @@
 % hier:每一帧的层次结构
 % org_imgs:每一帧的图像(resized)
 % adjacent_sp_mat:每一帧各层次sp的相邻矩阵
-function [net,hiers,adjacent_sp_mats] = connect_images(hier_set, flow_set, flow2_set)
+function [net,hiers,adjacent_sp_mats] = connect_images(hier_set, flow_set, flow2_set,resized_imgs)
 start_frame = 1;
 end_frame = length(hier_set);
 frame_sum = end_frame - start_frame + 1;    % 帧数
@@ -23,10 +23,10 @@ for i = start_frame:end_frame
     adjacent_sp_mats{i,1} = adjacent_sp_mat;
     curr_hier.sp_boxes = sp_boxes;
     hiers{i} = curr_hier;
-%     if (i-start_frame+1) >= show_start_frame
-%         show_line(net, hiers, 10 , i+1, org_imgs, [255,0,0]);
-%         input('next frame?');
-%     end
+    if (i-start_frame+1) >= 20
+        show_line(net, hiers, 10 , i, resized_imgs, [255,0,0]);
+        input('next frame?');
+    end
     % ====== 展示相邻帧匹配情况 ， 可以注掉 ===========
 %     lines = net(:,i+1,1);
 %     if i < 9

@@ -10,7 +10,7 @@ if exist(fullfile(video_path),'dir')    % validate video path
     flow2_set = cal_flow2(video_path, resized_imgs, 0);
     hier_set = cal_hier(video_path,flow_set, resized_imgs, 0);
     % entrance
-    proposals = get_proposals(video_dir,output_path,org_height,org_width,hier_set,flow_set,flow2_set);
+    proposals = get_proposals(video_dir,output_path,org_height,org_width,hier_set,flow_set,flow2_set,resized_imgs);
     % calculate result
     [result,annotations] = get_result(video_dir,annotation_path,output_path,proposals);
     recall = result.recall;

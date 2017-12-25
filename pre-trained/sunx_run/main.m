@@ -5,8 +5,8 @@ annotation_path = '/home/sunx/dataset/ImageNet/Annotations/ILSVRC2015_VID_train_
 output_path = '/home/sunx/output/ours';
 % run(base_path, package_dir, '/ILSVRC2015_train_00001000',[annotation_path,'/ILSVRC2015_train_00001000'],output_path);   % 乌龟1 find all | good
 % run(base_path,package_dir,'/ILSVRC2015_train_00001001',[annotation_path,'/ILSVRC2015_train_00001001'],output_path);   % 乌龟2 bad | 太难了，candidate 7万
-% run(base_path,package_dir,'/ILSVRC2015_train_00001002',[annotation_path,'/ILSVRC2015_train_00001002'],output_path);   % 乌龟4 find all | normal 分割不理想
-run(base_path,package_dir,'/ILSVRC2015_train_00005001',[annotation_path,'/ILSVRC2015_train_00005001'],output_path);   % 狗 find all | normal 头和身体不相邻
+run(base_path,package_dir,'/ILSVRC2015_train_00001002',[annotation_path,'/ILSVRC2015_train_00001002'],output_path);   % 乌龟4 find all | normal 分割不理想
+% run(base_path,package_dir,'/ILSVRC2015_train_00005001',[annotation_path,'/ILSVRC2015_train_00005001'],output_path);   % 狗 find all | normal 头和身体不相邻
 % run([dataset_path,'/ILSVRC2015_train_00005003'],[annotation_path,'/ILSVRC2015_train_00005003'],'JPEG','hier',true);   % 狗2 find all | good
 % run([dataset_path,'/ILSVRC2015_train_00005004'],[annotation_path,'/ILSVRC2015_train_00005004'],'JPEG','hier',true);   % 狗3 find all | normal
 % run([dataset_path,'/ILSVRC2015_train_00005005'],[annotation_path,'/ILSVRC2015_train_00005005'],'JPEG','hier',true);   % * 狗4 failed | 跑太远太小了，匹配失败
