@@ -17,26 +17,33 @@ for f = 1:length(hiers)
     frame_cand_scores = regRF_predict(feats,rf_regressor);
     scores(:,f) = frame_cand_scores;
 end
+scores_temp = zeros(size(cands,1),length(hiers));
+for c = 1:size(cands,1)
+    s = cand_info(c,2);
+    e = cand_info(c,3);
+    scores_temp(c,s:e) = scores(c,s:e);
+end
+scores = scores_temp;
 scores = sort(scores,2,'descend');
-top_k = floor(length(hiers) * 0.2);
-temp = scores(:,1:top_k);
-temp1 = sum(scores(:,1:top_k),2);
-avg_scores = sum(scores(:,1:top_k),2) / top_k;
-% avg_scores = zeros(size(cand_info,1),1);
-% for i = 1:size(cand_info,1)
-%     c_length = cand_info(i,4);
-%     weights = zeros(c_length,1);
-%     mid = floor((c_length + 1) / 2);
-%     weights(1:mid,1) = mid;
-%     if mod(c_length,2) == 0
-%         weights(mid+1:end,1) = mid - 1 : -1 : 0;
-%     else
-%         weights(mid:end,1) = mid - 1 : -1 : 0;
-%     end
-%     cand_scores = scores(i,1:c_length);
-%     s = sum(cand_scores' .* weights) / sum(weights);
-%     avg_scores(i,1) = s;
-% end
+% top_k = floor(length(hiers) * 0.2);
+% temp = scores(:,1:top_k);
+% temp1 = sum(scores(:,1:top_k),2);
+% avg_scores = sum(scores(:,1:top_k),2) / top_k;
+avg_scores = zeros(size(cand_info,1),1);
+for i = 1:size(cand_info,1)
+    c_length = cand_info(i,4);
+    weights = zeros(c_length,1);
+    mid = floor((c_length + 1) / 2);
+    weights(1:mid,1) = mid;
+    if mod(c_length,2) == 0
+        weights(mid+1:end,1) = mid - 1 : -1 : 0;
+    else
+        weights(mid:end,1) = mid - 1 : -1 : 0;
+    end
+    cand_scores = scores(i,1:c_length);
+    s = sum(cand_scores' .* weights) / sum(weights);
+    avg_scores(i,1) = s;
+end
 
 
 

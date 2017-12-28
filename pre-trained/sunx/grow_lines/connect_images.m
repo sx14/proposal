@@ -7,10 +7,11 @@ function [net,hiers,adjacent_sp_mats] = connect_images(hier_set, flow_set, flow2
 start_frame = 1;
 end_frame = length(hier_set);
 frame_sum = end_frame - start_frame + 1;    % 帧数
-net = zeros(800,frame_sum,3);               % 记录每一帧每一个sp属于哪个串
+net = zeros(1500,frame_sum,3);               % 记录每一帧每一个sp属于哪个串
 hiers = cell(frame_sum,1);                  % 保留所有层次结构
 adjacent_sp_mats = cell(frame_sum,1);       % 保留所有超像素相邻关系
 for i = start_frame:end_frame
+    
     curr_hier = hier_set{i};
     if i == start_frame
         [net,adjacent_sp_mat,sp_boxes] = grow_lines(i, net, curr_hier);
@@ -24,7 +25,7 @@ for i = start_frame:end_frame
     curr_hier.sp_boxes = sp_boxes;
     hiers{i} = curr_hier;
 %     if (i-start_frame+1) >= 20
-%         show_line(net, hiers, 10 , i, resized_imgs, [255,0,0]);
+%         show_line(net, hiers, i , i, resized_imgs, [255,0,0]);
 %         input('next frame?');
 %     end
     % ====== 展示相邻帧匹配情况 ， 可以注掉 ===========

@@ -34,13 +34,14 @@ for i = 1:size(temp_annotations,1)
     distribution(i,1) = counter;
 end
 
+% number = [5;5;5;5;5;5;5;5;5;5];
 number = [35;35;35;35;38;39;22;11;23;27];
 step = floor(distribution ./ number);
-video_list = cell(300,1);
+video_list = cell(sum(number),1);
 video_name_list = '';
 index = 1;
-for i = 1:size(annotation_info,1)
-    annotations = annotation_info(i,:);
+for i = 1:size(temp_annotations,1)
+    annotations = temp_annotations(i,:);
     for j = 0:number(i) - 1
         video = annotations{j*step(i) + 1};
         video.object_number = i;
@@ -58,4 +59,4 @@ video_list_path = '/home/sunx/output/selected';
 video_list_file_mat = 'video_list.mat';
 video_list_file_txt = 'video_list.txt';
 output(video_list_path, video_list_file_txt, video_name_list, 'txt');
-save(fullfile(video_list_path,video_list_file_mat), 'video_list');
+save(video_list_file_mat, 'video_list');
