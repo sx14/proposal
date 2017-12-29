@@ -2,8 +2,9 @@
 % cands_info:串组合的信息：id / start_frame / end_frame / length
 function [cands,cand_info] = get_cands(org_line_labels,long_line_info, new_line_labels, adjacent_sp_mats)
 long_line_adjacent_mat = cal_adjacent_line_2(org_line_labels, long_line_info, adjacent_sp_mats, new_line_labels);
+long_line_conbine_threshold = 0.3;  % 空间上相交的帧数/两者中较短的串的长度
 half_long_line_adjacent_mat = tril(long_line_adjacent_mat);
-[new_lines1,new_lines_2,~] = find(half_long_line_adjacent_mat > 0);
+[new_lines1,new_lines_2,~] = find(half_long_line_adjacent_mat > long_line_conbine_threshold);
 long_line_sum = size(long_line_info , 1);
 long_line_labels = 1:long_line_sum;             % 所有长串的新串号
 long_line_labels = long_line_labels';           % 转为列向量
@@ -25,13 +26,13 @@ for i = 1:long_line_sum - 2
             i_j = long_line_adjacent_mat(i,j);
             i_k = long_line_adjacent_mat(i,k);
             j_k = long_line_adjacent_mat(j,k);
-            if i_j > 0
+            if i_j > long_line_conbine_threshold
                 adjacent_counter = adjacent_counter + 1;
             end
-            if i_k > 0
+            if i_k > long_line_conbine_threshold
                 adjacent_counter = adjacent_counter + 1;
             end
-            if j_k > 0
+            if j_k > long_line_conbine_threshold
                 adjacent_counter = adjacent_counter + 1;
             end
             if adjacent_counter > 1 % 三个长串有两组相邻即可组合
