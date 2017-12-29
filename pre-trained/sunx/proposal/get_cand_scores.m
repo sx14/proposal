@@ -13,17 +13,11 @@ for f = 1:length(hiers)
     b_feats.end_ths   = [zeros(leave_sum,1);hier.end_ths]';
     b_feats.im_size   = size(f_lp);
     [sp_cand,indexes] = get_sp_cand(cands,line_frame_sp_mat,f);
-    [feats, bboxes] = compute_full_features((sp_cand+leave_sum),b_feats);
+    sp_cand(sp_cand > 0) = sp_cand(sp_cand > 0) + leave_sum;
+    [feats, bboxes] = compute_full_features(sp_cand,b_feats);
     frame_cand_scores = regRF_predict(feats,rf_regressor);
     scores(indexes,f) = frame_cand_scores;
 end
-scores_temp = zeros(size(cands,1),length(hiers));
-for c = 1:size(cands,1)
-    s = cand_info(c,2);
-    e = cand_info(c,3);
-    scores_temp(c,s:e) = scores(c,s:e);
-end
-scores = scores_temp;
 scores = sort(scores,2,'descend');
 % top_k = floor(length(hiers) * 0.2);
 % temp = scores(:,1:top_k);

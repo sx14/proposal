@@ -39,8 +39,8 @@ for i = 1:size(long_lines,1)
         show.color_line = color_line;
         subplot(2,1,2);
         imshow(uint8(mask));
-        if long_lines(i,1) > (small_sp_sum)
-%         if long_lines(i,1) > 0
+%         if long_lines(i,1) > (small_sp_sum)
+        if long_lines(i,1) > 0
             X = sprintf('SP %d.',sp);
             input(X);
         end
