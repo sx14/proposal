@@ -3,7 +3,7 @@ base_path = '/home/sunx/dataset/ImageNet/train';
 package_dir = 'chosen0';
 annotation_path = '/home/sunx/dataset/ImageNet/Annotations/ILSVRC2015_VID_train_0000';
 output_path = '/home/sunx/output/ours_temp';
-% run(fullfile(base_path, package_dir), '/ILSVRC2015_train_00001000',annotation_path,output_path,true);   % 乌龟1 find all | good
+% run(fullfile(base_path, package_dir),'/ILSVRC2015_train_00001000',annotation_path,output_path,true);   % 乌龟1 find all | good
 % run(fullfile(base_path, package_dir),'/ILSVRC2015_train_00001001',annotation_path,output_path,true);   % 乌龟2 bad | 太难
 % run(fullfile(base_path, package_dir),'/ILSVRC2015_train_00001002',annotation_path,output_path,true);   % 乌龟4 find all | normal 分割不理想
 % run(fullfile(base_path, package_dir),'/ILSVRC2015_train_00005001',annotation_path,output_path,true);   % 狗 find all | normal 头和身体不相邻
