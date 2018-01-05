@@ -14,7 +14,11 @@ sf_model = loadvar(fullfile(mcg_root, 'datasets', 'models', 'sf_modelFinal.mat')
 scales = 1;
 [~,ucm,~] = img2ucms(im1, sf_model, scales);
 % ucm = ucms(:,:,2);  % 取scale=1
-ucm(ucm < 0.1) = 0;
+% ucm(ucm < 0.1) = 0;
+ucm = ucm - 0.1;
+ucm(ucm < 0) = 0;
+max_value = max(max(ucm));
+ucm = ucm * (1 / max_value);
 hier = ucm2hier(ucm,flow);
 hier.ucm = ucm;
 % figure;

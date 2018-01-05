@@ -9,6 +9,9 @@ for f = 1:length(org_imgs)
     I = imresize(I,[org_height,org_width]);
     annotations_on_frame = ground_truth{f};
     for h = 1:ground_sum
+%         if h ~= 1
+%             continue;
+%         end
         annotation = annotations_on_frame(h);
         hit = all_hit(h,size(all_hit,2),:);
         if ~isempty(annotation.id)   % 第f帧上没有第h个标注物体
@@ -23,11 +26,10 @@ for f = 1:length(org_imgs)
                 I = draw_rect(I,[x_min y_min],[width height],3,[255,255,255]);
             end
         end
-        
         % =========== 画 candidates ============
         proposal_id = hit(1);
         max_T_IoU = hit(2);
-        %         if proposal_id ~= 0 && max_T_IoU > 0.5
+%         if proposal_id ~= 0 && max_T_IoU > 0.5
         if proposal_id ~= 0
             proposal = proposals{proposal_id};
             boxes = proposal.boxes;

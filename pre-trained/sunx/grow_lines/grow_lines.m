@@ -1,6 +1,6 @@
 % 输入：当前帧数，现有的所有条；当前帧的hier；光流；上一帧的hier,光流
 % 返回：将当前帧连起来以后的所有条
-function [net,adjacent_sp_mat,sp_boxes, sp_boundary_connectivity] = grow_lines(frame, net, new_hier, new_flow2, last_hier, last_flow)
+function [net,adjacent_sp_mat,sp_boxes, sp_boundary_connectivity, new_conbine_mat] = grow_lines(frame, net, new_hier, new_flow2, last_hier, last_flow)
 % ===== 当前帧的超像素组合矩阵（0/1）=====
 new_conbine_mat = get_conbine_mat(new_hier);
 [adjacent_sp_mat, sp_boxes, sp_boundary_pixel_num, sp_pixel_num] = cal_adjacent_sp(new_hier.leaves_part,new_conbine_mat);

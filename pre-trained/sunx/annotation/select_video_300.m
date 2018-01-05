@@ -34,7 +34,6 @@ for i = 1:size(temp_annotations,1)
     distribution(i,1) = counter;
 end
 
-% number = [5;5;5;5;5;5;5;5;5;5];
 number = [35;35;35;35;38;39;22;11;23;27];
 step = floor(distribution ./ number);
 video_list = cell(sum(number),1);
@@ -46,7 +45,7 @@ for i = 1:size(temp_annotations,1)
         video = annotations{j*step(i) + 1};
         video.object_number = i;
         video_list{index,1} = video;
-        video_name = [video.package_dir '/' video.video_dir];
+        video_name = video.video_dir;
         if index == 1
             video_name_list = video_name;
         else
@@ -55,6 +54,25 @@ for i = 1:size(temp_annotations,1)
         index = index + 1;
     end
 end
+
+% ========== 子集 ===========
+% video_list_t = cell(30,1);
+% for i = 1:30
+%     video_list_t{i} = video_list{i*10};
+% end
+% video_list = video_list_t;
+% 
+% video_name_list = '';
+% for i = 1:30
+%     video = video_list{i};
+%     video_name = video.video_dir;
+%     if index == 1
+%         video_name_list = video_name;
+%     else
+%         video_name_list = [video_name_list;video_name];
+%     end
+% end
+% ========== 子集 ===========
 video_list_path = '/home/sunx/output/selected';
 video_list_file_mat = 'video_list.mat';
 video_list_file_txt = 'video_list.txt';

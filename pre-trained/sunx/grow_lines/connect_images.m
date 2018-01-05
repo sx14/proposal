@@ -3,7 +3,7 @@
 % hier:每一帧的层次结构
 % org_imgs:每一帧的图像(resized)
 % adjacent_sp_mat:每一帧各层次sp的相邻矩阵
-function [net,hiers,adjacent_sp_mats, sp_boundary_connectivity_set] = connect_images(hier_set, flow_set, flow2_set,resized_imgs)
+function [net,hiers,adjacent_sp_mats, sp_boundary_connectivity_set, sp_conbine_set] = connect_images(hier_set, flow_set, flow2_set,resized_imgs)
 start_frame = 1;
 end_frame = length(hier_set);
 frame_sum = end_frame - start_frame + 1;    % 帧数
@@ -11,21 +11,23 @@ net = zeros(1500,frame_sum,3);               % 记录每一帧每一个sp属于�
 hiers = cell(frame_sum,1);                  % 保留所有层次结构
 adjacent_sp_mats = cell(frame_sum,1);       % 保留所有超像素相邻关系
 sp_boundary_connectivity_set = cell(frame_sum,1); 
+sp_conbine_set = cell(frame_sum,1);
 for i = start_frame:end_frame
     curr_hier = hier_set{i};
     if i == start_frame
-        [net,adjacent_sp_mat,sp_boxes,sp_boundary_connectivity] = grow_lines(i, net, curr_hier);
+        [net,adjacent_sp_mat,sp_boxes,sp_boundary_connectivity,conbine_mat] = grow_lines(i, net, curr_hier);
     else
         last_flow = flow_set{i-1};
         last_hier = hier_set{i-1};
         curr_flow2 = flow2_set{i};
-        [net,adjacent_sp_mat,sp_boxes,sp_boundary_connectivity] = grow_lines(i, net, curr_hier, curr_flow2, last_hier, last_flow);
+        [net,adjacent_sp_mat,sp_boxes,sp_boundary_connectivity,conbine_mat] = grow_lines(i, net, curr_hier, curr_flow2, last_hier, last_flow);
     end
-    adjacent_sp_mats{i,1} = adjacent_sp_mat;
-    sp_boundary_connectivity_set{i,1} = sp_boundary_connectivity;
+    adjacent_sp_mats{i} = adjacent_sp_mat;
+    sp_boundary_connectivity_set{i} = sp_boundary_connectivity;
     curr_hier.sp_boxes = sp_boxes;
     hiers{i} = curr_hier;
-%     if (i-start_frame+1) >= 20
+    sp_conbine_set{i} = conbine_mat;
+%     if (i-start_frame+1) >= 101
 %         show_line(net, hiers, i , i, resized_imgs, [255,0,0]);
 %         input('next frame?');
 %     end

@@ -15,7 +15,7 @@ for frame = 1:length(adjacent_sp_mats)
                 line2 = line_labels(sp2,frame,1);
                 new_line1 = new_line_label(line1);
                 new_line2 = new_line_label(line2);
-                if new_line1 ~= 0 && new_line2 ~= 0 % 找到的相邻串都是长串
+                if new_line1 ~= 0 && new_line2 ~= 0 && new_line1 ~= new_line2% 找到的相邻串都是长串
                     adjacent_line_mat_temp(new_line1,new_line2) = 1;
                     adjacent_line_mat_temp(new_line2,new_line1) = 1;
                 end

@@ -2,7 +2,7 @@ close all; close all; clc;
 base_path = '/home/sunx/dataset/ImageNet/train';
 package_dir = 'chosen0';
 annotation_path = '/home/sunx/dataset/ImageNet/Annotations/ILSVRC2015_VID_train_0000';
-output_path = '/home/sunx/output/ours';
+output_path = '/home/sunx/output/ours_temp';
 % run(fullfile(base_path, package_dir), '/ILSVRC2015_train_00001000',annotation_path,output_path,true);   % 乌龟1 find all | good
 % run(fullfile(base_path, package_dir),'/ILSVRC2015_train_00001001',annotation_path,output_path,true);   % 乌龟2 bad | 太难
 % run(fullfile(base_path, package_dir),'/ILSVRC2015_train_00001002',annotation_path,output_path,true);   % 乌龟4 find all | normal 分割不理想
@@ -14,7 +14,7 @@ output_path = '/home/sunx/output/ours';
 % run(fullfile(base_path,package_dir),'/ILSVRC2015_train_00008005',annotation_path,output_path,true);   % * 黑牛1 find all | not good 分割问题
 % run([dataset_path,'/ILSVRC2015_train_00010000'],[annotation_path,'/ILSVRC2015_train_00010000'],'JPEG','hier',true);   % 多个自行车 failed | 太难了
 % run(base_path,package_dir,'/ILSVRC2015_train_00012009',[annotation_path,'/ILSVRC2015_train_00012009'], output_path);   % 两匹马 find all | not good 匹配误差还是分割有待排查
-% run(fullfile(base_path, package_dir),'/ILSVRC2015_train_00008008',annotation_path,output_path,true);   % 黑牛3 find all | good 
+run(fullfile(base_path, package_dir),'/ILSVRC2015_train_00008008',annotation_path,output_path,true);   % 黑牛3 find all | good 
 % run([dataset_path,'/ILSVRC2015_train_00015000'],[annotation_path,'/ILSVRC2015_train_00015000'],'JPEG','hier',true);   % 黑白 failed | 太难
 % run([dataset_path,'/ILSVRC2015_train_00016001'],[annotation_path,'/ILSVRC2015_train_00016001'],'JPEG','hier',true);   % 车 find all | not good
 % run([dataset_path,'/ILSVRC2015_train_00016002'],[annotation_path,'/ILSVRC2015_train_00016002'],'JPEG','hier',true);   % 车 not all | special
@@ -38,7 +38,7 @@ annotation_path = '/home/sunx/dataset/ImageNet/Annotations/ILSVRC2015_VID_train_
 % run([dataset_path,'/ILSVRC2015_train_00150010'],[annotation_path,'/ILSVRC2015_train_00150010'],'JPEG','hier',true);   % 两个鸟叠起来 find all | not good
 % run([dataset_path,'/ILSVRC2015_train_00176000'],[annotation_path,'/ILSVRC2015_train_00176000'],'JPEG','hier',true);   % 小红车 find all | good
 % run([dataset_path,'/ILSVRC2015_train_00185000'],[annotation_path,'/ILSVRC2015_train_00185000'],'JPEG','hier',true);   % 四只羊 find all | bug???
-run(fullfile(base_path,package_dir),'/ILSVRC2015_train_00191000',annotation_path,output_path,true);   % 熊猫 find all | not good 串断了
+% run(fullfile(base_path,package_dir),'/ILSVRC2015_train_00191000',annotation_path,output_path,true);   % 熊猫 find all | not good 串断了
 
 
 

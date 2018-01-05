@@ -15,5 +15,5 @@ for i = 1:size(video_list,1)
     org_video = fullfile(org_video_path,package_dir,video_dir);
     output_video = fullfile(output_video_path,video_dir);
     copyfile(org_video,output_video);
-    copyfile(org_annotation,output_annotation);
+%     copyfile(org_annotation,output_annotation);
 end

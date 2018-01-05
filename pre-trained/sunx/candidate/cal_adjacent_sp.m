@@ -11,5 +11,6 @@ adjacent_sp_mat = adjacent_sp_mat & adjacent_sp_mat;    % 变为0/1矩阵
 full_conbine_mat = conbine_mat * conbine_mat';
 full_conbine_mat = full_conbine_mat & full_conbine_mat;
 adjacent_sp_mat = xor(adjacent_sp_mat,full_conbine_mat);
+
 sp_boundary_pixel_num = conbine_mat * basic_sp_boundary_pixel_num;
 sp_pixel_num = conbine_mat * basic_sp_pixel_num;

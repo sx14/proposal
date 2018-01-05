@@ -1,4 +1,4 @@
-function avg_scores = get_cand_scores(hiers, cands, line_frame_sp_mat, cand_info)
+function avg_scores = get_cand_scores(hiers, cands, line_frame_sp_mat, cand_info, long_line_length_ratio)
 rf_regressor = loadvar(fullfile(mcg_root, 'datasets', 'models', 'scg_rand_forest_train2012.mat'),'rf');
 scores = zeros(size(cands,1),length(hiers));
 for f = 1:length(hiers)
@@ -14,30 +14,47 @@ for f = 1:length(hiers)
     b_feats.im_size   = size(f_lp);
     [sp_cand,indexes] = get_sp_cand(cands,line_frame_sp_mat,f);
     sp_cand(sp_cand > 0) = sp_cand(sp_cand > 0) + leave_sum;
-    [feats, bboxes] = compute_full_features(sp_cand,b_feats);
+    if ~isempty(f_ms)
+        [cands_hf, cands_comp] = hole_filling(double(f_lp), double(f_ms), sp_cand); %#ok<NASGU>
+    else
+        cands_hf = sp_cand;
+        cands_comp = sp_cand; %#ok<NASGU>
+    end
+    % Select which proposals to keep (Uncomment just one line)
+    [feats, bboxes] = compute_full_features(cands_hf,b_feats);
     frame_cand_scores = regRF_predict(feats,rf_regressor);
     scores(indexes,f) = frame_cand_scores;
 end
+
 scores = sort(scores,2,'descend');
-% top_k = floor(length(hiers) * 0.2);
-% temp = scores(:,1:top_k);
-% temp1 = sum(scores(:,1:top_k),2);
-% avg_scores = sum(scores(:,1:top_k),2) / top_k;
 avg_scores = zeros(size(cand_info,1),1);
-for i = 1:size(cand_info,1)
-    c_length = cand_info(i,4);
-    weights = zeros(c_length,1);
-    mid = floor((c_length + 1) / 2);
-    weights(1:mid,1) = mid;
-    if mod(c_length,2) == 0
-        weights(mid+1:end,1) = mid - 1 : -1 : 0;
-    else
-        weights(mid:end,1) = mid - 1 : -1 : 0;
-    end
-    cand_scores = scores(i,1:c_length);
-    s = sum(cand_scores' .* weights) / sum(weights);
-    avg_scores(i,1) = s;
+long_line_length_ths = floor(length(hiers) * long_line_length_ratio * 3);
+long_line_ths_array = zeros(size(avg_scores));
+long_line_ths_array(:) = long_line_length_ths;
+[top_k,~] = min([cand_info(:,4) long_line_ths_array],[],2);
+% top_k = floor(cand_info(:,4) * 0.9);
+for i = 1:size(scores,1)
+    score_sum = sum(scores(i,1:top_k(i)));
+    avg_scores(i) = score_sum / top_k(i);
 end
+
+
+% avg_scores = zeros(size(cand_info,1),1);
+% for i = 1:size(cand_info,1)
+%     c_length = cand_info(i,4);
+%     weights = zeros(c_length,1);
+%     mid = floor((c_length + 1) / 2);
+%     weights(1:mid,1) = mid;
+%     if mod(c_length,2) == 0
+%         weights(mid+1:end,1) = mid - 1 : -1 : 0;
+%     else
+%         weights(mid:end,1) = mid - 1 : -1 : 0;
+%     end
+%     cand_scores = scores(i,1:c_length);
+%     s = sum(cand_scores' .* weights) / sum(weights);
+%     avg_scores(i,1) = s;
+% end
+
 % avg_scores = sum(scores,2) ./ cand_info(:,4);
 
 

@@ -6,21 +6,22 @@ long_lines = unique(all_lines);
 X = sprintf('Long line sum: %d.',size(long_lines,1));
 disp(X)
 for i = 1:size(long_lines,1)
-    for j =  1:end_frame
+    s = max(1,end_frame - 30);
+    for j =  s:end_frame
         hier = hiers{j};
         lines = net(:,j,1);
         [sp,~,v] = find(lines == long_lines(i));
-%         ratio = zeros(size(lines));
-%         ratio(sp') = net.lines(sp',j,2)';
-%         [~, max_sp] = max(ratio);
+        ratio = zeros(size(lines));
+        ratio(sp) = net(sp,j,2);
+        [~, max_sp] = max(ratio);
         if size(v,1) == 0
             continue;
         else
             mask_b = zeros(size(hier.leaves_part,1),size(hier.leaves_part,2));
-%             mask_b = get_binary_mask(max_sp, mask_b, hier, max(max(hier.leaves_part)));
-            for k = 1:size(sp,1)
-                mask_b = get_binary_mask(sp(k), mask_b, hier, max(max(hier.leaves_part)));
-            end
+            mask_b = get_binary_mask(max_sp, mask_b, hier, max(max(hier.leaves_part)));
+%             for k = 1:size(sp,1)
+%                 mask_b = get_binary_mask(sp(k), mask_b, hier, max(max(hier.leaves_part)));
+%             end
             mask_b = ~mask_b;
             org_img = org_imgs{j,1};
             org_r = org_img(:,:,1);
@@ -41,8 +42,7 @@ for i = 1:size(long_lines,1)
     end
     X = sprintf('Line: %d, continue?', long_lines(i));
     input(X);
-%     disp(X);
-    pause(0.7);
+    pause(0.5);
     close all;
 end
 
