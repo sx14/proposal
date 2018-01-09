@@ -12,7 +12,11 @@ avg_overall_flow_array = zeros(size(avg_cand_flow));
 avg_overall_flow_array(:) = avg_overall_flow;
 relative_flow = abs(avg_cand_flow - avg_overall_flow_array);
 max_flow = max(relative_flow);
-scores = relative_flow / max_flow;
+if sum(max_flow) > 0
+    scores = relative_flow / max_flow;
+else
+    scores = zeros(size(all_cand_sps,1),1);
+end
 
 
 

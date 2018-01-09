@@ -25,6 +25,7 @@ end
 
 % Install own lib
 addpath(root);
+addpath(genpath(fullfile(root,'annotation')));
 addpath(genpath(fullfile(root,'kcf')));
 addpath(genpath(fullfile(root,'mcg')));
 addpath(genpath(fullfile(root,'src')));

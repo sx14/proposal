@@ -1,5 +1,5 @@
 function net = grow_curr_frame(net, forward_match_sp_ratio, backward_match_sp_ratio,frame)
-threshold = 0.6;
+threshold = 0.55;
 lines = net;
 % 正向匹配：遍历last_2_new匹配矩阵的每一行（即前一帧的每一个sp与当前帧所有sp的avg_ratio）
 forward_match_sp_ratio(forward_match_sp_ratio < threshold) = 0;
@@ -16,8 +16,7 @@ for i = 1:size(match_ratio,1)
     if max_ratio == 0
         continue;
     end
-%     [~,cand_sp,~] = find(match(i,:) == 1);  % 候选
-    [~,cand_sp,~] = find(match_ratio(i,:) >= max_ratio - 0.1);  % 候选
+    [~,cand_sp,~] = find(match_ratio(i,:) >= (max_ratio - 0.1));  % 候选
     mask = zeros(size(lines(:,frame,1)));
     mask(cand_sp',1) = 1;   % 标识所有候选的匹配sp
     mask = lines(:,frame,3) .* mask;    % 标识候选的sp中已经被匹配过的sp

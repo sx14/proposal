@@ -3,7 +3,7 @@ base_path = '/home/sunx/dataset/ImageNet/train';
 package_dir = 'chosen0';
 annotation_path = '/home/sunx/dataset/ImageNet/Annotations/ILSVRC2015_VID_train_0000';
 output_path = '/home/sunx/output/ours_temp';
-% run(fullfile(base_path, package_dir),'/ILSVRC2015_train_00001000',annotation_path,output_path,true);   % 乌龟1 find all | good
+run(fullfile(base_path, package_dir),'/ILSVRC2015_train_00001000',annotation_path,output_path,true);   % 乌龟1 find all | good
 % run(fullfile(base_path, package_dir),'/ILSVRC2015_train_00001001',annotation_path,output_path,true);   % 乌龟2 bad | 太难
 % run(fullfile(base_path, package_dir),'/ILSVRC2015_train_00001002',annotation_path,output_path,true);   % 乌龟4 find all | normal 分割不理想
 % run(fullfile(base_path, package_dir),'/ILSVRC2015_train_00005001',annotation_path,output_path,true);   % 狗 find all | normal 头和身体不相邻
@@ -26,7 +26,7 @@ run(fullfile(base_path, package_dir),'/ILSVRC2015_train_00020000',annotation_pat
 % run([dataset_path,'/ILSVRC2015_train_00025005'],[annotation_path,'/ILSVRC2015_train_00025005'],'JPEG','hier',true);   % 自行车 find all | normal
 % run_all(dataset_path,annotation_path);
 
-% show_hier([fullfile(base_path, package_dir),'/ILSVRC2015_train_00020000'], 'JPEG', 'hier');
+show_hier([fullfile(base_path, package_dir),'/ILSVRC2015_train_00020000'], 'JPEG', 'hier');
 
 dataset_path = '/home/sunx/dataset/ImageNet/train';
 package_dir = 'chosen1';

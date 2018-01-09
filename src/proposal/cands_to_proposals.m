@@ -5,16 +5,19 @@ scores_part1 = all_scores(1:one_two_sum);
 scores_part2 = all_scores(one_two_sum+1:end);
 [~,ids1] = sort(scores_part1,'descend');
 [~,ids2] = sort(scores_part2,'descend');
-one_two_cand_sum = min(floor(0.6*length(ids1)),300);
+one_two_cand_top_sum = floor(0.8*one_two_sum);      % 一二组合取前60%
+if one_two_cand_top_sum < 200                       % 若前60%不足100个，则取全部
+    one_two_cand_top_sum = one_two_sum;
+end
+one_two_cand_sum = min(one_two_cand_top_sum,300);   % 不多于300
 ids1 = ids1(1:one_two_cand_sum);
 ids = [ids1;ids2];
-% [s, ids] = sort(all_scores,'descend');            % sort candidate scores
 last_one = min(size(ids,1),1000);                   % proposal sum
 selected_cands = cands(ids(1:last_one),:);          % sort cands
 % ======== no score ========
-% ids = (1:size(all_scores,1))';
+% ids = [ids1;ids2];
 % last_one = size(ids,1);
-% selected_cands = cands;
+% selected_cands = cands(ids(1:last_one),:);
 % ======== no score ========
 proposals = cell(last_one,1);
 proposal_info = cand_info(ids(1:last_one),:);

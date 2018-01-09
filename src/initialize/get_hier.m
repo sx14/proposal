@@ -10,11 +10,9 @@ sf_model = loadvar(fullfile(mcg_root, 'datasets', 'models', 'sf_modelFinal.mat')
 % if size(image,1)*size(image,2)>2.5e6 % 2.5 megapixel
 %     warning(['The image you are trying to segment using MCG might need too much memory because of its size (' num2str(size(image,1)) ',' num2str(size(image,2)) '). If you still want to try, comment lines 62-65 in im2mcg.m'])
 % end
-% scales = [2, 1, 0.5];
+
 scales = 1;
 [~,ucm,~] = img2ucms(im1, sf_model, scales);
-% ucm = ucms(:,:,2);  % 取scale=1
-% ucm(ucm < 0.1) = 0;
 ucm = ucm - 0.1;
 ucm(ucm < 0) = 0;
 max_value = max(max(ucm));

@@ -1,4 +1,4 @@
-clear;clc;close all;
+ clear;clc;close all;
 video_base_path = '/media/sunx/Data/ImageNet/train';
 output_path = '/home/sunx/output/ours';
 annotation_base_path = '/media/sunx/Data/ImageNet/Annotations';

@@ -38,7 +38,7 @@ for i = 1:length(video_list)
             win = 1;
         elseif our_recall == compare_recall
             win = 0;
-        else
+        elseif our_recall < compare_recall
             win = -1;
         end
     end
@@ -50,7 +50,7 @@ for i = 1:length(video_list)
 end
 [i,j,~] = find(compare(:,5) == -2);
 compare(i,:) = [];
-video_sum = length(i);
+video_sum = size(compare,1);
 win_ratio = length(find(compare(:,5) == 1)) / video_sum;
 lose_ratio = length(find(compare(:,5) == -1)) / video_sum;
 tie_ratio = length(find(compare(:,5) == 0)) / video_sum;

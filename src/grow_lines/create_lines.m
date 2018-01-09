@@ -28,8 +28,8 @@ for i = start_frame:end_frame
     sp_boundary_connectivity_set{i} = sp_boundary_connectivity;
     sp_boxes_set{i} = sp_boxes;
     sp_flow_sum_set{i} = [sp_flow_sum,sp_pixel_num];
-%     if (i-start_frame+1) >= 101
-%         show_line(net, hiers, i , i, resized_imgs, [255,0,0]);
+%     if (i-start_frame+1) >= 25
+%         show_line(net, hier_set, 10 , i, resized_imgs, [255,0,0]);
 %         input('next frame?');
 %     end
     % ====== 展示相邻帧匹配情况 ， 可以注掉 ===========
