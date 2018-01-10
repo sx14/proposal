@@ -44,33 +44,50 @@ else
     cands_hf = cands;
     cands_comp = cands; %#ok<NASGU>
 end
-cands = cands_hf;
-leaves_num = max(max(f_lp));
-f_ms(1:leaves_num,:) = [];
-f_ms = f_ms - double(leaves_num);
-cands(cands > 0) = cands(cands > 0) - double(leaves_num);
-start_ths(1:leaves_num) = [];
-end_ths(1:leaves_num) = [];
-parent_col = size(f_ms,2);
-ms_struct(size(f_ms,1)) = struct('parent',[],'children',[]);
-for i = 1:size(f_ms,1)
-    ms_struct(i).parent = f_ms(i,parent_col);
-    children = f_ms(i,1:parent_col-1);
-    ms_struct(i).children = children(children ~= 0);
-end
-
-b_feats = compute_base_features(f_lp, f_ms, ucm);
+cands = cands_hf;                       % Just the proposals with holes filled
+% cands = [cands_hf; cands_comp];         % Holes filled and the complementary
+% cands = [cands; cands_hf; cands_comp];  % All of them
+        
+% Compute base features
+b_feats = compute_base_features(f_lp, f_ms, all_ucms);
 b_feats.start_ths = start_ths;
 b_feats.end_ths   = end_ths;
 b_feats.im_size   = size(f_lp);
 
-Level of overlap to erase duplicates
-J_th = 0.95;
 % Filter by overlap
 red_cands = mex_fast_reduction(cands-1,b_feats.areas,b_feats.intersections,J_th);
 
+% Compute full features on reduced cands
+[feats, bboxes] = compute_full_features(red_cands,b_feats);
+
+% Rank proposals
+class_scores = regRF_predict(feats,rf_regressor);
+[scores, ids] = sort(class_scores,'descend');
+red_cands = red_cands(ids,:);
+bboxes = bboxes(ids,:);
+if isrow(scores)
+    scores = scores';
+end
+
+leaves_num = max(max(f_lp));
+f_ms(1:leaves_num,:) = [];
+f_ms(f_ms > 0) = f_ms(f_ms > 0) - double(leaves_num);
+red_cands(red_cands > 0) = red_cands(red_cands > 0) - double(leaves_num);
+start_ths(1:leaves_num) = [];
+end_ths(1:leaves_num) = [];
+% parent_col = size(f_ms,2);
+% ms_struct(size(f_ms,1)) = struct('parent',[],'children',[]);
+% for i = 1:size(f_ms,1)
+%     ms_struct(i).parent = f_ms(i,parent_col);
+%     children = f_ms(i,1:parent_col-1);
+%     ms_struct(i).children = children(children ~= 0);
+% end
+
 hier.leaves_part = f_lp;
-hier.ms_struct = ms_struct;
+hier.ms_matrix = f_ms;
+% hier.ms_struct = ms_struct;
 hier.start_ths = start_ths;
 hier.end_ths = end_ths;
 hier.cands = red_cands;
+hier.boxes = bboxes;
+hier.scores = scores;
