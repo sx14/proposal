@@ -16,7 +16,9 @@ scales = 1;
 ucm = ucm - 0.1;
 ucm(ucm < 0) = 0;
 max_value = max(max(ucm));
-ucm = ucm * (1 / max_value);
+if max_value ~= 0
+    ucm = ucm / max_value;
+end
 hier = ucm2hier(ucm,flow);
 hier.ucm = ucm;
 % figure;
