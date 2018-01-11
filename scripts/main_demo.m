@@ -18,7 +18,7 @@ run(fullfile(base_path, package_dir),'/ILSVRC2015_train_00001000',annotation_pat
 % run([dataset_path,'/ILSVRC2015_train_00015000'],[annotation_path,'/ILSVRC2015_train_00015000'],'JPEG','hier',true);   % 黑白 failed | 太难
 % run([dataset_path,'/ILSVRC2015_train_00016001'],[annotation_path,'/ILSVRC2015_train_00016001'],'JPEG','hier',true);   % 车 find all | not good
 % run([dataset_path,'/ILSVRC2015_train_00016002'],[annotation_path,'/ILSVRC2015_train_00016002'],'JPEG','hier',true);   % 车 not all | special
-run(fullfile(base_path, package_dir),'/ILSVRC2015_train_00020000',annotation_path,output_path,true);   % * 牛群 not all | not good 分割问题
+% run(fullfile(base_path, package_dir),'/ILSVRC2015_train_00020000',annotation_path,output_path,true);   % * 牛群 not all | not good 分割问题
 % run(fullfile(base_path,package_dir),'/ILSVRC2015_train_00022001',annotation_path,output_path,true);   % 乌龟3 find all | good
 % run([dataset_path,'/ILSVRC2015_train_00025002'],[annotation_path,'/ILSVRC2015_train_00025002'],'JPEG','hier',true);   % 狗5 find all | normal
 % run(fullfile(base_path,package_dir),'/ILSVRC2015_train_00027002',annotation_path,output_path,true);   % 鲸 find all | normal

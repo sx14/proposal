@@ -44,9 +44,14 @@ function [net,all_line_info] = connect_lines(net,all_line_info,long_line_info,li
         for j = 1:length(lines)
             line = lines(j);
             old_line_label = long_line_info(line,1);
-            all_line_info(old_line_label,start:end) = 0;    % 消除旧串记录
+            all_line_info(old_line_label,1:end) = 0;    % 消除旧串记录
             curr_s = long_line_info(line,2);
             curr_e = long_line_info(line,3);
+            for f = curr_s:curr_e
+                frame_line = net(:,f,1);
+                frame_line(frame_line == line) = connect_line_label;
+                net(:,f,1) = frame_line;
+            end
             boundary_connectivity = max(boundary_connectivity,long_line_info(line,5));
             start_frame = min(start_frame,curr_s);
             end_frame = max(end_frame,curr_e);

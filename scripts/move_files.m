@@ -6,10 +6,10 @@ for i = 1:length(video_dirs)
     org_video_dir = video_dirs(i);
     org_video_flow_path = fullfile(org_video_path,org_video_dir.name,'flow');
     org_video_resize_path = fullfile(org_video_path,org_video_dir.name,'resized');
-%     if exist(org_video_resize_path,'dir') && exist(fullfile(org_video_resize_path,'finish'),'file') && exist(org_video_flow_path,'dir') && exist(fullfile(org_video_flow_path,'finish'),'file')
-%         out_video_flow_path = fullfile(output_flow_path,org_video_dir.name);
-%         copyfile(org_video_flow_path,out_video_flow_path);
-%     end
+    if exist(org_video_resize_path,'dir') && exist(fullfile(org_video_resize_path,'finish'),'file') && exist(org_video_flow_path,'dir') && exist(fullfile(org_video_flow_path,'finish'),'file')
+        out_video_flow_path = fullfile(output_flow_path,org_video_dir.name);
+        copyfile(org_video_flow_path,out_video_flow_path);
+    end
     if exist(org_video_resize_path,'dir') && exist(fullfile(org_video_resize_path,'finish'),'file') && exist(org_video_flow_path,'dir') && exist(fullfile(org_video_flow_path,'finish'),'file')
         out_video_resize_path = fullfile(output_resize_path,org_video_dir.name);
         copyfile(org_video_resize_path,out_video_resize_path);

@@ -7,12 +7,14 @@ end
 proposal_path = fullfile(output_path, proposal_dir);
 proposal_file_name = [video_dir '.mat'];
 if ~exist(fullfile(proposal_path,proposal_file_name),'file') || re_cal == true  % not done
-    [net,sp_boxes_set,~,sp_boundary_connectivity_set,~] = create_lines(hier_set, flow_set, flow2_set, resized_imgs);      % grow sp sequences
+    [net,sp_boxes_set,~,sp_boundary_connectivity_set,sp_flow_info] = create_lines(hier_set, flow_set, flow2_set, resized_imgs);      % grow sp sequences
     [long_line_info,all_line_info,new_line_labels] = long_line_filter(net,sp_boundary_connectivity_set);
     long_line_frame_sp_mat = get_line_frame_sp(net, long_line_info, new_line_labels);
     % 连接断串，要修改：long_line_frame_sp_mat,long_line_info,new_line_labels
     line_connect_cand_mat = get_connect_line_cand2(sp_boxes_set,long_line_frame_sp_mat,long_line_info,resized_imgs);
     [net,all_line_info] = connect_lines(net,all_line_info,long_line_info,long_line_frame_sp_mat,line_connect_cand_mat);
+    hier_set = cal_img_pro_scores(hier_set,sp_flow_info);
+    resized_proposals = cal_line_bundle_proposals(hier_set,net,all_line_info);
     
     % 连接断串，要修改：long_line_frame_sp_mat,long_line_info,new_line_labels
 %     long_line_adjacent_mat = cal_adjacent_line_2(net(:,:,1), long_line_info, adjacent_sp_mats, new_line_labels);
