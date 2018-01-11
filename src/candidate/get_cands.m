@@ -58,7 +58,7 @@ if ~isempty(three_line_cands)
 end
 
 four_line_cand_sum = long_line_sum * (long_line_sum - 1) * (long_line_sum - 2) * (long_line_sum - 3) / 4*3*2*1;
-four_line_cand_sum = min((10000-size(cand_info,1)), four_line_cand_sum);
+four_line_cand_sum = min((15000-size(cand_info,1)), four_line_cand_sum);
 four_line_cands = zeros(four_line_cand_sum,4);    % 四四无重复组合作为candidate
 four_line_cand_counter = 0;
 for i = 1:long_line_sum - 3
