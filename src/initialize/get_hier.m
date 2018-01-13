@@ -9,8 +9,10 @@ scales = 1;
 [~,ucm,~] = img2ucms(im1, sf_model, scales);
 ucm = ucm - 0.1;
 ucm(ucm < 0) = 0;
-max_edge_power = max(max(ucm));
-ucm = ucm / max_edge_power;
+max_edge_weight = max(max(ucm));
+if max_edge_weight > 0
+    ucm = ucm / max_edge_weight;
+end
 % figure;
 % imshow(imdilate(ucm,strel(ones(3))),[]), title(['ucm']);
 % input('next?');

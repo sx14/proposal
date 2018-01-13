@@ -10,15 +10,16 @@ for f = 1:length(hiers)
     temp_ms = hier.ms_matrix;
     temp_ms(temp_ms > 0) = temp_ms(temp_ms > 0) + double(leave_sum);
     f_ms = cat(1,leaves_ms,temp_ms);
-    if ~isfield(hier,'b_feats')
+    if isfield(hier,'b_feats')
+        b_feats = hier.b_feats;
+    else
         ucm = hier.ucm;
         b_feats = compute_base_features(f_lp, f_ms, ucm);
         b_feats.start_ths = [zeros(leave_sum,1);hier.start_ths]';
         b_feats.end_ths   = [zeros(leave_sum,1);hier.end_ths]';
         b_feats.im_size   = size(f_lp);
-    else
-        b_feats = hier.b_feats;
     end
+    
     [sp_cand,indexes] = get_sp_cand(cands,line_frame_sp_mat,f);
     sp_cand(sp_cand > 0) = sp_cand(sp_cand > 0) + double(leave_sum);
     if ~isempty(f_ms)
@@ -26,7 +27,7 @@ for f = 1:length(hiers)
     else
         cands_hf = sp_cand;
     end
-    [feats, ~] = compute_full_features(cands_hf,b_feats);
+    [feats, bboxes] = compute_full_features(cands_hf,b_feats);
     sp_flow_info = sp_flow_info_set{f};
     cands_hf(cands_hf > 0) = cands_hf(cands_hf > 0) - double(leave_sum);
     motion_cand_scores = get_motion_scores(cands_hf, sp_flow_info);
@@ -45,6 +46,8 @@ for i = 1:size(scores,1)
     score_sum = sum(scores(i,1:top_k(i)));
     avg_scores(i) = score_sum / top_k(i);
 end
+
+
 % avg_scores = zeros(size(cand_info,1),1);
 % for i = 1:size(cand_info,1)
 %     c_length = cand_info(i,4);
@@ -62,6 +65,8 @@ end
 % end
 
 % avg_scores = sum(scores,2) ./ cand_info(:,4);
+
+
 
 function [sp_cand,indexes] = get_sp_cand(cands,line_frame_sp_mat,frame)
 sp_cand = zeros(size(cands));
