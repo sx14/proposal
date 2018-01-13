@@ -1,6 +1,6 @@
 % 持久化所有的层次结构
 function hier_set = cal_hier(video_package_path,video_dir,mid_result_path,flow_set,resized_imgs, re_cal)
-hier_dir_name = 'hier';
+hier_dir_name = 'hier2';
 video_path = fullfile(video_package_path,video_dir);
 video_hier_path = fullfile(mid_result_path,hier_dir_name,video_dir);
 if ~exist(video_hier_path,'dir')
