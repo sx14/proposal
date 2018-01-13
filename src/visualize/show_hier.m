@@ -1,18 +1,20 @@
-function show_hier(video_path, img_suffix, hier)
+function show_hier(mid_result_path,video_dir)
 % 测试
 % 假设：前后帧相同，光流全0
 % 预期：前后帧所有超像素全部成功连接，对应颜色相同
-imgs = dir(fullfile(video_path,'resized',['*.', img_suffix]));
+video_resize_path = fullfile(mid_result_path,'resize',video_dir);
+video_hier_path = fullfile(mid_result_path,'hier',video_dir);
+imgs = dir(fullfile(video_resize_path,['*.', img_suffix]));
 frame_sum = length(imgs);
 net = zeros(800,frame_sum,3); 
 % for i = 0:frame_sum-1
 for i = 45:46
     num1=num2str(i,'%06d');
     img_name = [num1,['.',img_suffix]];
-    I = imread(fullfile(video_path,'resized',img_name));
+    I = imread(fullfile(video_resize_path,img_name));
 %     curr_flow = zeros(size(I,1), size(I,2),2);
     hier_name = [num1,'.mat'];
-    curr_hier = load(fullfile(video_path,hier,hier_name));
+    curr_hier = load(fullfile(video_hier_path,hier_name));
     curr_hier  = curr_hier.hier;
     show.image = I;
     show.color_line = init_color(512);

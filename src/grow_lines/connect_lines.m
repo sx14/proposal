@@ -1,4 +1,4 @@
-function [line_info, line_frame_sp_mat,new_line_labels] = connect_lines(line_info, line_frame_sp_mat, connect_line_cand_mat, new_line_labels)
+function [line_info,line_frame_sp_mat,new_line_labels] = connect_lines(line_info, line_frame_sp_mat, connect_line_cand_mat, new_line_labels)
     temp = sum(connect_line_cand_mat,2);
     line_connect_max = length(temp(temp > 0));
     frame_sum = size(line_frame_sp_mat,2);
@@ -50,7 +50,6 @@ function [line_info, line_frame_sp_mat,new_line_labels] = connect_lines(line_inf
             new_line_labels(old_line_label) = connect_line_label;
             curr_s = line_info(line,2);
             curr_e = line_info(line,3);
-%             boundary_connectivity = max(boundary_connectivity,line_info(line,5));
             boundary_connectivity = boundary_connectivity + line_info(line,5);
             start_frame = min(start_frame,curr_s);
             end_frame = max(end_frame,curr_e);

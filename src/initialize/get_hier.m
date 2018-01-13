@@ -5,76 +5,80 @@
 function [hier, ucm] = get_hier(im1, flow)
 % Load pre-trained Structured Forest model
 sf_model = loadvar(fullfile(mcg_root, 'datasets', 'models', 'sf_modelFinal.mat'),'model');
-% If the image is very big, to avoid running out of memory,
-% we force 'fast', which does not upsample the image
-% if size(image,1)*size(image,2)>2.5e6 % 2.5 megapixel
-%     warning(['The image you are trying to segment using MCG might need too much memory because of its size (' num2str(size(image,1)) ',' num2str(size(image,2)) '). If you still want to try, comment lines 62-65 in im2mcg.m'])
-% end
-
 scales = 1;
 [~,ucm,~] = img2ucms(im1, sf_model, scales);
 ucm = ucm - 0.1;
 ucm(ucm < 0) = 0;
-max_value = max(max(ucm));
-if max_value ~= 0
-    ucm = ucm / max_value;
-end
-hier = ucm2hier(ucm,flow);
-hier.ucm = ucm;
+max_edge_power = max(max(ucm));
+ucm = ucm / max_edge_power;
 % figure;
 % imshow(imdilate(ucm,strel(ones(3))),[]), title(['ucm']);
 % input('next?');
 % close all;
-% ============================ 加candidate ======================
-% n_hiers = size(ucm,3);
-% lps = [];   % leaves_parts
-% ms  = cell(n_hiers,1);  % merging-sequence
-% ths = cell(n_hiers,1);  % threshold
-% for ii=1:n_hiers
-%     % Transform the UCM to a hierarchy
-%     curr_hier = ucm2hier(ucm(:,:,ii),flow);
-%     ths{ii}.start_ths = curr_hier.start_ths';
-%     ths{ii}.end_ths   = curr_hier.end_ths';
-%     ms{ii}            = curr_hier.ms_matrix;
-%     lps = cat(3, lps, curr_hier.leaves_part);
-% end
-% % Load pre-trained pareto point
-% pareto_n_cands = loadvar(fullfile(mcg_root, 'datasets', 'models', 'scg_pareto_point_train2012.mat'),'n_cands');
-% [f_lp,f_ms,cands,start_ths,end_ths] = full_cands_from_hiers(lps,ms,ths,pareto_n_cands);
-% % Hole filling and complementary proposals
+% ============================ 加image proposals ======================
+n_hiers = size(ucm,3);
+lps = [];   % leaves_parts
+ms  = cell(n_hiers,1);  % merging-sequence
+ths = cell(n_hiers,1);  % threshold
+for ii=1:n_hiers
+    % Transform the UCM to a hierarchy
+    curr_hier = ucm2hier(ucm(:,:,ii),flow);
+    ths{ii}.start_ths = curr_hier.start_ths';
+    ths{ii}.end_ths   = curr_hier.end_ths';
+    ms{ii}            = curr_hier.ms_matrix;
+    lps = cat(3, lps, curr_hier.leaves_part);
+end
+pareto_n_cands = loadvar(fullfile(mcg_root, 'datasets', 'models', 'scg_pareto_point_train2012.mat'),'n_cands');
+[f_lp,f_ms,cands,start_ths,end_ths] = full_cands_from_hiers(lps,ms,ths,pareto_n_cands);
+
+% leaves_num = max(max(f_lp));
+% f_ms(f_ms > leaves_num) = f_ms(f_ms > leaves_num) - double(leaves_num);
+% cands(cands > leaves_num) = cands(cands > leaves_num) - double(leaves_num);
+% start_ths = start_ths(leaves_num+1:end);
+% end_ths = end_ths(leaves_num+1:end);
+
 % if ~isempty(f_ms)
 %     [cands_hf, cands_comp] = hole_filling(double(f_lp), double(f_ms), cands); %#ok<NASGU>
 % else
 %     cands_hf = cands;
 %     cands_comp = cands; %#ok<NASGU>
 % end
-% cands = cands_hf;
-% leaves_num = max(max(f_lp));
-% f_ms(1:leaves_num,:) = [];
-% f_ms = f_ms - double(leaves_num);
-% cands(cands > 0) = cands(cands > 0) - double(leaves_num);
-% start_ths(1:leaves_num) = [];
-% end_ths(1:leaves_num) = [];
-% parent_col = size(f_ms,2);
-% ms_struct(size(f_ms,1)) = struct('parent',[],'children',[]);
-% for i = 1:size(f_ms,1)
-%     ms_struct(i).parent = f_ms(i,parent_col);
-%     children = f_ms(i,1:parent_col-1);
-%     ms_struct(i).children = children(children ~= 0);
-% end
-% 
-% b_feats = compute_base_features(f_lp, f_ms, ucm);
-% b_feats.start_ths = start_ths;
-% b_feats.end_ths   = end_ths;
-% b_feats.im_size   = size(f_lp);
-% 
-% % Level of overlap to erase duplicates
-% J_th = 0.95;
-% % Filter by overlap
-% red_cands = mex_fast_reduction(cands-1,b_feats.areas,b_feats.intersections,J_th);
-% 
-% hier.leaves_part = f_lp;
-% hier.ms_struct = ms_struct;
-% hier.start_ths = start_ths;
-% hier.end_ths = end_ths;
-% hier.cands = red_cands;
+% cands = cands_hf;                       % Just the proposals with holes filled
+
+
+
+b_feats = compute_base_features(f_lp, f_ms, ucm);
+b_feats.start_ths = start_ths;
+b_feats.end_ths   = end_ths;
+b_feats.im_size   = size(f_lp);
+
+J_th = 0.95;
+% Filter by overlap
+red_cands = mex_fast_reduction(cands-1,b_feats.areas,b_feats.intersections,J_th);
+
+% Compute full features on reduced cands
+[feats, ~] = compute_full_features(red_cands,b_feats);
+
+% Rank proposals
+rf_regressor = loadvar(fullfile(mcg_root, 'datasets', 'models', 'mcg_rand_forest_train2012.mat'),'rf');
+class_scores = regRF_predict(feats,rf_regressor);
+[scores, ids] = sort(class_scores,'descend');
+cand_sum = min(1000,length(ids));
+red_cands = red_cands(ids(1:cand_sum),:);
+% bboxes = bboxes(ids(1:cand_sum),:);
+scores = scores(1:cand_sum);
+if isrow(scores)
+    scores = scores';
+end
+
+leaves_num = max(max(f_lp));
+f_ms = f_ms(leaves_num + 1:end,:);
+f_ms(f_ms > leaves_num) = f_ms(f_ms > leaves_num) - double(leaves_num);
+red_cands(red_cands > leaves_num) = red_cands(red_cands > leaves_num) - double(leaves_num);
+
+hier.b_feats = b_feats;
+hier.leaves_part = f_lp;
+hier.ms_matrix = f_ms;
+hier.cands = red_cands;
+% hier.boxes = bboxes;
+hier.scores = scores;
