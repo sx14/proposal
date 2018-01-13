@@ -5,12 +5,6 @@
 function [hier, ucm] = get_hier(im1, flow)
 % Load pre-trained Structured Forest model
 sf_model = loadvar(fullfile(mcg_root, 'datasets', 'models', 'sf_modelFinal.mat'),'model');
-% If the image is very big, to avoid running out of memory,
-% we force 'fast', which does not upsample the image
-% if size(image,1)*size(image,2)>2.5e6 % 2.5 megapixel
-%     warning(['The image you are trying to segment using MCG might need too much memory because of its size (' num2str(size(image,1)) ',' num2str(size(image,2)) '). If you still want to try, comment lines 62-65 in im2mcg.m'])
-% end
-
 scales = 1;
 [~,ucm,~] = img2ucms(im1, sf_model, scales);
 ucm = ucm - 0.1;
@@ -43,13 +37,13 @@ pareto_n_cands = loadvar(fullfile(mcg_root, 'datasets', 'models', 'scg_pareto_po
 % start_ths = start_ths(leaves_num+1:end);
 % end_ths = end_ths(leaves_num+1:end);
 
-if ~isempty(f_ms)
-    [cands_hf, cands_comp] = hole_filling(double(f_lp), double(f_ms), cands); %#ok<NASGU>
-else
-    cands_hf = cands;
-    cands_comp = cands; %#ok<NASGU>
-end
-cands = cands_hf;                       % Just the proposals with holes filled
+% if ~isempty(f_ms)
+%     [cands_hf, cands_comp] = hole_filling(double(f_lp), double(f_ms), cands); %#ok<NASGU>
+% else
+%     cands_hf = cands;
+%     cands_comp = cands; %#ok<NASGU>
+% end
+% cands = cands_hf;                       % Just the proposals with holes filled
 
 
 
@@ -63,7 +57,7 @@ J_th = 0.95;
 red_cands = mex_fast_reduction(cands-1,b_feats.areas,b_feats.intersections,J_th);
 
 % Compute full features on reduced cands
-[feats, bboxes] = compute_full_features(red_cands,b_feats);
+[feats, ~] = compute_full_features(red_cands,b_feats);
 
 % Rank proposals
 rf_regressor = loadvar(fullfile(mcg_root, 'datasets', 'models', 'mcg_rand_forest_train2012.mat'),'rf');
@@ -71,7 +65,7 @@ class_scores = regRF_predict(feats,rf_regressor);
 [scores, ids] = sort(class_scores,'descend');
 cand_sum = min(1000,length(ids));
 red_cands = red_cands(ids(1:cand_sum),:);
-bboxes = bboxes(ids(1:cand_sum),:);
+% bboxes = bboxes(ids(1:cand_sum),:);
 scores = scores(1:cand_sum);
 if isrow(scores)
     scores = scores';
@@ -86,5 +80,5 @@ hier.b_feats = b_feats;
 hier.leaves_part = f_lp;
 hier.ms_matrix = f_ms;
 hier.cands = red_cands;
-hier.boxes = bboxes;
+% hier.boxes = bboxes;
 hier.scores = scores;

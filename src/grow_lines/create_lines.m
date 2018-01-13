@@ -7,10 +7,7 @@ function [net,sp_boxes_set,adjacent_sp_mats,sp_boundary_connectivity_set,sp_flow
 start_frame = 1;
 end_frame = length(hier_set);
 frame_sum = end_frame - start_frame + 1;    % 帧数
-hier0 = hier_set{1};
-hier0_ms_mat = hier0.ms_matrix;
-sp_sum = hier0_ms_mat(end);
-net = zeros(sp_sum * 2,frame_sum,3);        % 记录每一帧每一个sp属于哪个串
+net = zeros(1500,frame_sum,3);        % 记录每一帧每一个sp属于哪个串
 adjacent_sp_mats = cell(frame_sum,1);       % 保留所有超像素相邻关系
 sp_boxes_set = cell(frame_sum,1);
 sp_flow_sum_set = cell(frame_sum,1);

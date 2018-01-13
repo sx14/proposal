@@ -1,5 +1,5 @@
-function [proposals, proposal_info] = cands_to_proposals(hiers,cands,sp_boxes_set,sp_flow_info_set,line_frame_sp_mat,cand_info,video_dir,org_height, org_width)
-all_scores = get_cand_scores(hiers, cands, line_frame_sp_mat,cand_info,sp_flow_info_set);
+function [proposals, proposal_info] = cands_to_proposals(hiers,cands,sp_boxes_set,sp_flow_info_set,sp_boundary_connectivity_set,line_frame_sp_mat,cand_info,video_dir,org_height, org_width)
+all_scores = get_cand_scores(hiers, cands, line_frame_sp_mat,cand_info,sp_flow_info_set,sp_boundary_connectivity_set);
 one_two_sum = length(find(cand_info(:,5) < 3));
 scores_part1 = all_scores(1:one_two_sum);
 scores_part2 = all_scores(one_two_sum+1:end);

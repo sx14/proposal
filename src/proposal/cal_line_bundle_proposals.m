@@ -1,22 +1,21 @@
 function proposals = cal_line_bundle_proposals(hier_set,sp_frame_line,all_line_info)
-tic;
-proposal_sum = 1000;
+proposal_max = 1000;
 frame_sum = length(hier_set);
-operate_pool = zeros(proposal_sum,frame_sum,20);
-operate_cand_scores = zeros(proposal_sum,1);
-operate_cand_info = zeros(proposal_sum,2); % start_frame,end_frame
-operate_cand_boxes = zeros(proposal_sum,frame_sum,4);
-finish_pool = zeros(proposal_sum,frame_sum,20);
-finish_cand_scores = zeros(proposal_sum+1,1);
-finish_cand_info = zeros(proposal_sum,2);  % start_frame,end_frame
-finish_cand_boxes = zeros(proposal_sum,frame_sum,4);
+operate_pool = zeros(proposal_max,frame_sum,20);
+operate_cand_scores = zeros(proposal_max,1);
+operate_cand_info = zeros(proposal_max,2); % start_frame,end_frame
+operate_cand_boxes = zeros(proposal_max,frame_sum,4);
+finish_pool = zeros(proposal_max,frame_sum,20);
+finish_cand_scores = zeros(proposal_max+1,1);
+finish_cand_info = zeros(proposal_max,2);  % start_frame,end_frame
+finish_cand_boxes = zeros(proposal_max,frame_sum,4);
 finish_cand_counter = 0;
 for f = 1:frame_sum     % each frame
     disp(f);
     hier = hier_set{f};
     img_pros = hier.cands;
-    operate_hit_length = zeros(proposal_sum,1);
-    operate_hit_img_pro_id = zeros(proposal_sum,1);
+    operate_hit_length = zeros(proposal_max,1);
+    operate_hit_img_pro_id = zeros(proposal_max,1);
     if f == 1                       % initiate operate pool
         for i = 1:size(img_pros,1)  % each image proposal
             img_pro_sps = img_pros(i,:);
@@ -78,7 +77,7 @@ for f = 1:frame_sum     % each frame
     end
 end
 % TODO:put all operating cand into finish pool
-toc;
+
 [~,finish_pool_rank] = sort(finish_cand_scores);
 proposals = pool2proposals(finish_pool(finish_pool_rank));
 end
