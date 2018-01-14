@@ -31,7 +31,7 @@ function [long_line_info,new_line_labels,long_line_frame_sp_mat] = filter_cand_l
     long_line_length_ratio = 0.15;
     min_line_length = round(video_length * long_line_length_ratio);
     min_line_length = min(min_line_length,25);
-    long_line_info = line_info(line_info(:,4) >= min_line_length,:); % 消去长度小于10的串
+    long_line_info = line_info(line_info(:,4) >= min_line_length,:);
     long_line_frame_sp_mat = long_line_frame_sp_mat(line_info(:,4) >= min_line_length,:);
     new_line_labels(:) = 0;
     for i = 1:size(long_line_info,1)

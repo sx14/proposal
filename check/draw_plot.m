@@ -1,5 +1,5 @@
 clear;clc;close all;
-ours_output_path = '/home/sunx/output/ours/result';
+ours_output_path = '/home/sunx/output/ours_version1/result';
 vmcg_output_path = '/home/sunx/output/VMCG/result';
 veb_output_path = '/home/sunx/output/VEB/result';
 video_list_file = load('video_list.mat');

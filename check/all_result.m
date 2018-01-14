@@ -1,5 +1,5 @@
 clear;clc;close all;
-output_path = '/home/sunx/output/ours/result';
+output_path = '/home/sunx/output/ours_version1/result';
 all_results = dir(fullfile(output_path,'*.mat'));
 avg_result = zeros(10,3);
 for i = 1:length(all_results)

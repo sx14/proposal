@@ -3,5 +3,6 @@ hier/
 *.jpg
 *.png
 *.txt
-*.mat
+models/
+compare_result/
 *.JPEG
