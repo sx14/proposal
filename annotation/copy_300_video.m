@@ -21,18 +21,16 @@ for i = 1:size(video_list,1)
             finished = true;
         end
     end
-    output_video_package_path = fullfile(output_video_path,package_dir);
-    output_annotation_package_path = fullfile(output_annotation_path,package_dir);
     org_annotation = fullfile(org_annotation_path,package_dir,video_dir);
     output_annotation = fullfile(output_annotation_path,video_dir);
     if finished == false
         org_video = fullfile(org_video_path,package_dir,video_dir);
-        continue;
     else
         org_video = fullfile(org_video_path1,video_dir);
         disp(video_dir);
+        continue;
     end
     output_video = fullfile(output_video_path,video_dir);
     copyfile(org_video,output_video);
-%     copyfile(org_annotation,output_annotation);
+    copyfile(org_annotation,output_annotation);
 end
