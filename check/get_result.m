@@ -7,7 +7,7 @@ end
 result_path = fullfile(output_path, result_dir);
 result_file_name = [video_dir '.mat'];
 [ground_truth_info, annotations] = annotation_xml_2_struct(annotation_path);
-if ~exist(fullfile(result_path, result_file_name),'file') || re_cal == true  % not done
+if ~exist(fullfile(result_path, result_file_name),'file') || re_cal == true
     [recall,smT_IoU,hit] = cal_recall(ground_truth_info, annotations, proposals);
     output_info = sprintf('Recall: %.2f%% smT_IoU: %.2f%% object_sum: %d candidate_sum: %d', recall * 100, smT_IoU * 100, size(hit,1),size(proposals,1));
     disp(output_info);
