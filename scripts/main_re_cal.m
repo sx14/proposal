@@ -1,6 +1,6 @@
 clear;clc;close all;
 video_base_path = '/media/sunx/Data/ImageNet/train';
-output_path = '/home/sunx/output/ours';
+output_path = '/home/sunx/output/ours_version2';
 annotation_base_path = '/media/sunx/Data/ImageNet/Annotations';
 mid_result_path = '/media/sunx/Data/ImageNet/mid_result';
 all_results = dir(fullfile(output_path,'result','*.mat'));

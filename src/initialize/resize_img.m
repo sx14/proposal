@@ -38,7 +38,7 @@ else
     end
     num1=num2str(0,'%06d');
     img_name = [num1,'.',suffix];
-    I = imread(fullfile(video_resize_path,img_name)); % orginal image
+    I = imread(fullfile(video_path,img_name)); % orginal image
     org_height = size(I, 1);
     org_width = size(I, 2);
     disp('resize_img finished before.');

@@ -1,19 +1,23 @@
 function [proposals, proposal_info] = cands_to_proposals(hiers,cands,sp_boxes_set,sp_flow_info_set,sp_boundary_connectivity_set,line_frame_sp_mat,cand_info,video_dir,org_height, org_width)
 all_scores = get_cand_scores(hiers, cands, line_frame_sp_mat,cand_info,sp_flow_info_set,sp_boundary_connectivity_set);
-one_two_sum = length(find(cand_info(:,5) < 3));
-scores_part1 = all_scores(1:one_two_sum);
-scores_part2 = all_scores(one_two_sum+1:end);
-[~,ids1] = sort(scores_part1,'descend');
-[~,ids2] = sort(scores_part2,'descend');
-one_two_cand_top_sum = floor(0.8*one_two_sum);      % 一二组合取前60%
-if one_two_cand_top_sum < 200                       % 若前60%不足100个，则取全部
-    one_two_cand_top_sum = one_two_sum;
-end
-one_two_cand_sum = min(one_two_cand_top_sum,300);   % 不多于300
-ids1 = ids1(1:one_two_cand_sum);
-ids = [ids1;ids2];
-last_one = min(size(ids,1),1000);                   % proposal sum
-selected_cands = cands(ids(1:last_one),:);          % sort cands
+[~,ids] = sort(all_scores,'descend');
+last_one = min(size(ids,1),1000);
+selected_cands = cands(ids(1:last_one),:);
+% ======= one two combination first =======
+% one_two_sum = length(find(cand_info(:,5) < 3));
+% scores_part1 = all_scores(1:one_two_sum);
+% scores_part2 = all_scores(one_two_sum+1:end);
+% [~,ids1] = sort(scores_part1,'descend');
+% [~,ids2] = sort(scores_part2,'descend');
+% one_two_cand_top_sum = floor(0.8*one_two_sum);      % 一二组合取前60%
+% if one_two_cand_top_sum < 200                       % 若前60%不足100个，则取全部
+%     one_two_cand_top_sum = one_two_sum;
+% end
+% one_two_cand_sum = min(one_two_cand_top_sum,300);   % 不多于300
+% ids1 = ids1(1:one_two_cand_sum);
+% ids = [ids1;ids2];
+% last_one = min(size(ids,1),1000);                   % proposal sum
+% selected_cands = cands(ids(1:last_one),:);          % sort cands
 % ======== no score ========
 % ids = [ids1;ids2];
 % last_one = size(ids,1);

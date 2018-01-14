@@ -22,7 +22,7 @@ for i = 1:size(annotation_info,1)
     end
 end
 
-video_list_good = cell(300,1);
+video_list_good = cell(1000,1);
 video_name_list = '';
 index = 0;
 for i = 1:size(temp_annotations,1) - 2
@@ -31,7 +31,7 @@ for i = 1:size(temp_annotations,1) - 2
         video = annotations{1,j};
         if ~isempty(video)
             mid_ratio = video.mid_obj_num / video.obj_num;
-            if mid_ratio > 0.5
+            if  mid_ratio > 0.7 || video.mid_obj_num > 8
                 continue;
             else
                 index = index + 1;
