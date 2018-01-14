@@ -50,23 +50,15 @@ labels = labels';
 hierarchy.ucm2 = ucm2;
 hierarchy.leaves_part = labels(2:2:end, 2:2:end);
 leaves_flow_temp = zeros(max(max(hierarchy.leaves_part)),2);
-% leaves_flow_temp = zeros(max(max(hierarchy.leaves_part)),3);
 for i = 1:size(hierarchy.leaves_part,1)
     for j = 1:size(hierarchy.leaves_part,2)
         f1 = flow(i,j,1);
         f2 = flow(i,j,2);
         label = hierarchy.leaves_part(i,j);
-%         leaves_flow_temp(label,1) = leaves_flow_temp(label,1) + f1;
-%         leaves_flow_temp(label,2) = leaves_flow_temp(label,2) + f2;
-%         leaves_flow_temp(label,3) = leaves_flow_temp(label,3) + 1;
         leaves_flow_temp(label,1) = leaves_flow_temp(label,1) + (f1*f1 + f2*f2)^0.5;
         leaves_flow_temp(label,2) = leaves_flow_temp(label,2) + 1;
     end
 end
-
-% leaves_flow = zeros(size(leaves_flow_temp,1),2);
-% leaves_flow(:,1) = leaves_flow_temp(:,1) ./ leaves_flow_temp(:,3);
-% leaves_flow(:,2) = leaves_flow_temp(:,2) ./ leaves_flow_temp(:,3);
 
 leaves_flow = leaves_flow_temp(:,1) ./ leaves_flow_temp(:,2);
 
