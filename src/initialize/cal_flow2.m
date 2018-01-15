@@ -7,7 +7,7 @@ if ~exist(video_flow_path,'dir')
     mkdir(fullfile(mid_result_path,flow_dir_name), video_dir);
 end
 flow_set = cell(length(resized_imgs),1);
-if ~exist(fullfile(video_path, flow_dir_name,'finish'),'file') || re_cal == 1 % cal
+if ~exist(fullfile(video_flow_path,'finish'),'file') || re_cal == 1 % cal
     start_one = 0;
     last_one = length(resized_imgs) - 1;
     for i = last_one:-1:start_one
