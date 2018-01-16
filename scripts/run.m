@@ -13,7 +13,7 @@ if exist(fullfile(video_path),'dir')    % validate video path
     [org_height, org_width, resized_imgs] = resize_img(video_package_path,video_dir,mid_result_path,0);
     flow_set = cal_flow(video_package_path,video_dir,mid_result_path,resized_imgs,0);
     flow2_set = cal_flow2(video_package_path,video_dir,mid_result_path,resized_imgs,0);
-    hier_set = cal_hier(video_package_path,video_dir,mid_result_path,flow_set, resized_imgs, 0);
+    hier_set = cal_hier(video_package_path,video_dir,mid_result_path,flow_set, resized_imgs, 1);
 %     entrance
     proposals = get_proposals(video_dir,output_path,org_height,org_width,hier_set,flow_set,flow2_set,resized_imgs,re_cal);
 %     calculate result

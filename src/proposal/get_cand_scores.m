@@ -37,11 +37,11 @@ end
 
 scores = sort(scores,2,'descend');
 avg_scores = zeros(size(cand_info,1),1);
-long_line_length_ths = floor(length(hiers) * 0.8);
-long_line_ths_array = zeros(size(avg_scores));
-long_line_ths_array(:) = long_line_length_ths;
-[top_k,~] = min([cand_info(:,4) long_line_ths_array],[],2);
-% top_k = floor(cand_info(:,4) * 0.9);
+% long_line_length_ths = floor(length(hiers) * 0.8);
+% long_line_ths_array = zeros(size(avg_scores));
+% long_line_ths_array(:) = long_line_length_ths;
+% [top_k,~] = min([cand_info(:,4) long_line_ths_array],[],2);
+top_k = floor(cand_info(:,4) * 0.9);
 for i = 1:size(scores,1)
     score_sum = sum(scores(i,1:top_k(i)));
     avg_scores(i) = score_sum / top_k(i);
