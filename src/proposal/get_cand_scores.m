@@ -41,31 +41,13 @@ avg_scores = zeros(size(cand_info,1),1);
 % long_line_ths_array = zeros(size(avg_scores));
 % long_line_ths_array(:) = long_line_length_ths;
 % [top_k,~] = min([cand_info(:,4) long_line_ths_array],[],2);
-top_k = floor(cand_info(:,4) * 0.9);
+top_k = floor(cand_info(:,4));
 for i = 1:size(scores,1)
     score_sum = sum(scores(i,1:top_k(i)));
     avg_scores(i) = score_sum / top_k(i);
 end
-
-
-% avg_scores = zeros(size(cand_info,1),1);
-% for i = 1:size(cand_info,1)
-%     c_length = cand_info(i,4);
-%     weights = zeros(c_length,1);
-%     mid = floor((c_length + 1) / 2);
-%     weights(1:mid,1) = mid;
-%     if mod(c_length,2) == 0
-%         weights(mid+1:end,1) = mid - 1 : -1 : 0;
-%     else
-%         weights(mid:end,1) = mid - 1 : -1 : 0;
-%     end
-%     cand_scores = scores(i,1:c_length);
-%     s = sum(cand_scores' .* weights) / sum(weights);
-%     avg_scores(i,1) = s;
-% end
-
-% avg_scores = sum(scores,2) ./ cand_info(:,4);
-
+% life_cand_scores = cand_info(:,4) / double(length(hiers));
+% avg_scores = avg_scores * 0.8 + life_cand_scores * 0.2;
 
 
 function [sp_cand,indexes] = get_sp_cand(cands,line_frame_sp_mat,frame)

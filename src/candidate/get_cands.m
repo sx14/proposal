@@ -24,6 +24,7 @@ if ~isempty(two_line_cands)
     cand_info = cat(1,cand_info,two_line_cand_info);
 end
 three_line_cand_sum = long_line_sum * (long_line_sum - 1) * (long_line_sum - 2) / 3*2*1;
+three_line_cand_sum = min((10000-size(cand_info,1)), three_line_cand_sum);
 three_line_cands = zeros(three_line_cand_sum,4);                            % 三三无重复组合作为candidate
 three_line_cand_counter = 0;
 for i = 1:long_line_sum - 2
@@ -44,9 +45,14 @@ for i = 1:long_line_sum - 2
             end
             if adjacent_counter > 1 && ~contain_background(long_line_info, [i;j;k])% 三个长串有两组相邻即可组合
                 three_line_cand_counter = three_line_cand_counter + 1;
-                three_line_cands(three_line_cand_counter,1) = i;
-                three_line_cands(three_line_cand_counter,2) = j;
-                three_line_cands(three_line_cand_counter,3) = k;
+                if three_line_cand_counter <= three_line_cand_sum
+                    three_line_cands(three_line_cand_counter,1) = i;
+                    three_line_cands(three_line_cand_counter,2) = j;
+                    three_line_cands(three_line_cand_counter,3) = k;
+                else
+                    three_line_cand_counter = three_line_cand_sum;
+                    break;
+                end
             end
         end
     end
@@ -58,7 +64,7 @@ if ~isempty(three_line_cands)
 end
 
 four_line_cand_sum = long_line_sum * (long_line_sum - 1) * (long_line_sum - 2) * (long_line_sum - 3) / 4*3*2*1;
-four_line_cand_sum = min((15000-size(cand_info,1)), four_line_cand_sum);
+four_line_cand_sum = min((10000-size(cand_info,1)), four_line_cand_sum);
 four_line_cands = zeros(four_line_cand_sum,4);    % 四四无重复组合作为candidate
 four_line_cand_counter = 0;
 for i = 1:long_line_sum - 3
