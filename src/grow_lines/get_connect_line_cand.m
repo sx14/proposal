@@ -1,5 +1,5 @@
 function line_connect_mat = connect_lines(sp_boxes_set, sp_lab_hist_set, line_frame_sp_mat,line_info)
-line_interval_mat = get_line_interval(line_info);
+line_interval_mat = get_line_interval(line_info,3);
 line_space_distance_mat = zeros(size(line_interval_mat));
 line_color_distance_mat = zeros(size(line_interval_mat));
 line_area_ratio_mat = zeros(size(line_interval_mat));

@@ -58,7 +58,7 @@ function [line_info,line_frame_sp_mat,new_line_labels] = connect_lines(line_info
         new_line_info(i,1) = connect_line_label;
         new_line_info(i,2) = start_frame;
         new_line_info(i,3) = end_frame;
-        new_line_info(i,4) = end_frame - start_frame;
+        new_line_info(i,4) = end_frame - start_frame + 1;
         new_line_info(i,5) = boundary_connectivity;
     end
     line_info = cat(1,line_info,new_line_info);

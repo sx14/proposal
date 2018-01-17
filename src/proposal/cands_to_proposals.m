@@ -1,19 +1,19 @@
-function [proposals, proposal_info] = cands_to_proposals(hiers,cands,sp_boxes_set,sp_flow_info_set,line_frame_sp_mat,cand_info,video_dir,org_height, org_width,long_line_length_ratio)
+function proposals = cands_to_proposals(hiers,cands,sp_boxes_set,sp_flow_info_set,line_frame_sp_mat,cand_info,video_dir,resized_imgs)
 all_scores = get_cand_scores(hiers, cands, line_frame_sp_mat,cand_info,sp_flow_info_set);
 one_two_sum = length(find(cand_info(:,5) < 3));
 scores_part1 = all_scores(1:one_two_sum);
 scores_part2 = all_scores(one_two_sum+1:end);
+scores = [scores_part1;scores_part2];
 [~,ids1] = sort(scores_part1,'descend');
 [~,ids2] = sort(scores_part2,'descend');
-one_two_cand_top_sum = floor(0.8*one_two_sum);      % 一二组合取前60%
-if one_two_cand_top_sum < 200                       % 若前60%不足100个，则取全部
-    one_two_cand_top_sum = one_two_sum;
-end
+ids2 = ids2 + one_two_sum;
+one_two_cand_top_sum = floor(0.8*one_two_sum);      % 一二组合取前80%
 one_two_cand_sum = min(one_two_cand_top_sum,300);   % 不多于300
 ids1 = ids1(1:one_two_cand_sum);
 ids = [ids1;ids2];
 last_one = min(size(ids,1),1000);                   % proposal sum
-selected_cands = cands(ids(1:last_one),:);          % sort cands
+selected_cands = cands(ids(1:last_one),:);          % sorted cands
+selected_cand_scores = scores(ids(1:last_one));
 % ======== no score ========
 % ids = [ids1;ids2];
 % last_one = size(ids,1);
@@ -21,11 +21,7 @@ selected_cands = cands(ids(1:last_one),:);          % sort cands
 % ======== no score ========
 proposals = cell(last_one,1);
 proposal_info = cand_info(ids(1:last_one),:);
-resized_leaves_part = hiers{1}.leaves_part;
-resized_long_edge = max(size(resized_leaves_part));
-org_long_edge = max(org_width,org_height);
-resize_ratio = org_long_edge / resized_long_edge;
-for i = 1:last_one  % 为每一个proposal提取box
+for i = 1:last_one      % generate boxes for each proposal
     cand_lines = selected_cands(i,:);
     cand_lines = cand_lines(cand_lines > 0);
     start_frame = proposal_info(i,2);
@@ -43,10 +39,10 @@ for i = 1:last_one  % 为每一个proposal提取box
         all_min_x = cand_sps_boxes(:,2);
         all_max_y = cand_sps_boxes(:,3);
         all_min_y = cand_sps_boxes(:,4);
-        cand_max_x = round(max(all_max_x) * resize_ratio);
-        cand_min_x = round(min(all_min_x) * resize_ratio);
-        cand_max_y = round(max(all_max_y) * resize_ratio);
-        cand_min_y = round(min(all_min_y) * resize_ratio);
+        cand_max_x = max(all_max_x);
+        cand_min_x = min(all_min_x);
+        cand_max_y = max(all_max_y);
+        cand_min_y = min(all_min_y);
         boxes(f,:) = [cand_max_x,cand_min_x,cand_max_y,cand_min_y];
     end
     proposal.cand_id = ids(i);
@@ -54,5 +50,13 @@ for i = 1:last_one  % 为每一个proposal提取box
     proposal.end_frame = end_frame;
     proposal.boxes = boxes;
     proposal.video = video_dir;
+    proposal.score = selected_cand_scores(i);
     proposals{i} = proposal;
 end
+% =========== connect short proposals ============
+% proposals_part1 = proposals(1:one_two_sum);
+% proposals_part2 = proposals(one_two_sum+1:end);
+% proposals_part2_info = proposal_info(one_two_sum+1:end,:);
+% connect_proposal_cands = get_connect_proposal_cand(proposals_part2,proposals_part2_info,resized_imgs);
+% proposals_part2 = connect_proposals(proposals,connect_proposal_cands,length(hiers),1000-one_two_sum);
+% proposals = [proposals_part1,proposals_part2];

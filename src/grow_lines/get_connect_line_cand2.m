@@ -1,5 +1,5 @@
-function line_connect_mat = connect_lines_by_tracking(sp_boxes_set,line_frame_sp_mat,line_info,resized_imgs)
-line_interval_mat = get_line_interval(line_info);
+function line_connect_mat = get_connect_line_cand2(sp_boxes_set,line_frame_sp_mat,line_info,resized_imgs)
+line_interval_mat = get_line_interval(line_info,3);
 line_connect_mat = zeros(size(line_interval_mat));
 [first,second,~] = find(line_interval_mat > 0);
 for i = 1:length(first)
@@ -50,27 +50,3 @@ if intersection_box_width > 0 && intersection_box_height > 0
 else  
     iou = 0;
 end
-
-
-
-
-% function color_distance = cal_lab_color_distance(color1, color2)
-% diff = color1 - color2;
-% square = diff .* diff;
-% color_distance = sqrt(sum(square));
-% 
-% function space_distance = cal_space_distance(box1, box2)
-% mid_x_1 = floor((box1(1) + box1(2)) / 2);
-% mid_y_1 = floor((box1(3) + box1(4)) / 2);
-% mid_x_2 = floor((box2(1) + box2(2)) / 2);
-% mid_y_2 = floor((box2(3) + box2(4)) / 2);
-% mid_1 = [mid_x_1 , mid_y_1];
-% mid_2 = [mid_x_2 , mid_y_2];
-% diff = mid_1 - mid_2;
-% square = diff .* diff;
-% space_distance = sqrt(sum(square));
-% 
-% function area_ratio = cal_area_ratio(box1,box2)
-% area1 = (box1(1) - box1(2)) * (box1(3) - box1(4));
-% area2 = (box2(1) - box2(2)) * (box2(3) - box2(4));
-% area_ratio = max(area1,area2) / min(area1,area2);
