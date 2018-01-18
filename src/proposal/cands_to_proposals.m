@@ -1,4 +1,4 @@
-function proposals = cands_to_proposals(hiers,cands,sp_boxes_set,sp_flow_info_set,line_frame_sp_mat,cand_info,video_dir,resized_imgs)
+function proposals = cands_to_proposals(hiers,cands,sp_boxes_set,sp_flow_info_set,line_frame_sp_mat,cand_info,video_dir)
 all_scores = get_cand_scores(hiers, cands, line_frame_sp_mat,cand_info,sp_flow_info_set);
 one_two_sum = length(find(cand_info(:,5) < 3));
 scores_part1 = all_scores(1:one_two_sum);
@@ -15,11 +15,14 @@ last_one = min(size(ids,1),1000);                   % proposal sum
 selected_cands = cands(ids(1:last_one),:);          % sorted cands
 selected_cand_scores = scores(ids(1:last_one));
 % ======== no score ========
-% ids = [ids1;ids2];
-% last_one = size(ids,1);
-% selected_cands = cands(ids(1:last_one),:);
+% last_one = size(cands,1);
+% ids = 1:last_one;
+% selected_cands = cands;
+% selected_cand_scores = zeros(size(cands,1),1);
 % ======== no score ========
 proposals = cell(last_one,1);
+masks = cell(length(hiers),1);
+masks(:) = zeros(last_one,size(hiers{1}.leaves_part,1),size(hiers{1}.leaves_part,2));
 proposal_info = cand_info(ids(1:last_one),:);
 for i = 1:last_one      % generate boxes for each proposal
     cand_lines = selected_cands(i,:);
@@ -45,7 +48,7 @@ for i = 1:last_one      % generate boxes for each proposal
         cand_min_y = min(all_min_y);
         boxes(f,:) = [cand_max_x,cand_min_x,cand_max_y,cand_min_y];
     end
-    proposal.cand_id = ids(i);
+    proposal.voxel_num = cand_info(ids(i),5);
     proposal.start_frame = start_frame;
     proposal.end_frame = end_frame;
     proposal.boxes = boxes;

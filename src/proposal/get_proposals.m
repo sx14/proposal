@@ -17,7 +17,7 @@ function proposals = get_proposals(video_dir, output_path, org_height, org_width
         % 连接断串，要修改：long_line_frame_sp_mat,long_line_info,new_line_labels
         long_line_adjacent_mat = cal_adjacent_line_2(net(:,:,1), long_line_info, adjacent_sp_mats, new_line_labels);
         [cands,cand_info] = get_cands(long_line_info,long_line_adjacent_mat);     % get candidates by grouping
-        proposals = cands_to_proposals(hier_set,cands,sp_boxes_set,sp_flow_info_set,long_line_frame_sp_mat,cand_info,video_dir,resized_imgs);
+        proposals = cands_to_proposals(hier_set,cands,sp_boxes_set,sp_flow_info_set,long_line_frame_sp_mat,cand_info,video_dir);
         [resized_height,resized_width] = size(hier_set{1}.leaves_part);
         proposals = resize_proposals(proposals,org_height,org_width,resized_height,resized_width);
         save(fullfile(proposal_path, proposal_file_name),'proposals');
