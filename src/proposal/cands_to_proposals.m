@@ -18,6 +18,7 @@ function proposals = cands_to_proposals(hiers,cands,sp_boxes_set,sp_flow_info_se
 last_one = size(cands,1);
 ids = 1:last_one;
 selected_cands = cands;
+selected_cand_scores = zeros(size(cands,1),1);
 % ======== no score ========
 proposals = cell(last_one,1);
 proposal_info = cand_info(ids(1:last_one),:);
@@ -45,7 +46,6 @@ for i = 1:last_one      % generate boxes for each proposal
         cand_min_y = min(all_min_y);
         boxes(f,:) = [cand_max_x,cand_min_x,cand_max_y,cand_min_y];
     end
-%     proposal.cand_id = ids(i);
     proposal.voxel_num = cand_info(ids(i),5);
     proposal.start_frame = start_frame;
     proposal.end_frame = end_frame;
