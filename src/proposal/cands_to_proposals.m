@@ -1,4 +1,4 @@
-function proposals = cands_to_proposals(hiers,cands,sp_boxes_set,sp_flow_info_set,line_frame_sp_mat,cand_info,video_dir,resized_imgs)
+function proposals = cands_to_proposals(hiers,cands,sp_boxes_set,sp_flow_info_set,line_frame_sp_mat,cand_info,video_dir)
 all_scores = get_cand_scores(hiers, cands, line_frame_sp_mat,cand_info,sp_flow_info_set);
 one_two_sum = length(find(cand_info(:,5) < 3));
 scores_part1 = all_scores(1:one_two_sum);
@@ -21,6 +21,8 @@ selected_cand_scores = scores(ids(1:last_one));
 % selected_cand_scores = zeros(size(cands,1),1);
 % ======== no score ========
 proposals = cell(last_one,1);
+masks = cell(length(hiers),1);
+masks(:) = zeros(last_one,size(hiers{1}.leaves_part,1),size(hiers{1}.leaves_part,2));
 proposal_info = cand_info(ids(1:last_one),:);
 for i = 1:last_one      % generate boxes for each proposal
     cand_lines = selected_cands(i,:);

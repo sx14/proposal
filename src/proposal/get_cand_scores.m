@@ -19,7 +19,6 @@ for f = 1:length(hiers)
         b_feats.end_ths   = [zeros(leave_sum,1);hier.end_ths]';
         b_feats.im_size   = size(f_lp);
     end
-    
     [sp_cand,indexes] = get_sp_cand(cands,line_frame_sp_mat,f);
     sp_cand(sp_cand > 0) = sp_cand(sp_cand > 0) + double(leave_sum);
     if ~isempty(f_ms)
@@ -27,27 +26,23 @@ for f = 1:length(hiers)
     else
         cands_hf = sp_cand;
     end
-    [feats, bboxes] = compute_full_features(cands_hf,b_feats);
+    [feats, ~] = compute_full_features(cands_hf,b_feats);
     sp_flow_info = sp_flow_info_set{f};
     cands_hf(cands_hf > 0) = cands_hf(cands_hf > 0) - double(leave_sum);
-    motion_cand_scores = get_motion_scores(cands_hf, sp_flow_info);
-    frame_cand_scores = regRF_predict(feats,rf_regressor);
-    scores(indexes,f) = frame_cand_scores * 0.7 + motion_cand_scores * 0.3;
+    cand_motion_scores = get_motion_scores(cands_hf, sp_flow_info);
+    cand_appearence_scores = regRF_predict(feats,rf_regressor);
+    max_appearence_score = max(1,max(cand_appearence_scores));
+    cand_appearence_scores = cand_appearence_scores / max_appearence_score;
+    scores(indexes,f) = cand_appearence_scores * 0.7 + cand_motion_scores * 0.3;
 end
 
 scores = sort(scores,2,'descend');
 avg_scores = zeros(size(cand_info,1),1);
-% long_line_length_ths = floor(length(hiers) * 0.8);
-% long_line_ths_array = zeros(size(avg_scores));
-% long_line_ths_array(:) = long_line_length_ths;
-% [top_k,~] = min([cand_info(:,4) long_line_ths_array],[],2);
-top_k = floor(cand_info(:,4));
+cand_length = floor(cand_info(:,4));
 for i = 1:size(scores,1)
-    score_sum = sum(scores(i,1:top_k(i)));
-    avg_scores(i) = score_sum / top_k(i);
+    score_sum = sum(scores(i,1:cand_length(i)));
+    avg_scores(i) = score_sum / cand_length(i);
 end
-% life_cand_scores = cand_info(:,4) / double(length(hiers));
-% avg_scores = avg_scores * 0.8 + life_cand_scores * 0.2;
 
 
 function [sp_cand,indexes] = get_sp_cand(cands,line_frame_sp_mat,frame)
