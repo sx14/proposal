@@ -1,8 +1,8 @@
 % 输入：当前帧数，现有的所有条；当前帧的hier；光流；上一帧的hier,光流
 % 返回：将当前帧连起来以后的所有条
-function [net,new_combine_mat] = grow_lines(frame, net, new_hier, new_flow2, last_hier, last_flow)
+function [net,new_combine_mat,sp_leaves_mat] = grow_lines(frame, net, new_hier, new_flow2, last_hier, last_flow)
 % ===== 当前帧的超像素组合矩阵（0/1）=====
-new_combine_mat = get_combine_mat(new_hier);
+[new_combine_mat,sp_leaves_mat] = get_combine_mat(new_hier);
 if nargin > 3   % 不是第一帧
     % ===== 前一帧的超像素组合矩阵（0/1） =====
     last_combine_mat = get_combine_mat(last_hier);
