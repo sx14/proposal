@@ -26,7 +26,7 @@ if nargin > 3   % 不是第一帧
     net = grow_curr_frame(net, last_2_new_match_sp_ratio,new_2_last_match_sp_ratio, frame);
 else    % 是第一帧
     % 将第一帧的所有超像素全部加入lines
-    all_level_sp_num = new_hier.ms_matrix(end);
+    all_level_sp_num = max(max(new_hier.leaves_part)) + size(new_hier.ms_matrix,1);
     net(1:all_level_sp_num,frame,1) = 1:all_level_sp_num; % 初始化第一帧的串号
     net(1:all_level_sp_num,frame,2) = 1;  % 初始化第一帧sp的匹配IOU为1
     net(1:all_level_sp_num,frame,3) = 1;  % 初始化第一帧的串的长度为1

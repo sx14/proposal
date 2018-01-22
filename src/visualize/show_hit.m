@@ -9,9 +9,6 @@ for f = 1:length(org_imgs)
     I = imresize(I,[org_height,org_width]);
     annotations_on_frame = ground_truth{f};
     for h = 1:ground_sum
-%         if h ~= 1
-%             continue;
-%         end
         annotation = annotations_on_frame(h);
         hit = all_hit(h,size(all_hit,2),:);
         if ~isempty(annotation.id)   % 第f帧上没有第h个标注物体

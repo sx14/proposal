@@ -30,7 +30,11 @@ else
         hier_name = [num,'.mat'];
         hier_path = fullfile(video_hier_path, hier_name);
         heir_file = load(hier_path);
-        hier_set{i+1} = heir_file.hier;
+        hier = heir_file.hier;
+        % ==== only leaves ====
+        hier.ms_matrix = zeros(0,3);
+        % ==== only leaves ====
+        hier_set{i+1} = hier;
     end
     disp('cal_hier finished before.');
 end

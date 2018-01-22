@@ -66,13 +66,13 @@ for j = 1:max_proposal_num             % 每一个候选轨迹
             T_IoU = hit_frame_sum / u_length;
             avg_IoU = hit_IoU_sum / hit_frame_sum;
             if hit(i,2) < T_IoU     % 更新最匹配的cand
-%                 hit(i,1) = j;
-                hit(i,1) = proposal.voxel_num;
+                hit(i,1) = j;
+%                 hit(i,1) = proposal.cand_id;
                 hit(i,2) = T_IoU;
                 hit(i,3) = avg_IoU;
             elseif hit(i,2) == T_IoU && avg_IoU > hit(i,3)
-%                 hit(i,1) = j;
-                hit(i,1) = proposal.voxel_num;
+                hit(i,1) = j;
+%                 hit(i,1) = proposal.cand_id;
                 hit(i,2) = T_IoU;
                 hit(i,3) = avg_IoU;
             end

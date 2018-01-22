@@ -6,7 +6,7 @@ function [adjacent_sp_mat,sp_boxes,sp_boundary_connectivity, sp_pixel_num] = cal
 [basic_adjacent_mat,basic_sp_boxes,basic_sp_boundary_pixel_num, basic_sp_pixel_num] = cal_adjacent_basic_sp(leaves_part); % 自己与自己不相邻
 sp_boxes = get_sp_boxes(basic_sp_boxes, conbine_mat);
 diag = eye(size(basic_adjacent_mat));
-basic_adjacent_mat = basic_adjacent_mat + diag; % 让自己与自己相邻
+basic_adjacent_mat = basic_adjacent_mat + diag;         % 让自己与自己相邻
 adjacent_sp_mat = conbine_mat * basic_adjacent_mat * conbine_mat';
 adjacent_sp_mat = adjacent_sp_mat & adjacent_sp_mat;    % 变为0/1矩阵
 % 消去组合后的超像素与自己的子超像素相邻

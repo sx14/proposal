@@ -25,7 +25,7 @@ for i = 1:size(match_ratio,1)
     if size(matched_cand_indexes,1) ~= 0                            % 存在已经被匹配过的sp
         for j = 1:size(matched_cand_indexes,1)  % 遍历每一个matched sp
             curr_length = lines(i,frame-1,3);   % frame-1第i个串的长度
-            matched_length = lines(matched_cand_indexes(j),frame,3) - 1;    % matched sp的串长度 - 1，即对应到第frame-1帧的长度
+            matched_length = lines(matched_cand_indexes(j),frame,3) - 1;    % matched sp的串长度-1，即对应到第frame-1帧的长度
             if curr_length > matched_length     % frame-1第i个串更长，直接抢过来
                 lines(matched_cand_indexes(j),frame,1) = lines(i,frame-1,1);
                 % 填匹配ratio时，考虑前后帧的ratio，这里填的是二者的平均值

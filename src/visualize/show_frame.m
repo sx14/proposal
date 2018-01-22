@@ -8,7 +8,6 @@ small_sp_sum = max(max(hier.leaves_part));
 color_line = show.color_line;   % 颜色索引串号
 line_color = show.line_color;   % 串号索引颜色
 length = net(:,frame,3);  % 当前帧上所有串的长度
-% long_line_index = find(length > floor(frame/2));    % 长度超过一半帧数的串的index(sp)
 long_line_index = find(length == 1);
 all_lines = net(:,frame,1);               % 当前帧上所有串号
 long_lines = all_lines(long_line_index');       % 当前帧上长串的串号
@@ -34,6 +33,7 @@ for i = 1:size(long_lines,1)
     end
     if color_index > 0 % 颜色分配成功
         sp = long_line_index(i);
+        disp(sp);
         mask = fill_color(sp, mask, color_line(color_index,1:3),hier, small_sp_sum);
         show.line_color = line_color;
         show.color_line = color_line;
@@ -51,9 +51,10 @@ end
 function mask = fill_color(sp, mask, color, hier, small_sp_sum)
 if sp > small_sp_sum    % 组合过的sp
     % 递归填充颜色
-    conbine = hier.ms_struct(sp-small_sp_sum);
-    for i = 1:size(conbine.children,2)
-        mask = fill_color(conbine.children(1,i),mask,color,hier, small_sp_sum);
+    conbine = hier.ms_matrix(sp-small_sp_sum,:);
+    children = conbine(1:length(conbine)-1);
+    for i = 1:size(children,2)
+        mask = fill_color(children(i),mask,color,hier, small_sp_sum);
     end
 else    % 未组合过的sp
     % 直接填充颜色
