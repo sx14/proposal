@@ -3,11 +3,11 @@ rf_regressor = loadvar(fullfile(root,'mcg', 'datasets', 'models', 'scg_rand_fore
 scores = zeros(size(cands,1),length(hiers));
 for f = 1:length(hiers)
     hier = hiers{f};
-    f_lp = hier.leaves_part;
+    f_lp = hier.org_leaves_part;
     leave_sum = max(max(f_lp));
-    zero_col_num = size(hier.ms_matrix,2) - 2;
+    zero_col_num = size(hier.org_ms_matrix,2) - 2;
     leaves_ms = [(1:leave_sum)',zeros(leave_sum,zero_col_num),((1:leave_sum)+leave_sum)'];
-    temp_ms = hier.ms_matrix;
+    temp_ms = hier.org_ms_matrix;
     temp_ms(temp_ms > 0) = temp_ms(temp_ms > 0) + double(leave_sum);
     f_ms = cat(1,leaves_ms,temp_ms);
     if isfield(hier,'b_feats')
@@ -19,7 +19,8 @@ for f = 1:length(hiers)
         b_feats.end_ths   = [zeros(leave_sum,1);hier.end_ths]';
         b_feats.im_size   = size(f_lp);
     end
-    [sp_cand,indexes] = get_sp_cand(cands,line_frame_sp_mat,f);
+    [new_sp_cand,indexes] = get_sp_cand(cands,line_frame_sp_mat,f);
+    sp_cand = get_org_sp_cands(new_sp_cand,hier.new_to_org);
     sp_cand(sp_cand > 0) = sp_cand(sp_cand > 0) + double(leave_sum);
     if ~isempty(f_ms)
         [cands_hf, ~] = hole_filling(double(f_lp), double(f_ms), sp_cand);
@@ -28,7 +29,8 @@ for f = 1:length(hiers)
     end
     [feats, ~] = compute_full_features(cands_hf,b_feats);
     sp_flow_info = sp_flow_info_set{f};
-    cands_hf(cands_hf > 0) = cands_hf(cands_hf > 0) - double(leave_sum);
+%     cands_hf(cands_hf > 0) = cands_hf(cands_hf > 0) - double(leave_sum);
+    cands_hf = new_sp_cand;
     cand_motion_scores = get_motion_scores(cands_hf, sp_flow_info);
     cand_appearence_scores = regRF_predict(feats,rf_regressor);
     max_appearence_score = max(1,max(cand_appearence_scores));
@@ -44,6 +46,14 @@ for i = 1:size(scores,1)
     avg_scores(i) = score_sum / cand_length(i);
 end
 
+function org_sp_cand = get_org_sp_cands(sp_cand,new_to_org)
+org_sp_cand = zeros(size(sp_cand));
+for i = 1:size(sp_cand,1)
+    sps = sp_cand(i,:);
+    sps = sps(sps > 0);
+    org_sps = new_to_org(sps);
+    org_sp_cand(i,1:length(org_sps)) = org_sps;
+end
 
 function [sp_cand,indexes] = get_sp_cand(cands,line_frame_sp_mat,frame)
 sp_cand = zeros(size(cands));

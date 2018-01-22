@@ -1,27 +1,21 @@
-function show_hier(mid_result_path,video_dir)
+function show_hier(video_package_path,mid_result_path,video_dir)
 % 测试
 % 假设：前后帧相同，光流全0
 % 预期：前后帧所有超像素全部成功连接，对应颜色相同
-video_resize_path = fullfile(mid_result_path,'resize',video_dir);
-video_hier_path = fullfile(mid_result_path,'hier',video_dir);
-imgs = dir(fullfile(video_resize_path,['*.', 'JPEG']));
-frame_sum = length(imgs);
+[~, ~, resized_imgs] = resize_img(video_package_path,video_dir,mid_result_path,0);
+flow_set = cal_flow(video_package_path,video_dir,mid_result_path,resized_imgs,0);
+hier_set = cal_hier(video_package_path,video_dir,mid_result_path,flow_set,resized_imgs, false);
+frame_sum = length(hier_set);
 net = zeros(800,frame_sum,3); 
-% for i = 0:frame_sum-1
-for i = 45:46
-    num1=num2str(i,'%06d');
-    img_name = [num1,['.','JPEG']];
-    I = imread(fullfile(video_resize_path,img_name));
-%     curr_flow = zeros(size(I,1), size(I,2),2);
-    hier_name = [num1,'.mat'];
-    curr_hier = load(fullfile(video_hier_path,hier_name));
-    curr_hier  = curr_hier.hier;
+for i = 1:2
+    I = resized_imgs{i};
+    curr_hier  = hier_set{i};
     show.image = I;
     show.color_line = init_color(512);
     show.line_color = zeros(6000,1);  
-    [net,~] = grow_lines(i+1, net ,curr_hier);
-    show_frame(show, net, curr_hier, i+1);
-    X = sprintf('Frame %d finished.',i);
+    [net,~] = grow_lines(i, net ,curr_hier);
+    show_frame(show, net, curr_hier, i);
+    X = sprintf('Frame %d finished.',i-1);
     disp(X)
     input('continue?');
     close all;

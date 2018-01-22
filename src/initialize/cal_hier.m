@@ -31,10 +31,53 @@ else
         hier_path = fullfile(video_hier_path, hier_name);
         heir_file = load(hier_path);
         hier = heir_file.hier;
-        % ==== only leaves ====
+        % ==== top leaves ====
+        [new_leaves,new_to_org] = get_top_level(hier);
+        hier.org_leaves_part = hier.leaves_part;
+        hier.leaves_part = new_leaves;
+        hier.new_to_org = new_to_org;
+        hier.org_ms_matrix = hier.ms_matrix;
         hier.ms_matrix = zeros(0,3);
-        % ==== only leaves ====
+        % ==== top leaves ====
         hier_set{i+1} = hier;
     end
     disp('cal_hier finished before.');
 end
+
+
+function [new_leaves,new_to_org] = get_top_level(hier)
+leaves = hier.leaves_part;
+ms_matrix = hier.ms_matrix;
+org_leave_sum = max(max(leaves));
+org_sp_sum = org_leave_sum + size(hier.ms_matrix,1);
+top_level_sp_sum = floor(org_leave_sum * 0.2);
+curr_leaf_sum = org_leave_sum;
+for i = 1:(org_sp_sum - org_leave_sum)
+    if curr_leaf_sum == top_level_sp_sum
+        break;
+    end
+    combine = ms_matrix(i,:);
+    parent = combine(end);
+    chidren = combine(1:end-1);
+    mask = ismember(leaves,chidren);
+    leaves(mask) = parent;
+    curr_leaf_sum = curr_leaf_sum - 1;
+end
+new_to_org = zeros(curr_leaf_sum,1);
+org_to_new = zeros(max(max(leaves)),1);
+next_leaf_label = 1;
+for i = 1:size(leaves,1)
+    for j = 1:size(leaves,2)
+        org_leaf = leaves(i,j);
+        new_leaf = org_to_new(org_leaf);
+        if  new_leaf == 0   % new leaf
+            org_to_new(org_leaf) = next_leaf_label;
+            new_to_org(next_leaf_label) = org_leaf;
+            leaves(i,j) = next_leaf_label;
+            next_leaf_label = next_leaf_label + 1;
+        else                % new leaf existed 
+            leaves(i,j) = new_leaf;
+        end
+    end
+end
+new_leaves = leaves;

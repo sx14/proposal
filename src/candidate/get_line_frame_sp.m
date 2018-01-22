@@ -19,3 +19,4 @@ for frame = 1:size(line_labels,2)   % 遍历每一帧
         end
     end
 end
+line_frame_sp = line_frame_sp(:,:,1);

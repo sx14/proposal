@@ -19,6 +19,7 @@ long_lines = sort(long_lines,1,'ascend');
 for i = 1:size(long_lines,1)
     if long_lines(i,1) == (small_sp_sum+1)
         input('All small sp, continue?');
+
     end
     color_index = line_color(long_lines(i,1));
     if color_index == 0 % 新串未分配颜色
@@ -40,7 +41,6 @@ for i = 1:size(long_lines,1)
         subplot(2,1,2);
         imshow(uint8(mask));
         if long_lines(i,1) > (small_sp_sum)
-%         if long_lines(i,1) > 0
             X = sprintf('SP %d.',sp);
             input(X);
         end
