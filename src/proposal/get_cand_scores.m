@@ -5,9 +5,9 @@ for f = 1:length(hiers)
     hier = hiers{f};
     f_lp = hier.leaves_part;
     leave_sum = max(max(f_lp));
-    zero_col_num = size(hier.ms_matrix,2) - 2;
+    zero_col_num = size(hier.org_ms_matrix,2) - 2;
     leaves_ms = [(1:leave_sum)',zeros(leave_sum,zero_col_num),((1:leave_sum)+leave_sum)'];
-    temp_ms = hier.ms_matrix;
+    temp_ms = hier.org_ms_matrix;
     temp_ms(temp_ms > 0) = temp_ms(temp_ms > 0) + double(leave_sum);
     f_ms = cat(1,leaves_ms,temp_ms);
     if isfield(hier,'b_feats')
@@ -28,6 +28,7 @@ for f = 1:length(hiers)
     end
     [feats, ~] = compute_full_features(cands_hf,b_feats);
     sp_flow_info = sp_flow_info_set{f};
+    cands_hf = sp_cand;
     cands_hf(cands_hf > 0) = cands_hf(cands_hf > 0) - double(leave_sum);
     cand_motion_scores = get_motion_scores(cands_hf, sp_flow_info);
     cand_appearence_scores = regRF_predict(feats,rf_regressor);

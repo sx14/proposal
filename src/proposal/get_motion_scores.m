@@ -1,5 +1,7 @@
 function scores = get_motion_scores(all_cand_sps, sp_flow_sum)
-avg_overall_flow = sp_flow_sum(size(sp_flow_sum,1),1) / sp_flow_sum(size(sp_flow_sum,1),2); % 全局平均运动强度
+overall = sum(sp_flow_sum,1);
+avg_overall_flow = overall(1) / overall(2);
+% avg_overall_flow = sp_flow_sum(size(sp_flow_sum,1),1) / sp_flow_sum(size(sp_flow_sum,1),2); % 全局平均运动强度
 avg_cand_flow = zeros(size(all_cand_sps,1),1);
 for i = 1:size(all_cand_sps,1)
     cand_sps = all_cand_sps(i,:);
