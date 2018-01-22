@@ -10,6 +10,23 @@ else
     annotation_info  = annotation_file.annotation_info;
 end
 
+% video_sum = 0;
+% dis = zeros(10*4000,1);
+% for i = 1:10
+%     for j = 1:4000
+%         if isempty(annotation_info{i,j})
+%             continue;
+%         else
+%             video_sum = video_sum + 1;
+%             dis((i-1)*4000+j) = min(annotation_info{i,j}.obj_num,10);
+%         end
+%     end
+% end
+
+dis = dis(dis > 0);
+hist(dis);
+avg_obj_num = sum(dis) / length(dis);   % 2.065
+
 temp_annotations = cell(10,4000);
 for i = 1:size(annotation_info,1)
     counter = 1;
