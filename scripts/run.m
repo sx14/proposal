@@ -8,7 +8,7 @@ if exist(fullfile(output_path,'result', [video_dir,'.mat']),'file') && re_cal ==
     disp('done');
     return;
 end
-show = true;
+show = false;
 if exist(fullfile(video_path),'dir')    % validate video path
     [org_height, org_width, resized_imgs] = resize_img(video_package_path,video_dir,mid_result_path,0);
     flow_set = cal_flow(video_package_path,video_dir,mid_result_path,resized_imgs,0);

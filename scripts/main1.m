@@ -3,5 +3,5 @@ video_base_path = '/media/sunx/Data/ImageNet/train';
 output_path = '/home/sunx/output/ours_version1_leaves_only';
 annotation_base_path = '/media/sunx/Data/ImageNet/Annotations';
 mid_result_path = '/media/sunx/Data/ImageNet/mid_result';
-[recall, smT_IoU] = run(video_base_path,'ILSVRC2015_train_00020000',annotation_base_path,mid_result_path, output_path, true);
+[recall, smT_IoU] = run(video_base_path,'ILSVRC2015_train_00040005',annotation_base_path,mid_result_path, output_path, true);
 % show_hier(video_base_path,mid_result_path,'ILSVRC2015_train_00025006');
