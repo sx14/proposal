@@ -131,8 +131,8 @@ end
 
 
 function cand_info = get_cand_info(cands, cand_size, line_info,start_id)
-cand_info = zeros(size(cands,1),5); % cand id / start_frame / end_frame / length
-cand_info(:,1) = start_id:start_id + size(cands,1) - 1;   % 填入临时cand id
+cand_info = zeros(size(cands,1),6); % cand id / start_frame / end_frame / length
+cand_info(:,1) = start_id:(start_id + size(cands,1) - 1);   % 填入临时cand id
 cand_info(:,2) = +Inf;
 for i = 1:cand_size
     info = line_info(cands(:,i),:);
@@ -140,6 +140,9 @@ for i = 1:cand_size
     end_frames = max(cand_info(:,3),info(:,3));
     cand_info(:,2) = start_frames;
     cand_info(:,3) = end_frames;
+    if cand_size == 1
+        cand_info(:,6) = info(:,6);
+    end
 end
 cand_info(:,4) = cand_info(:,3) - cand_info(:,2) + 1;
 cand_info(:,5) = cand_size;

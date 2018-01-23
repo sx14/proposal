@@ -34,7 +34,7 @@ function [line_info,line_frame_sp_mat,new_line_labels] = connect_lines(line_info
         end
     end
     line_connect_mat = line_connect_mat(1:next_connect_index,:);
-    new_line_info = zeros(next_connect_index,5);
+    new_line_info = zeros(next_connect_index,6);
     new_line_frame_sp_mat = zeros(next_connect_index,frame_sum,2);
     org_line_sum = size(line_info,1);
     for i = 1:size(line_connect_mat,1)
@@ -44,6 +44,7 @@ function [line_info,line_frame_sp_mat,new_line_labels] = connect_lines(line_info
         start_frame = frame_sum;
         end_frame = 0;
         boundary_connectivity = 0;
+        boundary_connectivity1 = 0;
         for j = 1:length(lines)
             line = lines(j);
             old_line_label = line_info(line,1);
@@ -51,6 +52,7 @@ function [line_info,line_frame_sp_mat,new_line_labels] = connect_lines(line_info
             curr_s = line_info(line,2);
             curr_e = line_info(line,3);
             boundary_connectivity = boundary_connectivity + line_info(line,5);
+            boundary_connectivity1 = boundary_connectivity1 + line_info(line,6);
             start_frame = min(start_frame,curr_s);
             end_frame = max(end_frame,curr_e);
             new_line_frame_sp_mat(i,curr_s:curr_e,:) = line_frame_sp_mat(line,curr_s:curr_e,:);
@@ -60,9 +62,11 @@ function [line_info,line_frame_sp_mat,new_line_labels] = connect_lines(line_info
         new_line_info(i,3) = end_frame;
         new_line_info(i,4) = end_frame - start_frame + 1;
         new_line_info(i,5) = boundary_connectivity;
+        new_line_info(i,6) = boundary_connectivity1;
     end
     line_info = cat(1,line_info,new_line_info);
     line_info(:,5) = line_info(:,5) ./ line_info(:,4);
+    line_info(:,6) = line_info(:,6) ./ line_info(:,4);
     line_frame_sp_mat = cat(1,line_frame_sp_mat,new_line_frame_sp_mat);
 end
 

@@ -5,13 +5,14 @@ video_length = length(sp_boundary_connectivity_set);
 min_line_length = round(video_length * long_line_length_ratio);
 min_line_length = min(min_line_length,10);
 boundary_connectivity_ths = 1;
+boundary_connectivity_ths2 = 2;
 line_labels = net(:,:,1);
 max_line_label = double(max(max(line_labels)));
-line_info = zeros(max_line_label,5);    % index索引串号：串号,start_frame,end_frame,length
+line_info = zeros(max_line_label,6);    % index索引串号：串号,start_frame,end_frame,length
 for f=1:size(line_labels,2)             % 遍历每一帧，收集所有串的信息
     sp = 1;
     sp_boundary_connectivity_mat = sp_boundary_connectivity_set{f};
-    line_record = zeros(max_line_label,1);
+    line_record = zeros(max_line_label,2);
     while(line_labels(sp,f) > 0)        % 遍历每一个sp
         line = line_labels(sp,f);       % 串号
         line_info(line,1) = line;       % 记录串号
@@ -20,9 +21,13 @@ for f=1:size(line_labels,2)             % 遍历每一帧，收集所有串的�
         end
         line_info(line,3) = f;  % 更新结束帧
         sp_boundary_connectivity = sp_boundary_connectivity_mat(sp);
-        if sp_boundary_connectivity > boundary_connectivity_ths && line_record(line) == 0
+        if sp_boundary_connectivity > boundary_connectivity_ths && line_record(line,1) == 0
             line_info(line,5) = line_info(line,5) + 1;
-            line_record(line) = 1;
+            line_record(line,1) = 1;
+        end
+        if sp_boundary_connectivity > boundary_connectivity_ths2 && line_record(line,2) == 0
+            line_info(line,6) = line_info(line,6) + 1;
+            line_record(line,2) = 1;
         end
         sp = sp+1;
     end
