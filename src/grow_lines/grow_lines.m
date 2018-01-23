@@ -14,16 +14,17 @@ if nargin > 3   % 不是第一帧
     last_basic_sp_pixel_mat = tabulate(last_hier.leaves_part(:));
     last_basic_sp_pixel_mat = last_basic_sp_pixel_mat(:,2);
     last_sp_pixel_mat = last_combine_mat * last_basic_sp_pixel_mat;     % 前一帧各层次超像素包含的像素个数
-    last_2_new_match_sp_ratio = cal_ratio(last_sp_pixel_mat, last_2_new_match_sp);
+   
     % ===== 后一帧向前一帧，重复以上步骤 =====
-    new_2_last_match_basic_sp = get_match(new_flow2,new_hier.leaves_part,last_hier.leaves_part);
-    new_2_last_match_sp = new_combine_mat * new_2_last_match_basic_sp * last_combine_mat';
+%     new_2_last_match_basic_sp = get_match(new_flow2,new_hier.leaves_part,last_hier.leaves_part);
+%     new_2_last_match_sp = new_combine_mat * new_2_last_match_basic_sp * last_combine_mat';
     new_basic_sp_pixel_mat = tabulate(new_hier.leaves_part(:));
     new_basic_sp_pixel_mat = new_basic_sp_pixel_mat(:,2);
     new_sp_pixel_mat = new_combine_mat * new_basic_sp_pixel_mat;
-    new_2_last_match_sp_ratio = cal_ratio(new_sp_pixel_mat, new_2_last_match_sp);
+%     new_2_last_match_sp_ratio = cal_ratio(new_sp_pixel_mat, new_2_last_match_sp);
     % ===== 将新一帧匹配的超像素连进串里 =====
-    net = grow_curr_frame(net, last_2_new_match_sp_ratio,new_2_last_match_sp_ratio, frame);
+    last_2_new_match_sp_ratio = cal_IOU(last_sp_pixel_mat,new_sp_pixel_mat,last_2_new_match_sp);
+    net = grow_curr_frame(net,last_2_new_match_sp_ratio, frame);
 else    % 是第一帧
     % 将第一帧的所有超像素全部加入lines
     all_level_sp_num = new_hier.ms_matrix(end);
