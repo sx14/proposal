@@ -30,11 +30,10 @@ for f = 1:length(hiers)
     sp_flow_info = sp_flow_info_set{f};
     cands_hf(cands_hf > 0) = cands_hf(cands_hf > 0) - double(leave_sum);
     cand_motion_scores = get_motion_scores(cands_hf, sp_flow_info, cand_info(indexes,:),length(hiers));
-%     cand_appearence_scores = regRF_predict(feats,rf_regressor);
-%     max_appearence_score = max(1,max(cand_appearence_scores));
-%     cand_appearence_scores = cand_appearence_scores / max_appearence_score;
-%     scores(indexes,f) = cand_appearence_scores * 0.7 + cand_motion_scores * 0.3;
-    scores(indexes,f) = cand_motion_scores;
+    cand_appearence_scores = regRF_predict(feats,rf_regressor);
+    max_appearence_score = max(1,max(cand_appearence_scores));
+    cand_appearence_scores = cand_appearence_scores / max_appearence_score;
+    scores(indexes,f) = cand_appearence_scores * 0.7 + cand_motion_scores * 0.3;
 end
 
 scores = sort(scores,2,'descend');
