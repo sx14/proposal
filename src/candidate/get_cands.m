@@ -103,7 +103,7 @@ for i = 1:long_line_sum - 3
                 if k_l > 0
                     adjacent_counter = adjacent_counter + 1;
                 end
-                if adjacent_counter > 3 && ~contain_background(long_line_info, [i;j;k])% 三个长串有两组相邻即可组合
+                if adjacent_counter > 3 && ~contain_background(long_line_info, [i;j;k;l])% 三个长串有两组相邻即可组合
                     four_line_cand_counter = four_line_cand_counter + 1;
                     if four_line_cand_counter <= four_line_cand_max
                         four_line_cands(four_line_cand_counter,1) = i;
@@ -130,11 +130,12 @@ cands_statistic = sprintf('one: %d two: %d three: %d four: %d', size(one_line_ca
 disp(cands_statistic);
 
 function result = contain_background(long_line_info, lines)
-bcs = long_line_info(lines,5);
 result = false;
-if ~isempty(find(bcs > 0.9, 1))
-    result = true;
-end
+% bcs = long_line_info(lines,5);
+% result = false;
+% if ~isempty(find(bcs > 0.9, 1))
+%     result = true;
+% end
 
 
 function cand_info = get_cand_info(cands, cand_size, line_info,start_id)
