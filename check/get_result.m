@@ -1,5 +1,5 @@
 % 获取单个视频的处理结果
-function [result,annotations] = get_result(video_dir,annotation_path,output_path, proposals, re_cal)
+function [result,annotations] = get_result(video_dir,annotation_path,output_path, proposals, cand_sum, re_cal)
 result_dir = 'result';
 if ~exist(fullfile(output_path, result_dir),'dir')
     mkdir(fullfile(output_path), result_dir);   % make result dir
@@ -22,6 +22,7 @@ if ~exist(fullfile(result_path, result_file_name),'file') || re_cal == true  % n
     result.recall = recall;
     result.smT_IoU = smT_IoU;
     result.hit = hit;
+    result.cand_sum = cand_sum;
     % result dir: video_name.txt is readable; video_name.mat contains recall, smT-IoU, hit (object named result)
     save(fullfile(result_path, [video_dir,'.mat']),'result');
     output(result_path, [video_dir '.txt'], output_info, 'txt');

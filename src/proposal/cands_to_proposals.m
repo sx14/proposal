@@ -1,4 +1,10 @@
-function proposals = cands_to_proposals(hiers,cands,sp_boxes_set,sp_flow_info_set,line_frame_sp_mat,cand_info,video_dir)
+function [proposals,cand_sum] = cands_to_proposals(hiers,cands,sp_boxes_set,sp_flow_info_set,line_frame_sp_mat,cand_info,video_dir)
+cand_volume_max = size(cands,2);
+cand_sum = zeros(cand_volume_max,1);
+for i = 1:cand_volume_max
+    cand_sum(i) = length(find(cand_info(:,5) == i));
+end
+
 all_scores = get_cand_scores(hiers, cands, line_frame_sp_mat,cand_info,sp_flow_info_set);
 one_two_sum = length(find(cand_info(:,5) < 3));
 scores_part1 = all_scores(1:one_two_sum);
