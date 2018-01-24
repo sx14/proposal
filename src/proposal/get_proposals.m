@@ -11,9 +11,9 @@ function [proposals,cand_sum] = get_proposals(video_dir, output_path, org_height
         [long_line_info, new_line_labels] = long_line_filter(net,sp_boundary_connectivity_set);
         long_line_frame_sp_mat = get_line_frame_sp(net, long_line_info, new_line_labels);
         % 连接断串，要修改：long_line_frame_sp_mat,long_line_info,new_line_labels
-        line_connect_cand_mat = get_connect_line_cand2(sp_boxes_set,long_line_frame_sp_mat,long_line_info,resized_imgs);
-        [long_line_info,long_line_frame_sp_mat,new_line_labels] = connect_lines(long_line_info,long_line_frame_sp_mat,line_connect_cand_mat,new_line_labels);
-        [long_line_info,new_line_labels,long_line_frame_sp_mat] = filter_cand_line_after_connect(new_line_labels,long_line_info,length(hier_set),long_line_frame_sp_mat);
+%         line_connect_cand_mat = get_connect_line_cand2(sp_boxes_set,long_line_frame_sp_mat,long_line_info,resized_imgs);
+%         [long_line_info,long_line_frame_sp_mat,new_line_labels] = connect_lines(long_line_info,long_line_frame_sp_mat,line_connect_cand_mat,new_line_labels);
+%         [long_line_info,new_line_labels,long_line_frame_sp_mat] = filter_cand_line_after_connect(new_line_labels,long_line_info,length(hier_set),long_line_frame_sp_mat);
         % 连接断串，要修改：long_line_frame_sp_mat,long_line_info,new_line_labels
         long_line_adjacent_mat = cal_adjacent_line_2(net(:,:,1), long_line_info, adjacent_sp_mats, new_line_labels);
         [cands,cand_info] = get_cands(long_line_info,long_line_adjacent_mat);     % get candidates by grouping

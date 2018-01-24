@@ -4,7 +4,10 @@ cand_sum = zeros(cand_volume_max,1);
 for i = 1:cand_volume_max
     cand_sum(i) = length(find(cand_info(:,5) == i));
 end
-
+if size(cands,1) > 10000
+    cands = cands(1:10000,:);
+    cand_info = cand_info(1:10000,:);
+end
 all_scores = get_cand_scores(hiers, cands, line_frame_sp_mat,cand_info,sp_flow_info_set);
 one_two_sum = length(find(cand_info(:,5) < 3));
 scores_part1 = all_scores(1:one_two_sum);

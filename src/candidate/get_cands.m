@@ -9,7 +9,7 @@ long_line_labels = long_line_labels';           % 转为列向量
 one_line_cands = [long_line_labels zeros(long_line_sum,3)];                 % 所有单个长串作为candidate
 cand_info = get_cand_info(one_line_cands,1,long_line_info,1);
 two_line_cand_max = long_line_sum * (long_line_sum - 1) / 2*1;
-two_line_cand_max = min((10000-size(cand_info,1)), two_line_cand_max);
+two_line_cand_max = min((20000-size(cand_info,1)), two_line_cand_max);
 two_line_cands = zeros(size(two_line_cand_max,1),4);
 two_line_cand_counter = 0;
 for i = 1:size(new_lines1,1)
@@ -31,7 +31,7 @@ if ~isempty(two_line_cands)
     cand_info = cat(1,cand_info,two_line_cand_info);
 end
 three_line_cand_max = long_line_sum * (long_line_sum - 1) * (long_line_sum - 2) / 3*2*1;
-three_line_cand_max = min((10000-size(cand_info,1)), three_line_cand_max);
+three_line_cand_max = min((20000-size(cand_info,1)), three_line_cand_max);
 three_line_cands = zeros(three_line_cand_max,4);                            % 三三无重复组合作为candidate
 three_line_cand_counter = 0;
 for i = 1:long_line_sum - 2
@@ -71,7 +71,7 @@ if ~isempty(three_line_cands)
 end
 
 four_line_cand_max = long_line_sum * (long_line_sum - 1) * (long_line_sum - 2) * (long_line_sum - 3) / 4*3*2*1;
-four_line_cand_max = min((10000-size(cand_info,1)), four_line_cand_max);
+four_line_cand_max = min((20000-size(cand_info,1)), four_line_cand_max);
 four_line_cands = zeros(four_line_cand_max,4);    % 四四无重复组合作为candidate
 four_line_cand_counter = 0;
 for i = 1:long_line_sum - 3
