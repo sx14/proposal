@@ -15,6 +15,7 @@ if ~exist(fullfile(video_hier_path,'finish'),'file') || re_cal == 1  % cal
         I = resized_imgs{i+1};
         curr_flow = flow_set{i+1};
         [hier, ~] = get_hier(I, curr_flow);
+        hier = restrict_top_level(hier);
         hier_set{i+1,1} = hier;
         hier_name = [num,'.mat'];
         hier_name = fullfile(video_hier_path,hier_name);
@@ -29,8 +30,35 @@ else
         num=num2str(i,'%06d');
         hier_name = [num,'.mat'];
         hier_path = fullfile(video_hier_path, hier_name);
-        heir_file = load(hier_path);
-        hier_set{i+1} = heir_file.hier;
+        hier_file = load(hier_path);
+        hier = hier_file.hier;
+        hier = restrict_top_level(hier);
+        hier_set{i+1} = hier;
     end
     disp('cal_hier finished before.');
 end
+
+function hier = restrict_top_level(hier)
+leaves = hier.leaves_part;
+ms_matrix = hier.ms_matrix;
+org_leaf_sum = max(max(leaves));
+org_sp_sum = org_leaf_sum + size(hier.ms_matrix,1);
+top_level_sp_sum = floor(org_leaf_sum * 0.2);
+top_level_sp_sum = max(top_level_sp_sum,20);
+top_level_sp_sum = min(top_level_sp_sum,org_leaf_sum);
+
+curr_leaf_sum = org_leaf_sum;
+curr_region_sum = 0;
+for i = 1:(org_sp_sum - org_leaf_sum)
+    if curr_leaf_sum == top_level_sp_sum
+        break;
+    end
+    combine = ms_matrix(i,:);
+    parent = combine(end);
+    chidren = combine(1:end-1);
+    mask = ismember(leaves,chidren);
+    leaves(mask) = parent;
+    curr_leaf_sum = curr_leaf_sum - 1;
+    curr_region_sum = i;
+end
+hier.ms_matrix = ms_matrix(1:curr_region_sum,:);
