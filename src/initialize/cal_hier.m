@@ -48,11 +48,11 @@ end
 function [new_leaves,new_to_org] = get_top_level(hier)
 leaves = hier.leaves_part;
 ms_matrix = hier.ms_matrix;
-org_leave_sum = max(max(leaves));
-org_sp_sum = org_leave_sum + size(hier.ms_matrix,1);
-top_level_sp_sum = floor(org_leave_sum * 0.2);
-curr_leaf_sum = org_leave_sum;
-for i = 1:(org_sp_sum - org_leave_sum)
+org_leaf_sum = max(max(leaves));
+org_sp_sum = org_leaf_sum + size(hier.ms_matrix,1);
+top_level_sp_sum = floor(org_leaf_sum * 0.3);
+curr_leaf_sum = org_leaf_sum;
+for i = 1:(org_sp_sum - org_leaf_sum)
     if curr_leaf_sum == top_level_sp_sum
         break;
     end
