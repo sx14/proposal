@@ -52,6 +52,7 @@ org_leaf_sum = max(max(leaves));
 org_sp_sum = org_leaf_sum + size(hier.ms_matrix,1);
 top_level_sp_sum = floor(org_leaf_sum * 0.3);
 top_level_sp_sum = max(top_level_sp_sum,30);
+top_level_sp_sum = min(top_level_sp_sum,org_leaf_sum);
 curr_leaf_sum = org_leaf_sum;
 for i = 1:(org_sp_sum - org_leaf_sum)
     if curr_leaf_sum == top_level_sp_sum
