@@ -1,6 +1,6 @@
 function [recall,smT_IoU,hit_all] = cal_recall(ground_truth_info, frame_annotations,proposals)
 ground_truth_object_sum = size(ground_truth_info,1);
-record_interval = 20;
+record_interval = 10;
 max_proposal_num = 1000;
 record_times = max_proposal_num/record_interval;
 hit_all = zeros(ground_truth_object_sum,record_times,3); % 击中每个ground truth 在增加50个proposals后的candidate id , T_IoU , avg_IoU
@@ -74,10 +74,6 @@ for j = 1:max_proposal_num             % 每一个候选轨迹
                 hit(i,2) = T_IoU;
                 hit(i,3) = avg_IoU;
             end
-            % ==== save mask ====
-            if T_IoU > 0.5
-                
-            end 
         end
     end
     if mod(j,record_interval) == 0
