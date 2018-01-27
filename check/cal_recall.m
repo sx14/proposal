@@ -1,7 +1,7 @@
 function [recall,smT_IoU,hit_all] = cal_recall(ground_truth_info, frame_annotations,proposals)
 ground_truth_object_sum = size(ground_truth_info,1);
 record_interval = 20;
-max_proposal_num = 10000;
+max_proposal_num = 1000;
 record_times = max_proposal_num/record_interval;
 hit_all = zeros(ground_truth_object_sum,record_times,3); % 击中每个ground truth 在增加50个proposals后的candidate id , T_IoU , avg_IoU
 hit = zeros(ground_truth_object_sum,3);
@@ -66,16 +66,18 @@ for j = 1:max_proposal_num             % 每一个候选轨迹
             T_IoU = hit_frame_sum / u_length;
             avg_IoU = hit_IoU_sum / hit_frame_sum;
             if hit(i,2) < T_IoU     % 更新最匹配的cand
-%                 hit(i,1) = j;
-                hit(i,1) = proposal.voxel_num;
+                hit(i,1) = j;
                 hit(i,2) = T_IoU;
                 hit(i,3) = avg_IoU;
             elseif hit(i,2) == T_IoU && avg_IoU > hit(i,3)
-%                 hit(i,1) = j;
-                hit(i,1) = proposal.voxel_num;
+                hit(i,1) = j;
                 hit(i,2) = T_IoU;
                 hit(i,3) = avg_IoU;
             end
+            % ==== save mask ====
+            if T_IoU > 0.5
+                
+            end 
         end
     end
     if mod(j,record_interval) == 0

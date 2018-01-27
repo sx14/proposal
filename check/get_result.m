@@ -14,10 +14,14 @@ if ~exist(fullfile(result_path, result_file_name),'file') || re_cal == true  % n
     for i = 1:size(hit,1)
         h = output_info(1,:);
         h(:) = ' ';
-        h_content = sprintf('%d : %.2f%%', i, hit(i,size(hit,2),2)*100);
+        proposal_id = hit(i,size(hit,2),1);
+        h_content = sprintf('%d-%d : %.2f%%', i, proposal_id, hit(i,size(hit,2),2)*100);
         h(1:length(h_content)) = h_content;
         disp(h);
         output_info = [output_info;h];
+        if proposal_id > 0
+            copy_proposal_masks(output_path,video_dir,hit(i,size(hit,2),1));
+        end
     end
     result.recall = recall;
     result.smT_IoU = smT_IoU;
@@ -29,3 +33,18 @@ else    % done read result
     result_file = load(fullfile(result_path, [video_dir,'.mat']));
     result = result_file.result;
 end
+
+
+function copy_proposal_masks(output_path,video_dir,proposal_id)
+p_num=num2str(proposal_id,'%04d');
+hit_path = fullfile(output_path,'hit');
+mask_path = fullfile(output_path,'mask');
+hit_video_path = fullfile(hit_path,video_dir);
+hit_proposal_path = fullfile(hit_video_path,p_num);
+org_proposal_path = fullfile(mask_path,video_dir,p_num);
+if ~exist(hit_video_path,'dir')
+    mkdir(hit_path,video_dir);
+end
+copyfile(org_proposal_path,hit_proposal_path);
+
+
