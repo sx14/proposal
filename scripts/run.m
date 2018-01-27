@@ -10,12 +10,14 @@ if exist(fullfile(output_path,'result', [video_dir,'.mat']),'file') && re_cal ==
 end
 show = false;
 if exist(fullfile(video_path),'dir')    % validate video path
+    t0 = clock;
     [org_height, org_width, resized_imgs] = resize_img(video_package_path,video_dir,mid_result_path,0);
     flow_set = cal_flow(video_package_path,video_dir,mid_result_path,resized_imgs,0);
     flow2_set = cal_flow2(video_package_path,video_dir,mid_result_path,resized_imgs,0);
     hier_set = cal_hier(video_package_path,video_dir,mid_result_path,flow_set, resized_imgs, 0);
-    [proposals,cand_sum] = get_proposals(video_dir,output_path,org_height,org_width,hier_set,flow_set,flow2_set,resized_imgs,re_cal);
-    [result,annotations] = get_result(video_dir,annotation_path,output_path,proposals,cand_sum,re_cal);
+    [proposals,cand_sum,grouping_time] = get_proposals(video_dir,output_path,org_height,org_width,hier_set,flow_set,flow2_set,resized_imgs,re_cal);
+    timecost = etime(clock,t0);
+    [result,annotations] = get_result(video_dir,annotation_path,output_path,proposals,cand_sum,re_cal,grouping_time);
     recall = result.recall;
     smT_IoU = result.smT_IoU;
     disp(['Finish:',video_path]);

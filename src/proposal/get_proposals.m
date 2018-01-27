@@ -1,5 +1,5 @@
 % 获取单个视频的处理结果
-function [proposals,cand_sum] = get_proposals(video_dir, output_path, org_height, org_width, hier_set, flow_set, flow2_set,resized_imgs, re_cal)
+function [proposals,cand_sum,grouping_time] = get_proposals(video_dir, output_path, org_height, org_width, hier_set, flow_set, flow2_set,resized_imgs, re_cal)
     proposal_dir = 'proposals';
     if ~exist(fullfile(output_path, proposal_dir),'dir')
         mkdir(fullfile(output_path), proposal_dir); % make proposals dir
@@ -15,8 +15,10 @@ function [proposals,cand_sum] = get_proposals(video_dir, output_path, org_height
 %         [long_line_info,long_line_frame_sp_mat,new_line_labels] = connect_lines(long_line_info,long_line_frame_sp_mat,line_connect_cand_mat,new_line_labels);
 %         [long_line_info,new_line_labels,long_line_frame_sp_mat] = filter_cand_line_after_connect(new_line_labels,long_line_info,length(hier_set),long_line_frame_sp_mat);
         % 连接断串，要修改：long_line_frame_sp_mat,long_line_info,new_line_labels
+        t0 = clock;
         long_line_adjacent_mat = cal_adjacent_line_2(net(:,:,1), long_line_info, adjacent_sp_mats, new_line_labels);
         [cands,cand_info] = get_cands(long_line_info,long_line_adjacent_mat);     % get candidates by grouping
+        grouping_time = etime(clock,t0);
         [proposals,cand_sum] = cands_to_proposals(hier_set,cands,sp_boxes_set,sp_flow_info_set,long_line_frame_sp_mat,cand_info,video_dir);
         [resized_height,resized_width] = size(hier_set{1}.leaves_part);
         proposals = resize_proposals(proposals,org_height,org_width,resized_height,resized_width);
