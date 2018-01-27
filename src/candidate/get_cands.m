@@ -136,12 +136,12 @@ cands_statistic = sprintf('one: %d two: %d three: %d four: %d', size(one_line_ca
 disp(cands_statistic);
 
 function result = contain_background(long_line_info, lines)
-result = false;
-% bcs = long_line_info(lines,5);
 % result = false;
-% if ~isempty(find(bcs > 0.9, 1))
-%     result = true;
-% end
+bcs = long_line_info(lines,5);
+result = false;
+if ~isempty(find(bcs > 0.9, 1))
+    result = true;
+end
 
 
 function cand_info = get_cand_info(cands, cand_size, line_info,start_id)
