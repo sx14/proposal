@@ -1,8 +1,17 @@
 function show_hit(org_imgs,all_hit,proposals,ground_truth,org_height, org_width)
 ground_sum = size(all_hit,1);
-color_v = init_color(ground_sum);
+% color_v = init_color(ground_sum);
+color_v = [
+    255,0,0;    % r
+    0,255,0;    % g
+    0,0,255;    % b
+    255,255,0;  % y
+    132,54,204;
+    0,255,255;
+    255,0,255
+    ];
 % 要显示ground truth将show_ground_truth设为false;
-show_ground_truth = true;
+show_ground_truth = false;
 figure;
 for f = 1:length(org_imgs)
     I = org_imgs{f};
@@ -29,8 +38,8 @@ for f = 1:length(org_imgs)
         % =========== 画 candidates ============
         proposal_id = hit(1);
         max_T_IoU = hit(2);
-        if proposal_id ~= 0 && max_T_IoU > 0.5
-%         if proposal_id ~= 0
+%         if proposal_id ~= 0 && max_T_IoU > 0.5
+        if proposal_id ~= 0
             proposal = proposals{proposal_id};
             boxes = proposal.boxes;
             box = boxes(f,:);
@@ -46,6 +55,8 @@ for f = 1:length(org_imgs)
         end
     end
     imshow(I),title(['frame: ',num2str(f)]);
-    pause(0.2);
+    num1=num2str(f-1,'%06d');
+    frame_name = [num1,'.JPEG'];
+    imwrite(I,fullfile('/home/sunx/good_demo/g7/',frame_name));
 end
 close;
