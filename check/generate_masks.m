@@ -43,17 +43,21 @@ for f = start_frame:end_frame
         end
     end
     color_set = get_color_set();
-    masked_img = color_mask(resized_imgs{f}, mask, color_set);
+    org_img = resized_imgs{f};
+%     white_mask = zeros(size(org_img));
+%     white_mask(:,:,:) = 255;
+%     org_img = 0.5*double(org_img) + 0.5*double(white_mask);
+    masked_img = color_mask(org_img, mask, color_set);
     save_mask(output_path,video_dir,f-1,proposal_id,masked_img);
 end
 end
 
 function color_set = get_color_set()
 color_set = [
-    204,57,63;      % r
-    149,231,65;     % g
-    48,136,233;     % b
-    255,251,72;     % y
+    255,0,0     ;        % r
+    0,0,255  ;        % b
+    0,255,0     ;        % g
+    255,0,255   ;        % m
     ];
 end
 
@@ -75,9 +79,15 @@ imwrite(masked_img,bmp_file_name);
 end
 
 function masked_img = color_mask(org_img, mask_b, color_set)
-masked_img = org_img;
+% masked_img = org_img;
+masked_img = zeros(size(org_img));
+masked_img(:,:,:) = 150;
+% org_img(:,:,:) = org_img(:,:,:) + 100;
 for v = min(min(mask_b)) : max(max(mask_b))
     if v ~= 0
+%         if v == 3
+%             continue;
+%         end
         mask_temp = (mask_b == v);
         org_r = masked_img(:,:,1);
         org_g = masked_img(:,:,2);
@@ -90,6 +100,6 @@ for v = min(min(mask_b)) : max(max(mask_b))
         masked_img(:,:,3) = org_b;
     end
 end
-masked_img = round(0.7*masked_img + 0.3*org_img);
+masked_img = round(0.7*double(masked_img) + 0.3*double(org_img));
 masked_img = uint8(masked_img);
 end
