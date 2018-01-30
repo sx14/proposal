@@ -23,7 +23,7 @@ end
 
 function generate_proposal_masks(output_path,video_dir,proposal_id,proposal,selected_cands,sp_leaves_set,hier_set,resized_imgs,line_frame_sp_mat)
 start_frame = proposal.start_frame;
-end_frame = proposal.end_frame;generate_masks.m
+end_frame = proposal.end_frame;
 cand_lines = selected_cands(proposal_id,:);
 cand_lines = cand_lines(cand_lines > 0);
 for f = start_frame:end_frame
@@ -58,6 +58,8 @@ color_set = [
     0,0,255  ;           % b
     0,255,0     ;        % g
     255,0,255   ;        % m
+    255,255,0   ;        % m
+    0,255,255   ;        % m
     ];
 end
 
