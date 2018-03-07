@@ -1,4 +1,4 @@
-% 持久化所有的反向光流
+% calculate and save backward optical flow for each frame
 function flow_set = cal_flow2(video_package_path,video_dir,mid_result_path,resized_imgs, re_cal)
 flow_dir_name = 'flow2';
 video_path = fullfile(video_package_path,video_dir);
@@ -7,9 +7,10 @@ if ~exist(video_flow_path,'dir')
     mkdir(fullfile(mid_result_path,flow_dir_name), video_dir);
 end
 flow_set = cell(length(resized_imgs),1);
-if ~exist(fullfile(video_flow_path,'finish'),'file') || re_cal == 1 % cal
+if ~exist(fullfile(video_flow_path,'finish'),'file') || re_cal == 1
     start_one = 0;
     last_one = length(resized_imgs) - 1;
+    % the optical flow of the first frame is zero.
     for i = last_one:-1:start_one
         num=num2str(i,'%06d');
         I1 = resized_imgs{i+1};
@@ -29,7 +30,7 @@ if ~exist(fullfile(video_flow_path,'finish'),'file') || re_cal == 1 % cal
 else
     start_one = 0;
     last_one = length(resized_imgs) - 1;
-    for i = last_one:-1:start_one    % 最后一个没有
+    for i = last_one:-1:start_one
         num1=num2str(i,'%06d');
         flow_name = [num1,'.mat'];
         flow_path = fullfile(video_flow_path, flow_name);

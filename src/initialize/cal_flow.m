@@ -1,7 +1,6 @@
-% 持久化所有的正向光流
-function flow_set = cal_flow(video_package_path,video_dir,mid_result_path, resized_imgs, re_cal)
+% calculate and save forward optical flow for each frame
+function flow_set = cal_flow(video_package_path, video_dir, mid_result_path, resized_imgs, re_cal)
 flow_dir_name = 'flow';
-video_path = fullfile(video_package_path,video_dir);
 video_flow_path = fullfile(mid_result_path,flow_dir_name,video_dir);
 if ~exist(video_flow_path,'dir')
     mkdir(fullfile(mid_result_path,flow_dir_name), video_dir);
@@ -10,7 +9,8 @@ flow_set = cell(length(resized_imgs),1);
 if ~exist(fullfile(video_flow_path,'finish'),'file') || re_cal == 1
     start_one = 0;
     last_one = length(resized_imgs) - 1;
-    for i = start_one:last_one    % 最后一个没有
+    % the optical flow of the last frame is zero.
+    for i = start_one:last_one
         num=num2str(i,'%06d');
         I1 = resized_imgs{i+1};
         if i ~= last_one

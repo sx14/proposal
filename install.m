@@ -30,7 +30,6 @@ addpath(genpath(fullfile(root,'kcf')));
 addpath(genpath(fullfile(root,'mcg')));
 addpath(genpath(fullfile(root,'src')));
 addpath(genpath(fullfile(root,'check')));
-addpath(genpath(fullfile(root,'scripts')));
 
 %% Check that the needed functions are compiled
 % Included in our code

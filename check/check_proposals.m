@@ -1,5 +1,5 @@
-% 获取单个视频的处理结果
-function [result,annotations] = get_result(video_dir,annotation_path,output_path, proposals, re_cal)
+%check proposals: calculate recall and mT-IoU
+function [result,annotations] = check_proposals(video_dir,annotation_path,output_path, proposals, re_cal)
 result_dir = 'result';
 if ~exist(fullfile(output_path, result_dir),'dir')
     mkdir(fullfile(output_path), result_dir);   % make result dir
@@ -25,7 +25,8 @@ if ~exist(fullfile(result_path, result_file_name),'file') || re_cal == true  % n
     % result dir: video_name.txt is readable; video_name.mat contains recall, smT-IoU, hit (object named result)
     save(fullfile(result_path, [video_dir,'.mat']),'result');
     output(result_path, [video_dir '.txt'], output_info, 'txt');
-else    % done read result
+else
+    % done. read result
     result_file = load(fullfile(result_path, [video_dir,'.mat']));
     result = result_file.result;
 end

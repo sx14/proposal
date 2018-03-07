@@ -18,9 +18,6 @@ for f = 1:length(org_imgs)
     I = imresize(I,[org_height,org_width]);
     annotations_on_frame = ground_truth{f};
     for h = 1:ground_sum
-%         if h ~= 1
-%             continue;
-%         end
         annotation = annotations_on_frame(h);
         hit = all_hit(h,size(all_hit,2),:);
         if ~isempty(annotation.id)   % 第f帧上没有第h个标注物体
@@ -38,8 +35,8 @@ for f = 1:length(org_imgs)
         % =========== 画 candidates ============
         proposal_id = hit(1);
         max_T_IoU = hit(2);
-%         if proposal_id ~= 0 && max_T_IoU > 0.5
-        if proposal_id ~= 0
+        if proposal_id ~= 0 && max_T_IoU > 0.5
+%         if proposal_id ~= 0
             proposal = proposals{proposal_id};
             boxes = proposal.boxes;
             box = boxes(f,:);
@@ -55,8 +52,5 @@ for f = 1:length(org_imgs)
         end
     end
     imshow(I),title(['frame: ',num2str(f)]);
-    num1=num2str(f-1,'%06d');
-    frame_name = [num1,'.JPEG'];
-    imwrite(I,fullfile('/home/sunx/good_demo/g7/',frame_name));
 end
 close;

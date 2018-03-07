@@ -1,4 +1,4 @@
-function cal_finish(path)
-% create a file named 'finish' 
+% create a file named 'finish'
+function cal_finish(path) 
 fp=fopen([path,'/finish'],'w');
 fclose(fp);

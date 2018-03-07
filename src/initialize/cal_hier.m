@@ -1,4 +1,4 @@
-% 持久化所有的层次结构
+% calculate and save hierarchical segmentation of each frame
 function hier_set = cal_hier(video_package_path,video_dir,mid_result_path,flow_set,resized_imgs, re_cal)
 hier_dir_name = 'hier';
 video_path = fullfile(video_package_path,video_dir);
@@ -7,7 +7,7 @@ if ~exist(video_hier_path,'dir')
     mkdir(fullfile(mid_result_path,hier_dir_name), video_dir);
 end
 hier_set = cell(length(resized_imgs),1);
-if ~exist(fullfile(video_hier_path,'finish'),'file') || re_cal == 1  % cal
+if ~exist(fullfile(video_hier_path,'finish'),'file') || re_cal == 1
     start_one = 0;
     last_one = length(resized_imgs) - 1;
     for i = start_one:last_one
