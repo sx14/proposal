@@ -1,18 +1,18 @@
-function line_connect_mat = get_connect_line_cand2(sp_boxes_set,line_frame_sp_mat,line_info,resized_imgs)
-line_interval_mat = get_line_interval(line_info,3);
-line_connect_mat = zeros(size(line_interval_mat));
-[first,second,~] = find(line_interval_mat > 0);
+function volume_connect_mat = get_connect_volume_cand2(sp_boxes_set,volume_frame_sp_mat,volume_info,resized_imgs)
+volume_interval_mat = get_volume_interval(volume_info,3);
+volume_connect_mat = zeros(size(volume_interval_mat));
+[first,second,~] = find(volume_interval_mat > 0);
 for i = 1:length(first)
-    first_line = first(i);
-    first_end_frame = line_info(first_line,3);
-    first_line_sp = line_frame_sp_mat(first_line, first_end_frame);
+    first_volume = first(i);
+    first_end_frame = volume_info(first_volume,3);
+    first_volume_sp = volume_frame_sp_mat(first_volume, first_end_frame);
     first_sp_boxes = sp_boxes_set{first_end_frame};
-    first_sp_box = first_sp_boxes(first_line_sp,:);
-    second_line = second(i);
-    second_start_frame = line_info(second_line,2);
-    second_line_sp = line_frame_sp_mat(second_line, second_start_frame);
+    first_sp_box = first_sp_boxes(first_volume_sp,:);
+    second_volume = second(i);
+    second_start_frame = volume_info(second_volume,2);
+    second_volume_sp = volume_frame_sp_mat(second_volume, second_start_frame);
     second_sp_boxes = sp_boxes_set{second_start_frame};
-    second_sp_box = second_sp_boxes(second_line_sp,:);
+    second_sp_box = second_sp_boxes(second_volume_sp,:);
     left_top_pos = [first_sp_box(4),first_sp_box(2)];   % ymin,xmin
     box_height = first_sp_box(3) - first_sp_box(4);
     box_width = first_sp_box(1) - first_sp_box(2);
@@ -29,10 +29,10 @@ for i = 1:length(first)
     predict_second_sp_box = [predict_position(2) + box_width,predict_position(2),predict_position(1) + box_height,predict_position(1)];
     iou = cal_box_IoU(second_sp_box,predict_second_sp_box);
     if iou > 0.6
-        line_connect_mat(first_line,second_line) = iou;
+        volume_connect_mat(first_volume,second_volume) = iou;
     end
 end
-max(max(line_connect_mat))
+max(max(volume_connect_mat))
 
 
 function iou = cal_box_IoU(box1,box2)

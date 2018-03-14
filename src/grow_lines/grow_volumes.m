@@ -1,6 +1,6 @@
 % 输入：当前帧数，现有的所有条；当前帧的hier；光流；上一帧的hier,光流
 % 返回：将当前帧连起来以后的所有条
-function [net,new_combine_mat] = grow_lines(frame, net, new_hier, new_flow2, last_hier, last_flow)
+function [net,new_combine_mat] = grow_volumes(frame, net, new_hier, new_flow2, last_hier, last_flow)
 % ===== 当前帧的超像素组合矩阵（0/1）=====
 new_combine_mat = get_combine_mat(new_hier);
 if nargin > 3   % 不是第一帧
@@ -25,7 +25,7 @@ if nargin > 3   % 不是第一帧
     % ===== 将新一帧匹配的超像素连进串里 =====
     net = grow_curr_frame(net, last_2_new_match_sp_ratio,new_2_last_match_sp_ratio, frame);
 else    % 是第一帧
-    % 将第一帧的所有超像素全部加入lines
+    % 将第一帧的所有超像素全部加入volumes
     all_level_sp_num = new_hier.ms_matrix(end);
     net(1:all_level_sp_num,frame,1) = 1:all_level_sp_num; % 初始化第一帧的串号
     net(1:all_level_sp_num,frame,2) = 1;  % 初始化第一帧sp的匹配IOU为1

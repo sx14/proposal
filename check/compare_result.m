@@ -1,6 +1,6 @@
 clear;clc;close all;
-ours_output_path = '/home/sunx/output/ours_version1/result';
-compare_output_path = '/home/sunx/output/SXD/result';
+ours_output_path = '/home/sunx/ICMR2018/output/comparison/ours_version1/result';
+compare_output_path = '/home/sunx/ICMR2018/output/comparison/VEB/result';
 video_list_file = load('video_list.mat');
 video_list = video_list_file.video_list;
 our_results = dir(fullfile(ours_output_path,'*.mat'));

@@ -1,5 +1,5 @@
 % calculate and save forward optical flow for each frame
-function flow_set = cal_flow(video_dir, mid_result_path, resized_imgs, direction, re_cal)
+function flow_set = cal_flow_match(video_package_path, video_dir, mid_result_path, resized_imgs, direction, re_cal)
 if strcmp(direction,'forward')
     flow_dir_name = 'flow';
     start_one = 1;
@@ -13,6 +13,7 @@ elseif strcmp(direction,'backward')
 else
     error('param : direction is "forward" or "backward".');
 end
+img_suffix = '.JPEG';
 video_flow_path = fullfile(mid_result_path,flow_dir_name,video_dir);
 if ~exist(video_flow_path,'dir')
     mkdir(fullfile(mid_result_path,flow_dir_name), video_dir);
@@ -21,32 +22,27 @@ flow_set = cell(length(resized_imgs),1);
 if ~exist(fullfile(video_flow_path,'finish'),'file') || re_cal == 1
     % the optical flow of the last frame is zero.
     for i = start_one:step:last_one
-        num=num2str(i-1,'%06d');
-        I1 = resized_imgs{i};
+        flo_path = fullfile(video_flow_path,[num2str(i-1,'%06d'),'.flo']);
         if i ~= last_one
-            I2 = resized_imgs{i+step};
-            flow = deepflow2(single(I1), single(I2));
+            I1_path = fullfile(video_package_path,video_dir,[num2str(i-1,'%06d'),img_suffix]);
+            I2_path = fullfile(video_package_path,video_dir,[num2str(i,'%06d'),img_suffix]);
+            cmd = ['./deepflow/deepmatching-static ',I1_path,' ',I2_path,' | ./deepflow/deepflow2-static ',I1_path,' ',I2_path,' ',flo_path,' -match -sintel'];
+            system(cmd);
+            flow = readFlowFile(flo_path);
         else
             flow = zeros(size(I1,1),size(I1,2),2);
+            writeFlowFile(flow,flo_path);
         end
         flow_set{i} = flow;
-        flow_name = [num,'.mat'];
-        flow_name = fullfile(video_flow_path, flow_name);
-        save(flow_name, 'flow');
     end
     cal_finish(video_flow_path);
     disp('cal_flow finished.');
 else
     for i = start_one:step:last_one 
-        num1=num2str(i-1,'%06d');
-        flow_name = [num1,'.mat'];
-        flow_path = fullfile(video_flow_path, flow_name);
-        try
-            flow_file = load(flow_path);
-        catch
-            flow_file.flow = zeros(size(flow_set{i}));
-        end
-        flow_set{i} = flow_file.flow;
+        num=num2str(i-1,'%06d');
+        flo_path = fullfile(video_flow_path, [num,'.flo']);
+        flow = readFlowFile(flo_path);
+        flow_set{i} = flow;
     end
     disp('cal_flow finished before.');
 end

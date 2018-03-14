@@ -6,7 +6,7 @@ mid_result_output_path = '/media/sunx/Data/ImageNetx/mid_result';
 % save proposals and check result
 result_output_path = '/home/sunx/output/ours';
 % time_cost:resize, flow, flow2, hier, proposal, sum
-[recall, smT_IoU, time_cost, frame_sum] = run(video_base_path,annotation_base_path,'ILSVRC2015_train_00020000',mid_result_output_path, result_output_path, false);
+[recall, smT_IoU, time_cost, frame_sum] = run(video_base_path,annotation_base_path,'ILSVRC2015_train_00321000',mid_result_output_path, result_output_path, true);
 % show hierarchical segmentation on each frame
 % show_hier(mid_result_path,'ILSVRC2015_train_00025006');
 

@@ -10,10 +10,10 @@ if exist(fullfile(video_path),'dir')    % validate video path
     [org_height, org_width, resized_imgs] = resize_img(video_package_path,video_dir,mid_result_path,0);
     t1 = clock;
     resize_time_cost = etime(t1, t0);
-    flow_set = cal_flow(video_package_path,video_dir,mid_result_path,resized_imgs,0);
+    flow_set = cal_flow_match(video_package_path,video_dir,mid_result_path,resized_imgs,'forward',1);
     t2 = clock;
     flow_time_cost = etime(t2,t1);
-    flow2_set = cal_flow2(video_package_path,video_dir,mid_result_path,resized_imgs,0);
+    flow2_set = cal_flow_match(video_package_path,video_dir,mid_result_path,resized_imgs,'backward',0);
     t3 = clock;
     flow2_time_cost = etime(t3,t2);
     hier_set = cal_hier(video_package_path,video_dir,mid_result_path,flow_set, resized_imgs, 0);
