@@ -1,48 +1,45 @@
 % calculate and save forward optical flow for each frame
-function flow_set = cal_flow_match(video_package_path, video_dir, mid_result_path, resized_imgs, direction, re_cal)
+function flow_set = cal_flow_match(video_package_path, flow_path, video_dir, direction)
+img_suffix = 'JPEG';
+video_path = fullfile(video_package_path,video_dir);
+if exist(video_path,'dir')
+    imgs = dir(fullfile(video_path, ['*.',img_suffix]));
+else
+    error('cal_flow_match : video not found.')
+end
 if strcmp(direction,'forward')
-    flow_dir_name = 'flow';
     start_one = 1;
-    last_one = length(resized_imgs);
+    last_one = length(imgs);
     step = 1;
 elseif strcmp(direction,'backward')
-    flow_dir_name = 'flow2';
-    start_one = length(resized_imgs);
+    start_one = length(imgs);
     last_one = 1;
     step = -1;
 else
     error('param : direction is "forward" or "backward".');
 end
-img_suffix = '.JPEG';
-video_flow_path = fullfile(mid_result_path,flow_dir_name,video_dir);
+video_flow_path = fullfile(flow_path,video_dir);
 if ~exist(video_flow_path,'dir')
-    mkdir(fullfile(mid_result_path,flow_dir_name), video_dir);
+    mkdir(flow_path, video_dir);
 end
-flow_set = cell(length(resized_imgs),1);
-if ~exist(fullfile(video_flow_path,'finish'),'file') || re_cal == 1
-    % the optical flow of the last frame is zero.
-    for i = start_one:step:last_one
-        flo_path = fullfile(video_flow_path,[num2str(i-1,'%06d'),'.flo']);
+flow_set = cell(length(imgs),1);
+% the optical flow of the last frame is zero.
+for i = start_one:step:last_one
+    flo_path = fullfile(video_flow_path,[num2str(i-1,'%06d'),'.flo']);
+    if ~exist(flo_path,'file')
         if i ~= last_one
-            I1_path = fullfile(video_package_path,video_dir,[num2str(i-1,'%06d'),img_suffix]);
-            I2_path = fullfile(video_package_path,video_dir,[num2str(i,'%06d'),img_suffix]);
-            cmd = ['./deepflow/deepmatching-static ',I1_path,' ',I2_path,' | ./deepflow/deepflow2-static ',I1_path,' ',I2_path,' ',flo_path,' -match -sintel'];
+            I1_path = fullfile(video_package_path,video_dir,[num2str(i-1,'%06d'),'.',img_suffix]);
+            I2_path = fullfile(video_package_path,video_dir,[num2str(i-1+step,'%06d'),'.',img_suffix]);
+            cmd = ['./deepflow/deepmatching-static ',I1_path,' ',I2_path,' -nt 4 | ./deepflow/deepflow2-static ',I1_path,' ',I2_path,' ',flo_path,' -match -sintel'];
             system(cmd);
-            flow = readFlowFile(flo_path);
         else
+            I1 = imread(fullfile(video_path,['000000','.',img_suffix]));
             flow = zeros(size(I1,1),size(I1,2),2);
             writeFlowFile(flow,flo_path);
         end
-        flow_set{i} = flow;
     end
-    cal_finish(video_flow_path);
-    disp('cal_flow finished.');
-else
-    for i = start_one:step:last_one 
-        num=num2str(i-1,'%06d');
-        flo_path = fullfile(video_flow_path, [num,'.flo']);
-        flow = readFlowFile(flo_path);
-        flow_set{i} = flow;
-    end
-    disp('cal_flow finished before.');
+    flow = readFlowFile(flo_path);
+    flow_set{i} = flow;
 end
+disp(['cal_',direction,'_flow finished.']);
+

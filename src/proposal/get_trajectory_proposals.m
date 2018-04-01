@@ -1,5 +1,5 @@
 % process one video, obtain proposals
-function proposals = get_proposals(video_dir, output_path, org_height, org_width, hier_set, flow_set, flow2_set,resized_imgs, re_cal)
+function proposals = get_trajectory_proposals(video_dir, output_path, org_height, org_width, hier_set, flow_set, flow2_set,resized_imgs, re_cal)
     proposal_output_dir = 'proposals';
     if ~exist(fullfile(output_path, proposal_output_dir),'dir')
         mkdir(fullfile(output_path), proposal_output_dir);

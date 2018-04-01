@@ -1,5 +1,4 @@
 function [ dest ] = draw_rect( src, pt, wSize,  lineSize, color )
-%简介：
 % %将图像画上有颜色的框图，如果输入是灰度图，先转换为彩色图像，再画框图
 % 图像矩阵
 % 行向量方向  是  y

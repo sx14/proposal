@@ -32,7 +32,6 @@ for i = 1:length(first)
         volume_connect_mat(first_volume,second_volume) = iou;
     end
 end
-max(max(volume_connect_mat))
 
 
 function iou = cal_box_IoU(box1,box2)

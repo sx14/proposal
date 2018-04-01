@@ -25,12 +25,12 @@ end
 
 % Install own lib
 addpath(root);
-addpath(genpath(fullfile(root,'annotation')));
-addpath(genpath(fullfile(root,'kcf')));
-addpath(genpath(fullfile(root,'mcg')));
-addpath(genpath(fullfile(root,'src')));
-addpath(genpath(fullfile(root,'check')));
-addpath(genpath(fullfile(root,'deepflow')));
+addpath(genpath(fullfile(mcg_root,'annotation')));
+addpath(genpath(fullfile(mcg_root,'kcf')));
+addpath(genpath(fullfile(mcg_root,'mcg')));
+addpath(genpath(fullfile(mcg_root,'src')));
+addpath(genpath(fullfile(mcg_root,'check')));
+addpath(genpath(fullfile(mcg_root,'deepflow')));
 
 %% Check that the needed functions are compiled
 % Included in our code

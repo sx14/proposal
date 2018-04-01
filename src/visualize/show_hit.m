@@ -11,7 +11,7 @@ color_v = [
     255,0,255
     ];
 % 要显示ground truth将show_ground_truth设为false;
-show_ground_truth = false;
+show_ground_truth = true;
 figure;
 for f = 1:length(org_imgs)
     I = org_imgs{f};

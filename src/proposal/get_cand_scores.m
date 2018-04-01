@@ -1,5 +1,5 @@
 function avg_scores = get_cand_scores(hiers, cands, line_frame_sp_mat, cand_info, sp_flow_info_set)
-rf_regressor = loadvar(fullfile(root,'mcg', 'datasets', 'models', 'scg_rand_forest_train2012.mat'),'rf');
+rf_regressor = loadvar(fullfile(mcg_root,'mcg', 'datasets', 'models', 'scg_rand_forest_train2012.mat'),'rf');
 scores = zeros(size(cands,1),length(hiers));
 for f = 1:length(hiers)
     hier = hiers{f};
