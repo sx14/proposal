@@ -14,17 +14,17 @@
 % Please consider citing the paper if you use this code.
 % ------------------------------------------------------------------------
 % Check that 'mcg_root' has been set
-if ~exist(root,'dir')
+if ~exist(mcg_root,'dir')
     error('Error installing the package, try updating the value of mcg_root in the file "mcg_root.m"')
 end
 
 % Check that 'mcg_root' has the needed folder
-if ~exist(fullfile(root,'mcg'),'dir')
+if ~exist(fullfile(mcg_root,'mcg'),'dir')
     error('Error installing the package, the folder "lib" not found, have you compiled it? See build.m')
 end
 
 % Install own lib
-addpath(root);
+addpath(mcg_root);
 addpath(genpath(fullfile(mcg_root,'annotation')));
 addpath(genpath(fullfile(mcg_root,'kcf')));
 addpath(genpath(fullfile(mcg_root,'mcg')));
