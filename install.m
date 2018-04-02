@@ -13,24 +13,24 @@
 %    Computer Vision and Pattern Recognition (CVPR) 2014.
 % Please consider citing the paper if you use this code.
 % ------------------------------------------------------------------------
-% Check that 'mcg_root' has been set
-if ~exist(mcg_root,'dir')
-    error('Error installing the package, try updating the value of mcg_root in the file "mcg_root.m"')
+% Check that 'root' has been set
+if ~exist(root,'dir')
+    error('Error installing the package, try updating the value of root in the file "root.m"')
 end
 
-% Check that 'mcg_root' has the needed folder
-if ~exist(fullfile(mcg_root,'mcg'),'dir')
+% Check that 'root' has the needed folder
+if ~exist(fullfile(root,'mcg'),'dir')
     error('Error installing the package, the folder "lib" not found, have you compiled it? See build.m')
 end
 
 % Install own lib
-addpath(mcg_root);
-addpath(genpath(fullfile(mcg_root,'annotation')));
-addpath(genpath(fullfile(mcg_root,'kcf')));
-addpath(genpath(fullfile(mcg_root,'mcg')));
-addpath(genpath(fullfile(mcg_root,'src')));
-addpath(genpath(fullfile(mcg_root,'check')));
-addpath(genpath(fullfile(mcg_root,'deepflow')));
+addpath(root);
+addpath(genpath(fullfile(root,'annotation')));
+addpath(genpath(fullfile(root,'kcf')));
+addpath(genpath(fullfile(root,'mcg')));
+addpath(genpath(fullfile(root,'src')));
+addpath(genpath(fullfile(root,'check')));
+addpath(genpath(fullfile(root,'deepflow')));
 
 %% Check that the needed functions are compiled
 % Included in our code
