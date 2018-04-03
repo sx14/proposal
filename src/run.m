@@ -20,5 +20,4 @@ else
     recall = NaN;
     smT_IoU = NaN;
     time_cost = [];
-    frame_sum = NaN;
 end
