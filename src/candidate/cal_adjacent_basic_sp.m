@@ -10,10 +10,10 @@ adjacent_mat = zeros(basic_sp_sum, basic_sp_sum);
 sp_boundary_pixel_num = zeros(basic_sp_sum,1);
 sp_pixel_num = zeros(basic_sp_sum,1);
 [h,w] = size(leaves);
-for i = 1:size(leaves, 1)   % 沿水平方向扫描
-    for j = 1:size(leaves,2)
+for i = 1:h   % 沿水平方向扫描
+    for j = 1:w
         sp1 = leaves(i,j);
-        if j < size(leaves,2)
+        if j < w
             sp2 = leaves(i,j+1);
             if sp1 ~= sp2
                 adjacent_mat(sp1,sp2) = 1;

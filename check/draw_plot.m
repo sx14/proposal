@@ -1,77 +1,74 @@
-clear;clc;close all;
-ours_output_path = '/home/sunx/output/ours_version1/result';
-vmcg_output_path = '/home/sunx/output/VMCG/result';
-veb_output_path = '/home/sunx/output/VEB/result';
-video_list_file = load('video_list.mat');
-video_list = video_list_file.video_list;
-our_results = dir(fullfile(ours_output_path,'*.mat'));
-vmcg_results = dir(fullfile(vmcg_output_path,'*.mat'));
-counter = 0;
-recall = [];
-mT_IoU = [];
-for i = 1:length(video_list)
-    video_info = video_list{i};
-    video_name = video_info.video_dir;
-    video_id = video_name(length(video_name) - 7 : length(video_name));
-    try
-        our_result = load(fullfile(ours_output_path,[video_name,'.mat']));
-    catch
-        our_result = [];
-    end
-    try
-        vmcg_result = load(fullfile(vmcg_output_path,[video_name,'.mat']));
-    catch
-        vmcg_result = [];
-    end
-    try
-        veb_result = load(fullfile(veb_output_path,[video_name,'.mat']));
-    catch
-        veb_result = [];
-    end
-    if ~isempty(our_result) && ~isempty(vmcg_result) && ~isempty(veb_result)
-        our_result = our_result.result;
-        vmcg_result = vmcg_result.result;
-        veb_result = veb_result.result;
+function draw_plot(output_path_set,line_style_set,legend_set)
+recall_values = [];
+mt_iou_values = [];
+for r = 1:size(output_path_set,1)
+    video_list = dir(fullfile(output_path_set{r},'*.mat'));
+    counter = 0;
+    recall = [];
+    mT_IoU = [];
+    for i = 1:size(video_list,1)
+        video_name = video_list(i);
+        video_name = video_name.name;
+        video_id = video_name(length(video_name) - 11 : length(video_name) - 4);
+        result = loadvar(fullfile(output_path_set{r},video_name),'result');
         counter = counter + 1;
         if counter == 1
-            recall = zeros(size(our_result.hit,2)+1,3); % 添一个0
-            mT_IoU = zeros(size(our_result.hit,2)+1,3); % 添一个0
+            recall = zeros(size(result.hit,2)+1,1); % 添一个0
+            mT_IoU = zeros(size(result.hit,2)+1,1); % 添一个0
         end
-        temp = our_result.hit(:,:,2);
-        s_mT_IoU = sum(temp,1) / size(our_result.hit,1);
-        mT_IoU(:,1) = mT_IoU(:,1) + [0,s_mT_IoU]';
+        temp = result.hit(:,:,2);
+        s_mT_IoU = sum(temp,1) / size(result.hit,1);
+        mT_IoU(:) = mT_IoU(:) + [0,s_mT_IoU]';
         temp(temp <= 0.5) = 0;
         temp = temp & temp;
-        s_recall = sum(temp,1) / size(our_result.hit,1);
-        recall(:,1) = recall(:,1) + [0,s_recall]';
-        
-        temp = vmcg_result.hit(:,:,2);
-        s_mT_IoU = sum(temp,1) / size(vmcg_result.hit,1);
-        mT_IoU(:,2) = mT_IoU(:,2) + [0,s_mT_IoU]';
-        temp(temp <= 0.5) = 0;
-        temp = temp & temp;
-        s_recall = sum(temp,1) / size(vmcg_result.hit,1);
-        recall(:,2) = recall(:,2) + [0,s_recall]';
-        
-        temp = veb_result.hit(:,:,2);
-        s_mT_IoU = sum(temp,1) / size(veb_result.hit,1);
-        mT_IoU(:,3) = mT_IoU(:,3) + [0,s_mT_IoU]';
-        temp(temp <= 0.5) = 0;
-        temp = temp & temp;
-        s_recall = sum(temp,1) / size(veb_result.hit,1);
-        recall(:,3) = recall(:,3) + [0,s_recall]';
+        s_recall = sum(temp,1) / size(result.hit,1);
+        recall(:) = recall(:) + [0,s_recall]';
     end
+    recall = recall / counter;
+    mT_IoU = mT_IoU / counter;
+    
+    recall1 = zeros(size(recall));
+    mT_IoU1 = zeros(size(mT_IoU));
+    recall1(1:2:end) = recall(1:26);
+    mT_IoU1(1:2:end) = mT_IoU(1:26);
+    for i = 2:2:size(recall1,1)
+        recall1(i) = (recall1(i-1) + recall1(i+1)) / 2;
+        mT_IoU1(i) = (mT_IoU1(i-1) + mT_IoU1(i+1)) / 2;
+    end
+    
+    recall2 = zeros((size(mT_IoU1,1)-1)*2+1,size(mT_IoU1,2));
+    mT_IoU2 = zeros((size(mT_IoU1,1)-1)*2+1,size(mT_IoU1,2));
+    recall2(1:2:end) = recall1(:);
+    mT_IoU2(1:2:end) = mT_IoU1(:);
+    for i = 2:2:size(recall2,1) % smooth lines
+        recall2(i) = (recall2(i-1) + recall2(i+1)) / 2;
+        mT_IoU2(i) = (mT_IoU2(i-1) + mT_IoU2(i+1)) / 2;
+    end
+    recall_values = cat(2,recall_values,recall2);
+    mt_iou_values = cat(2,mt_iou_values,mT_IoU2);
 end
-recall = recall / counter;
-mT_IoU = mT_IoU / counter;
-x = 0:20:1000;
+
+x = 0:5:500;
 figure,
 subplot(1,2,1),
-plot(x,recall(:,1),'r',x,recall(:,2),'g',x,recall(:,3),'b'),
-ylim([0,1]),
-title('recall');
+for r = 1:size(recall_values,2)
+    plot(x,recall_values(:,r),line_style_set{r},'LineWidth',2),hold on,
+end
+xlabel('number of proposals'),
+ylabel('recall'),
+set(gca,'GridLineStyle', '-'),
+set(gcf,'color',[1,1,1]),
+% legend('Location','SouthEast'),
+ylim([0,0.8]),
+
 subplot(1,2,2),
-plot(x,mT_IoU(:,1),'r',x,mT_IoU(:,2),'g',x,mT_IoU(:,3),'b');
-ylim([0,1]),
-title('mT-IoU');
+for r = 1:size(recall_values,2)
+    plot(x,mt_iou_values(:,r),line_style_set{r},'LineWidth',2),hold on,
+end
+xlabel('number of proposals'),
+ylabel('mT-IoU'),
+set(gca,'GridLineStyle', '-'),
+set(gcf,'color',[1,1,1]),
+% legend('Location','SouthEast'),
+ylim([0,0.8]);
 
