@@ -20,7 +20,7 @@ function proposals = get_trajectory_proposals(video_dir, output_path, org_height
         % filter out the short volumes again
         [long_volume_info,new_volume_labels,long_volume_frame_sp_mat] = filter_cand_volume_after_connect(new_volume_labels,long_volume_info,length(hier_set),long_volume_frame_sp_mat);
         % get spatio adjacent volume pairs
-        long_volume_adjacent_mat = cal_adjacent_volume(volumes(:,:,1), long_volume_info, adjacent_sp_mats, new_volume_labels);
+        long_volume_adjacent_mat = cal_adjacent_volume2(volumes(:,:,1), long_volume_info, adjacent_sp_mats, new_volume_labels);
         % get candidates by grouping
         [cands,cand_info] = get_cands(long_volume_info,long_volume_adjacent_mat);     
         % score and rank

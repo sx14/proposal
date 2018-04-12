@@ -51,9 +51,11 @@ end
 function mask = fill_color(sp, mask, color, hier, small_sp_sum)
 if sp > small_sp_sum    % 组合过的sp
     % 递归填充颜色
-    conbine = hier.ms_struct(sp-small_sp_sum);
-    for i = 1:size(conbine.children,2)
-        mask = fill_color(conbine.children(1,i),mask,color,hier, small_sp_sum);
+    combine = hier.ms_matrix(sp-small_sp_sum,:);
+    info = combine(sp-small_sp_sum,:);
+    grandsons = info(1:length(info) - 1);
+    for i = 1:length(grandsons)
+        mask = fill_color(grandsons(i),mask,color,hier, small_sp_sum);
     end
 else    % 未组合过的sp
     % 直接填充颜色

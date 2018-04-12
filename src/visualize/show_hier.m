@@ -14,7 +14,7 @@ for i = 0:frame_sum - 1
     show.image = I;
     show.color_line = init_color(512);
     show.line_color = zeros(6000,1);  
-    [net,~] = grow_lines(i+1, net ,curr_hier);
+    [net,~] = grow_volumes(i+1, net ,curr_hier);
     show_frame(show, net, curr_hier, i+1);
     X = sprintf('Frame %d finished.',i);
     disp(X)

@@ -17,7 +17,8 @@ for frame = 1:length(adjacent_sp_mats)
                 volume2 = volume_labels(sp2,frame,1);
                 new_volume1 = new_volume_label(volume1);
                 new_volume2 = new_volume_label(volume2);
-                if new_volume1 ~= 0 && new_volume2 ~= 0 && new_volume1 ~= new_volume2% 找到的相邻串都是长串
+                if new_volume1 ~= 0 && new_volume2 ~= 0 && new_volume1 ~= new_volume2
+                    % 找到的相邻串都是长串
                     adjacent_volume_mat_temp(new_volume1,new_volume2) = 1;
                     adjacent_volume_mat_temp(new_volume2,new_volume1) = 1;
                 end
