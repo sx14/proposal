@@ -9,7 +9,6 @@ for r = 1:size(output_path_set,1)
     for i = 1:size(video_list,1)
         video_name = video_list(i);
         video_name = video_name.name;
-        video_id = video_name(length(video_name) - 11 : length(video_name) - 4);
         result = loadvar(fullfile(output_path_set{r},video_name),'result');
         counter = counter + 1;
         if counter == 1
