@@ -21,6 +21,14 @@ output_path_set = {
     '/home/sunx/ICMR2018/output/exp/exp_param_flow/flow_0.3'
 };
 
+% output_path_set = {
+%     '/home/sunx/ICMR2018/output/exp/exp_param_adjacent/0.7/result',
+%     '/home/sunx/ICMR2018/output/exp/exp_param_adjacent/0.4/result',
+%     '/home/sunx/ICMR2018/output/x/exp_ours_match',
+%     '/home/sunx/ICMR2018/output/exp/exp_param_adjacent/0.1/result',
+%     '/home/sunx/ICMR2018/output/exp/exp_param_adjacent/0/result'
+% };
+
 line_style_set = {'b','r','k','g','m'};
 
 legend_set = {'ours','VEB','VMCG','FOD','SXD','SODP'};

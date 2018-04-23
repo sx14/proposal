@@ -9,7 +9,8 @@ for r = 1:size(output_path_set,1)
     for i = 1:size(video_list,1)
         video_name = video_list(i);
         video_name = video_name.name;
-        result = loadvar(fullfile(output_path_set{r},video_name),'result');
+        result = load(fullfile(output_path_set{r},video_name));
+        result = result.result;
         counter = counter + 1;
         if counter == 1
             recall = zeros(size(result.hit,2)+1,1); % 添一个0
