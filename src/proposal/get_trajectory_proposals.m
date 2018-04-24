@@ -8,7 +8,7 @@ function [proposals,mask_generation_package] = get_trajectory_proposals(video_di
     proposal_file_name = [video_dir '.mat'];
     if ~exist(fullfile(proposal_path,proposal_file_name),'file') || re_cal == true
         % construct volumes
-        [volumes,sp_boxes_set,adjacent_sp_mats,sp_boundary_connectivity_set,sp_flow_info_set] = create_volumes(hier_set, flow_set, flow2_set, resized_imgs);      
+        [volumes,sp_boxes_set,adjacent_sp_mats,sp_boundary_connectivity_set,sp_flow_info_set,sp_leaves_set] = create_volumes(hier_set, flow_set, flow2_set, resized_imgs);      
         % filter out the extremely short volumes
         [long_volume_info, new_volume_labels] = long_volume_filter(volumes,sp_boundary_connectivity_set);
         % volume id indexes sp id on each frame
@@ -31,9 +31,10 @@ function [proposals,mask_generation_package] = get_trajectory_proposals(video_di
         proposals = resize_proposals(proposals,org_height,org_width,resized_height,resized_width);
         save(fullfile(proposal_path, proposal_file_name),'proposals');
         mask_generation_package.proposal_volume_group = volume_group;
-        mask_generation_package.hier_set = heir_set;
+        mask_generation_package.hier_set = hier_set;
         mask_generation_package.resized_imgs = resized_imgs;
         mask_generation_package.volume_frame_sp_mat = long_volume_frame_sp_mat;
+        mask_generation_package.sp_leaves_set = sp_leaves_set;
     else
         % done, load proposals
         proposals_file = load(fullfile(proposal_path,proposal_file_name));

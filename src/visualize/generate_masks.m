@@ -1,6 +1,12 @@
-function generate_masks(output_path,video_dir,result,proposals,selected_cands,sp_leaves_set,hier_set,resized_imgs,line_frame_sp_mat)
+function generate_masks(output_path,video_dir,result,proposals,mask_generation_package)
+fprintf('generating masks ... ');
+selected_cands = mask_generation_package.proposal_volume_group;
+sp_leaves_set = mask_generation_package.sp_leaves_set;
+hier_set = mask_generation_package.hier_set;
+resized_imgs = mask_generation_package.resized_imgs;
+volume_frame_sp_mat = mask_generation_package.volume_frame_sp_mat;
 hit = result.hit;
-hit_proposal_id_list = zeros(size(hit(1,:,1)),1);
+hit_proposal_id_list = zeros(length(hit(1,:,1)),1);
 next = 0;
 for i = 1:size(hit,1)
     for h = 1:size(hit,2)
@@ -16,18 +22,20 @@ end
 for h = 1:size(hit_proposal_id_list,1)
     proposal_id = hit_proposal_id_list(h);
     if proposal_id > 0
-        generate_proposal_masks(output_path,video_dir,proposal_id,proposals{proposal_id},selected_cands,sp_leaves_set,hier_set,resized_imgs,line_frame_sp_mat);
+        generate_proposal_masks(output_path,video_dir,proposal_id,proposals{proposal_id},selected_cands,sp_leaves_set,hier_set,resized_imgs,volume_frame_sp_mat);
     end
 end
+fprintf('finish');
 end
 
-function generate_proposal_masks(output_path,video_dir,proposal_id,proposal,selected_cands,sp_leaves_set,hier_set,resized_imgs,line_frame_sp_mat)
+
+function generate_proposal_masks(output_path,video_dir,proposal_id,proposal,selected_cands,sp_leaves_set,hier_set,resized_imgs,volume_frame_sp_mat)
 start_frame = proposal.start_frame;
 end_frame = proposal.end_frame;
 cand_lines = selected_cands(proposal_id,:);
 cand_lines = cand_lines(cand_lines > 0);
 for f = start_frame:end_frame
-    o_cand_sps = line_frame_sp_mat(cand_lines,f);
+    o_cand_sps = volume_frame_sp_mat(cand_lines,f);
     cand_sps = o_cand_sps(o_cand_sps > 0);
     if isempty(cand_sps)
         continue;
@@ -79,13 +87,13 @@ imwrite(masked_img,bmp_file_name);
 end
 
 function masked_img = color_mask(org_img, mask, color_set)
-masked_img = zeros(size(org_img));
+masked_img = org_img;
 for v = min(min(mask)) : max(max(mask))
     if v ~= 0
         mask_temp = (mask == v);
-        org_r = org_img(:,:,1);
-        org_g = org_img(:,:,2);
-        org_b = org_img(:,:,3);
+        org_r = masked_img(:,:,1);
+        org_g = masked_img(:,:,2);
+        org_b = masked_img(:,:,3);
         org_r(mask_temp) = color_set(v,1);
         org_g(mask_temp) = color_set(v,2);
         org_b(mask_temp) = color_set(v,3);
