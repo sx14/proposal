@@ -1,7 +1,7 @@
 % process single video
 % recall : hit object percentage
 % smT-IoU : mT-IoU for single video
-function [proposals, time_cost] = proposal(video_package_path,video_dir,mid_result_path,output_path,re_cal)
+function [proposals, time_cost, mask_generation_package] = proposal(video_package_path,video_dir,mid_result_path,output_path,re_cal)
 if ~exist(fullfile(mid_result_path,'resize'),'dir')
     mkdir(mid_result_path,'resize');
 end
@@ -36,7 +36,7 @@ if exist(fullfile(video_path),'dir')    % validate video path
     t4 = clock;
     hier_time_cost = etime(t4,t3);
     % generate no more than 1000 trajectory proposals
-    proposals = get_trajectory_proposals(video_dir,output_path,org_height,org_width,hier_set,flow_set,flow2_set,resized_imgs,re_cal);
+    [proposals,mask_generation_package] = get_trajectory_proposals(video_dir,output_path,org_height,org_width,hier_set,flow_set,flow2_set,resized_imgs,re_cal);
     proposal_time_cost=etime(clock,t4);
     time_cost.resize = resize_time_cost;
     time_cost.flow = flow_time_cost;

@@ -1,5 +1,5 @@
 % process one video, obtain proposals
-function proposals = get_trajectory_proposals(video_dir, output_path, org_height, org_width, hier_set, flow_set, flow2_set,resized_imgs, re_cal)
+function [proposals,mask_generation_package] = get_trajectory_proposals(video_dir, output_path, org_height, org_width, hier_set, flow_set, flow2_set,resized_imgs, re_cal)
     proposal_output_dir = 'proposals';
     if ~exist(fullfile(output_path, proposal_output_dir),'dir')
         mkdir(fullfile(output_path), proposal_output_dir);
@@ -24,19 +24,23 @@ function proposals = get_trajectory_proposals(video_dir, output_path, org_height
         % get candidates by grouping
         [cands,cand_info] = get_cands(long_volume_info,long_volume_adjacent_mat);     
         % score and rank
-        proposals = cands_to_proposals(hier_set,cands,sp_boxes_set,sp_flow_info_set,long_volume_frame_sp_mat,cand_info,video_dir);
+        [proposals,volume_group] = cands_to_proposals(hier_set,cands,sp_boxes_set,sp_flow_info_set,long_volume_frame_sp_mat,cand_info,video_dir);
         % resized frame size
         [resized_height,resized_width] = size(hier_set{1}.leaves_part);
         % resize the proposals to the original frame size
         proposals = resize_proposals(proposals,org_height,org_width,resized_height,resized_width);
         save(fullfile(proposal_path, proposal_file_name),'proposals');
+        mask_generation_package.proposal_volume_group = volume_group;
+        mask_generation_package.hier_set = heir_set;
+        mask_generation_package.resized_imgs = resized_imgs;
+        mask_generation_package.volume_frame_sp_mat = long_volume_frame_sp_mat;
     else
         % done, load proposals
         proposals_file = load(fullfile(proposal_path,proposal_file_name));
         proposals = proposals_file.proposals;
+        mask_generation_package = [];
     end
 end
-
 
 function [long_volume_info,new_volume_labels,long_volume_frame_sp_mat] = filter_cand_volume_after_connect(new_volume_labels,volume_info,video_length,long_volume_frame_sp_mat)
     long_volume_length_ratio = 0.2;

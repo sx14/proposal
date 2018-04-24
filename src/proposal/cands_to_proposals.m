@@ -1,4 +1,4 @@
-function proposals = cands_to_proposals(hiers,cands,sp_boxes_set,sp_flow_info_set,line_frame_sp_mat,cand_info,video_dir)
+function [proposals,volume_group] = cands_to_proposals(hiers,cands,sp_boxes_set,sp_flow_info_set,line_frame_sp_mat,cand_info,video_dir)
 all_scores = get_cand_scores(hiers, cands, line_frame_sp_mat,cand_info,sp_flow_info_set);
 one_two_sum = length(find(cand_info(:,5) < 3));
 scores_part1 = all_scores(1:one_two_sum);
@@ -48,6 +48,7 @@ for i = 1:last_one      % generate boxes for each proposal
     proposal.score = selected_cand_scores(i);
     proposals{i} = proposal;
 end
+volume_group = selected_cands;
 % =========== connect short proposals ============
 % proposals_part1 = proposals(1:one_two_sum);
 % proposals_part2 = proposals(one_two_sum+1:end);
