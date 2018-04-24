@@ -14,17 +14,6 @@ ids = [ids1;ids2];
 last_one = min(size(ids,1),1000);                   % proposal sum
 selected_cands = cands(ids(1:last_one),:);          % sorted cands
 selected_cand_scores = scores(ids(1:last_one));
-% ======== no score ========
-% last_one = size(cands,1);
-% ids = 1:last_one;
-% selected_cands = cands;
-% selected_cand_scores = zeros(size(cands,1),1);
-% ======== all score ========
-% [~,ids] = sort(all_scores,'descend');
-% last_one = min(size(ids,1),1000);                   % proposal sum
-% selected_cands = cands(ids(1:last_one),:);          % sorted cands
-% selected_cand_scores = all_scores(ids(1:last_one));
-% ======== all score ========
 proposals = cell(last_one,1);
 proposal_info = cand_info(ids(1:last_one),:);
 for i = 1:last_one      % generate boxes for each proposal
