@@ -32,15 +32,16 @@ function [proposals,mask_generation_package] = get_trajectory_proposals(video_di
         save(fullfile(proposal_path, proposal_file_name),'proposals');
         mask_generation_package.proposal_volume_group = volume_group;
         mask_generation_package.hier_set = hier_set;
-        mask_generation_package.resized_imgs = resized_imgs;
         mask_generation_package.volume_frame_sp_mat = long_volume_frame_sp_mat;
         mask_generation_package.sp_leaves_set = sp_leaves_set;
     else
         % done, load proposals
         proposals_file = load(fullfile(proposal_path,proposal_file_name));
         proposals = proposals_file.proposals;
-        mask_generation_package = [];
     end
+    mask_generation_package.resized_imgs = resized_imgs;
+    mask_generation_package.org_width = org_width;
+    mask_generation_package.org_height = org_height;
 end
 
 function [long_volume_info,new_volume_labels,long_volume_frame_sp_mat] = filter_cand_volume_after_connect(new_volume_labels,volume_info,video_length,long_volume_frame_sp_mat)

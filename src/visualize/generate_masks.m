@@ -70,7 +70,7 @@ color_set = [
 end
 
 function save_mask(output_path,video_dir,frame,proposal_id,masked_img)
-mask_dir = 'hit';
+mask_dir = 'mask';
 if ~exist(fullfile(output_path, mask_dir),'dir')
     mkdir(fullfile(output_path), mask_dir); % make proposals dir
 end
