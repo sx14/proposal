@@ -22,13 +22,13 @@ if exist(fullfile(video_path),'dir')    % validate video path
     t1 = clock;
     resize_time_cost = etime(t1, t0);
     % forward optical flow estimation
-    flow_set = cal_flow_match(fullfile(mid_result_path,'resize'),fullfile(mid_result_path,'flow'),video_dir,'forward');
-    %     flow_set = cal_flow(video_dir,fullfile(mid_result_path,'flow'),resized_imgs,'forward');
+%     flow_set = cal_flow_match(fullfile(mid_result_path,'resize'),fullfile(mid_result_path,'flow'),video_dir,'forward');
+        flow_set = cal_flow(video_dir,fullfile(mid_result_path,'flow'),resized_imgs,'forward');
     t2 = clock;
     % backward optical flow estimation
     flow_time_cost = etime(t2,t1);
-    flow2_set = cal_flow_match(fullfile(mid_result_path,'resize'),fullfile(mid_result_path,'flow2'),video_dir,'backward');
-    %     flow2_set = cal_flow(video_dir,fullfile(mid_result_path,'flow2'),resized_imgs,'backward');
+%     flow2_set = cal_flow_match(fullfile(mid_result_path,'resize'),fullfile(mid_result_path,'flow2'),video_dir,'backward');
+        flow2_set = cal_flow(video_dir,fullfile(mid_result_path,'flow2'),resized_imgs,'backward');
     t3 = clock;
     flow2_time_cost = etime(t3,t2);
     % hierarchical segmentation with MCG

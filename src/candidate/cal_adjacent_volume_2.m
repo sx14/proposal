@@ -5,7 +5,7 @@
 % new_volume_label：用旧的串号可以索引到新的串号
 function adjacent_volume_mat = cal_adjacent_volume_2(volume_labels, long_volume_info, adjacent_sp_mats, new_volume_label)
 adjacent_volume_mat = zeros(size(long_volume_info,1), size(long_volume_info,1));
-threshold = 0.1;
+threshold = 0.3;
 for frame = 1:length(adjacent_sp_mats)
     adjacent_volume_mat_temp = zeros(size(long_volume_info,1), size(long_volume_info,1));
     adjacent_sp_mat = adjacent_sp_mats{frame};  % 单帧上的超像素相邻矩阵
@@ -34,6 +34,6 @@ min_length = min(volume1_info(:,4),volume2_info(:,4));
 for i = 1:length(volumes1)
     half_volume_adjacent_mat(volumes1(i),volumes2(i)) = half_volume_adjacent_mat(volumes1(i),volumes2(i)) / min_length(i);
 end
-half_volume_adjacent_mat(half_volume_adjacent_mat < threshold) = 0;
+half_volume_adjacent_mat(half_volume_adjacent_mat <= threshold) = 0;
 adjacent_volume_mat = half_volume_adjacent_mat + half_volume_adjacent_mat';
 adjacent_volume_mat = adjacent_volume_mat & adjacent_volume_mat;
