@@ -30,8 +30,9 @@ addpath(genpath(fullfile(root,'kcf')));
 addpath(genpath(fullfile(root,'mcg')));
 addpath(genpath(fullfile(root,'src')));
 addpath(genpath(fullfile(root,'evaluate')));
-addpath(genpath(fullfile(root,'deepflow')));
-
+% addpath(genpath(fullfile(root,'deepflow')));
+addpath(genpath(fullfile(root, 'flow-code-matlab')));
+addpath(fullfile(root, 'flownet2-master'));
 %% Check that the needed functions are compiled
 % Included in our code
 needed_files = {'mex_assess_one_sel','mex_base_perimeters','mex_fast_features',...

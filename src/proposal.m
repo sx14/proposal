@@ -14,25 +14,31 @@ end
 if ~exist(fullfile(mid_result_path,'hier'),'dir')
     mkdir(mid_result_path,'hier');
 end
+resize_root = fullfile(mid_result_path,'resize');
+flow_root = fullfile(mid_result_path,'flow');
+flow2_root = fullfile(mid_result_path,'flow2');
+hier_root = fullfile(mid_result_path,'hier');
 video_path = fullfile(video_package_path, video_dir);
 if exist(fullfile(video_path),'dir')    % validate video path
     t0 = clock;
     % resize frames to fixed size (long edge = 500)
-    [org_height, org_width, resized_imgs] = resize_img(video_package_path,fullfile(mid_result_path,'resize'),video_dir);
+    [org_height, org_width, resized_imgs] = resize_img(video_package_path, resize_root, video_dir);
     t1 = clock;
     resize_time_cost = etime(t1, t0);
     % forward optical flow estimation
 %     flow_set = cal_flow_match(fullfile(mid_result_path,'resize'),fullfile(mid_result_path,'flow'),video_dir,'forward');
-        flow_set = cal_flow(video_dir,fullfile(mid_result_path,'flow'),resized_imgs,'forward');
+%     flow_set = cal_flow(video_dir, flow_root, resized_imgs,'forward');
+    flow_set = cal_flow_fn(video_dir, resize_root, flow_root, 'forward');
     t2 = clock;
     % backward optical flow estimation
     flow_time_cost = etime(t2,t1);
 %     flow2_set = cal_flow_match(fullfile(mid_result_path,'resize'),fullfile(mid_result_path,'flow2'),video_dir,'backward');
-        flow2_set = cal_flow(video_dir,fullfile(mid_result_path,'flow2'),resized_imgs,'backward');
+%     flow2_set = cal_flow(video_dir,fullfile(mid_result_path,'flow2'),resized_imgs,'backward');
+    flow2_set = cal_flow_fn(video_dir, resize_root, flow2_root, 'backward');
     t3 = clock;
     flow2_time_cost = etime(t3,t2);
     % hierarchical segmentation with MCG
-    hier_set = cal_hier(fullfile(mid_result_path,'hier'),video_dir,flow_set, resized_imgs);
+    hier_set = cal_hier(hier_root, video_dir, flow_set, resized_imgs);
     t4 = clock;
     hier_time_cost = etime(t4,t3);
     % generate no more than 1000 trajectory proposals
