@@ -23,7 +23,7 @@ for i = start_frame:end_frame
         curr_flow2 = flow2_set{i};
         [volume,combine_mat,sp_leaves_mat] = grow_volumes(i, volume, curr_hier, curr_flow2, last_hier, last_flow);
     end
-    [adjacent_sp_mat, sp_boxes, sp_boundary_connectivity, sp_pixel_num] = cal_adjacent_sp(curr_hier.leaves_part,combine_mat);
+    [adjacent_sp_mat, sp_boxes, sp_boundary_connectivity, sp_pixel_num] = cal_adjacent_sp(curr_hier.leaves_part, combine_mat);
     sp_flow_sum = get_sp_flow_sum(curr_hier.leaves_part,flow_set{i},combine_mat);
     adjacent_sp_mats{i} = adjacent_sp_mat;
     sp_boundary_connectivity_set{i} = sp_boundary_connectivity;

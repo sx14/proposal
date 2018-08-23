@@ -53,6 +53,7 @@ figure,
 subplot(1,2,1),
 for r = 1:size(recall_values,2)
     plot(x,recall_values(:,r),line_style_set{r},'LineWidth',2),hold on,
+    
 end
 xlabel('number of proposals'),
 ylabel('recall'),
@@ -60,6 +61,7 @@ set(gca,'GridLineStyle', '-'),
 set(gcf,'color',[1,1,1]),
 % legend('Location','SouthEast'),
 ylim([0,0.8]),
+legend(legend_set),
 
 subplot(1,2,2),
 for r = 1:size(recall_values,2)
@@ -70,5 +72,6 @@ ylabel('mT-IoU'),
 set(gca,'GridLineStyle', '-'),
 set(gcf,'color',[1,1,1]),
 % legend('Location','SouthEast'),
+legend(legend_set),
 ylim([0,0.8]);
 

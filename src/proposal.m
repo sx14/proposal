@@ -54,4 +54,5 @@ else
     disp(['Orginal video not found : ',video_path]);
     proposals = [];
     time_cost = [];
+    mask_generation_package = [];
 end

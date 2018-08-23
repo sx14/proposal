@@ -33,7 +33,7 @@ img_list_file = fopen(list_file_path,'w');
 is_list_empty = true;
 % the optical flow of the last frame is zero.
 for i = start_one:step:last_one
-    flo_path = fullfile(output_path,[num2str(i,'%07d'),'.flo']);
+    flo_path = fullfile(output_path,[num2str(i,'%06d'),'.flo']);
     if ~exist(flo_path,'file')
         is_list_empty = false;
         if i ~= last_one
@@ -62,7 +62,7 @@ if ~is_list_empty
     system(cal_flow_cmd);
 end
 for i = start_one:step:last_one
-    flo_path = fullfile(output_path,[num2str(i,'%07d'),'.flo']);
+    flo_path = fullfile(output_path,[num2str(i,'%06d'),'.flo']);
     flo = readFlowFile(flo_path);
     flow_set{i+1} = flo;
 end

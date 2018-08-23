@@ -31,5 +31,6 @@ output_path_set = {
 
 line_style_set = {'b','r','k','g','m'};
 
-legend_set = {'ours','VEB','VMCG','FOD','SXD','SODP'};
+% legend_set = {'ours','VEB','VMCG','FOD','SXD','SODP'};
+legend_set = ['b';'r';'k';'g';'m'];
 draw_plot(output_path_set,line_style_set,legend_set);
