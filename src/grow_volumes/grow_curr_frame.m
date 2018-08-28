@@ -10,7 +10,7 @@ forward_match_sp_ratio(~match) = 0;
 backward_match_sp_ratio((~match)') = 0;
 match_ratio = (forward_match_sp_ratio + backward_match_sp_ratio')/2;
 % =====================OK=======================
-for i = 1:size(match_ratio,1)  
+for i = 1:size(match_ratio,1)
     [max_ratio, ~] = max(match_ratio(i,:));
     if max_ratio == 0
         continue;

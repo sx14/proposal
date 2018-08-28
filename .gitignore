@@ -6,3 +6,4 @@ hier/
 models/
 compare_result/
 *.JPEG
+.build_release/

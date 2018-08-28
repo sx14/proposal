@@ -13,13 +13,14 @@ max_edge_weight = max(max(ucm));
 if max_edge_weight > 0
     ucm = ucm / max_edge_weight;
 end
-
+all_ucms = ucm;
 % show UCM:
 % figure;
 % imshow(imdilate(ucm,strel(ones(3))),[]), title(['ucm']);
 % input('next?');
 % close all;
-
+J_th = 0.95;
+theta = 0.7;
 n_hiers = size(ucm,3);
 lps = [];   % leaves_parts
 ms  = cell(n_hiers,1);  % merging-sequence
@@ -32,13 +33,14 @@ for ii=1:n_hiers
     ms{ii}            = curr_hier.ms_matrix;
     lps = cat(3, lps, curr_hier.leaves_part);
 end
+rf_regressor = loadvar(fullfile(mcg_root, 'datasets', 'models', 'mcg_rand_forest_train2012.mat'),'rf');
 pareto_n_cands = loadvar(fullfile(mcg_root, 'datasets', 'models', 'scg_pareto_point_train2012.mat'),'n_cands');
 [f_lp,f_ms,cands,start_ths,end_ths] = full_cands_from_hiers(lps,ms,ths,pareto_n_cands);
 
 % =================================================================================== scg ===
 % Hole filling and complementary proposals
 if ~isempty(f_ms)
-    [cands_hf, cands_comp] = hole_filling(double(f_lp), double(f_ms), cands); %#ok<NASGU>
+    [cands_hf, cands_comp] = hole_filling(double(f_lp), double(f_ms), cands);
 else
     cands_hf = cands;
     cands_comp = cands; %#ok<NASGU>

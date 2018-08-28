@@ -8,11 +8,11 @@ function [proposals,mask_generation_package] = get_trajectory_proposals(video_di
     proposal_file_name = [video_dir '.mat'];
     if ~exist(fullfile(proposal_path,proposal_file_name),'file') || re_cal == true
         % construct volumes
-        [volumes,sp_boxes_set,adjacent_sp_mats,sp_boundary_connectivity_set,sp_flow_info_set,sp_leaves_set] = create_volumes(hier_set, flow_set, flow2_set, resized_imgs);      
+        [volumes,sp_boxes_set,adjacent_sp_mats,sp_boundary_connectivity_set,sp_flow_info_set,sp_leaves_set,sp_pixel_num_set] = create_volumes(hier_set, flow_set, flow2_set, resized_imgs);      
         % filter out the extremely short volumes
         [long_volume_info, new_volume_labels] = long_volume_filter(volumes,sp_boundary_connectivity_set);
         % volume id indexes sp id on each frame
-        long_volume_frame_sp_mat = get_volume_frame_sp(volumes, long_volume_info, new_volume_labels);
+        long_volume_frame_sp_mat = get_volume_frame_sp(volumes, long_volume_info, new_volume_labels, sp_pixel_num_set);
         % get volume pairs which can be connected into one volume
         volume_connect_cand_mat = get_connect_volume_cand2(sp_boxes_set,long_volume_frame_sp_mat,long_volume_info,resized_imgs);
         % connect the broken volumes
@@ -20,7 +20,7 @@ function [proposals,mask_generation_package] = get_trajectory_proposals(video_di
         % filter out the short volumes again
         [long_volume_info,new_volume_labels,long_volume_frame_sp_mat] = filter_cand_volume_after_connect(new_volume_labels,long_volume_info,length(hier_set),long_volume_frame_sp_mat);
         % get spatio adjacent volume pairs
-        long_volume_adjacent_mat = cal_adjacent_volume_2(volumes(:,:,1), long_volume_info, adjacent_sp_mats, new_volume_labels);
+        [long_volume_adjacent_mat, adjacent_ratio_mat] = cal_adjacent_volume_2(volumes(:,:,1), long_volume_info, adjacent_sp_mats, new_volume_labels);
         % get candidates by grouping
         [cands,cand_info] = get_cands(long_volume_info,long_volume_adjacent_mat);     
         % score and rank

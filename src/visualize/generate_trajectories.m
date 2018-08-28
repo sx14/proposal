@@ -1,14 +1,23 @@
 function generate_trajectories(output_path, video_dir, org_imgs,all_hit,proposals,ground_truth,org_height, org_width)
+fprintf('generating trajectories ... ');
 ground_sum = size(all_hit,1);
 color_v = init_color(ground_sum);
 % 要显示ground truth将show_ground_truth设为false;
 show_ground_truth = false;
+output_dir = 'trajectory';
+if ~exist(fullfile(output_path, output_dir),'dir')
+    mkdir(fullfile(output_path), output_dir); % make proposals dir
+end
+if exist(fullfile(output_path, output_dir,video_dir),'dir')
+    rmdir(fullfile(output_path, output_dir, video_dir), 's');
+end
+mkdir(fullfile(output_path,output_dir),video_dir); % make proposals dir
 figure;
 for f = 1:length(org_imgs)
     I = org_imgs{f};
     [resized_height,resized_width] = size(I(:,:,1));
     resize_ratio = double(org_height)/double(resized_height);
-%     I = imresize(I,[org_height,org_width]);
+    %     I = imresize(I,[org_height,org_width]);
     annotations_on_frame = ground_truth{f};
     for h = ground_sum:-1:1
         annotation = annotations_on_frame(h);
@@ -54,31 +63,31 @@ for f = 1:length(org_imgs)
                 height = max(height,5);
                 width = max(width,5);
                 
-%                 if isempty(annotation.id)
-%                     I = draw_rect(I,[x_min y_min],[width height],4,color_v(h,:)');
-%                     continue;
-%                 end
-%                 
-%                 a_x_max = min(floor(annotation.x_max / resize_ratio),resized_width);
-%                 a_x_min = max(floor(annotation.x_min / resize_ratio),1);
-%                 a_y_max = min(floor(annotation.y_max / resize_ratio),resized_height);
-%                 a_y_min = max(floor(annotation.y_min / resize_ratio),1);
-%                 intersection_r = min(x_max,a_x_max);
-%                 intersection_l = max(x_min,a_x_min);
-%                 intersection_t = max(y_min,a_y_min);
-%                 intersection_b = min(y_max,a_y_max);
-%                 intersection_width = intersection_r - intersection_l;
-%                 intersection_height = intersection_b - intersection_t;
-% 
-%                 if intersection_width > 0 && intersection_height > 0    % 两个框相交
-%                     cand_region = (x_max - x_min) * (y_max - y_min);
-%                     ground_region = (a_x_max - a_x_min) * (a_y_max - a_y_min);
-%                     intersection_region = intersection_height * intersection_width;
-%                     IoU = intersection_region / (cand_region + ground_region - intersection_region);
-%                     if IoU > 0.3   % 命中单帧
-%                         I = draw_rect(I,[x_min y_min],[width height],4,color_v(h,:)');
-%                     end
-%                 end
+                %                 if isempty(annotation.id)
+                %                     I = draw_rect(I,[x_min y_min],[width height],4,color_v(h,:)');
+                %                     continue;
+                %                 end
+                %
+                %                 a_x_max = min(floor(annotation.x_max / resize_ratio),resized_width);
+                %                 a_x_min = max(floor(annotation.x_min / resize_ratio),1);
+                %                 a_y_max = min(floor(annotation.y_max / resize_ratio),resized_height);
+                %                 a_y_min = max(floor(annotation.y_min / resize_ratio),1);
+                %                 intersection_r = min(x_max,a_x_max);
+                %                 intersection_l = max(x_min,a_x_min);
+                %                 intersection_t = max(y_min,a_y_min);
+                %                 intersection_b = min(y_max,a_y_max);
+                %                 intersection_width = intersection_r - intersection_l;
+                %                 intersection_height = intersection_b - intersection_t;
+                %
+                %                 if intersection_width > 0 && intersection_height > 0    % 两个框相交
+                %                     cand_region = (x_max - x_min) * (y_max - y_min);
+                %                     ground_region = (a_x_max - a_x_min) * (a_y_max - a_y_min);
+                %                     intersection_region = intersection_height * intersection_width;
+                %                     IoU = intersection_region / (cand_region + ground_region - intersection_region);
+                %                     if IoU > 0.3   % 命中单帧
+                %                         I = draw_rect(I,[x_min y_min],[width height],4,color_v(h,:)');
+                %                     end
+                %                 end
                 
                 I = draw_rect(I,[x_min y_min],[width height],4,color_v(h,:)');
             end
@@ -87,13 +96,7 @@ for f = 1:length(org_imgs)
     imshow(I),title(['frame: ',num2str(f)]);
     num1=num2str(f-1,'%06d');
     frame_name = [num1,'.JPEG'];
-    output_dir = 'trajectory';
-    if ~exist(fullfile(output_path, output_dir),'dir')
-        mkdir(fullfile(output_path), output_dir); % make proposals dir
-    end
-    if ~exist(fullfile(output_path, output_dir,video_dir),'dir')
-        mkdir(fullfile(output_path,output_dir),video_dir); % make proposals dir
-    end
     imwrite(I,fullfile(output_path,output_dir,video_dir,frame_name));
 end
 close;
+fprintf('finish\n');

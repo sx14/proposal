@@ -3,7 +3,7 @@
 % long_volume_info：长串信息，包括label, start_frame, end_frame, length
 % adjacent_sp_mats：每一帧上的超像素相邻关系
 % new_volume_label：用旧的串号可以索引到新的串号
-function adjacent_volume_mat = cal_adjacent_volume_2(volume_labels, long_volume_info, adjacent_sp_mats, new_volume_label)
+function [adjacent_volume_mat, adjacent_ratio_mat] = cal_adjacent_volume_2(volume_labels, long_volume_info, adjacent_sp_mats, new_volume_label)
 adjacent_volume_mat = zeros(size(long_volume_info,1), size(long_volume_info,1));
 threshold = 0.3;
 for frame = 1:length(adjacent_sp_mats)
@@ -34,6 +34,7 @@ min_length = min(volume1_info(:,4),volume2_info(:,4));
 for i = 1:length(volumes1)
     half_volume_adjacent_mat(volumes1(i),volumes2(i)) = half_volume_adjacent_mat(volumes1(i),volumes2(i)) / min_length(i);
 end
+adjacent_ratio_mat = half_volume_adjacent_mat + half_volume_adjacent_mat';
 half_volume_adjacent_mat(half_volume_adjacent_mat <= threshold) = 0;
 adjacent_volume_mat = half_volume_adjacent_mat + half_volume_adjacent_mat';
 adjacent_volume_mat = adjacent_volume_mat & adjacent_volume_mat;

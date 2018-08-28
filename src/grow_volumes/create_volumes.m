@@ -3,17 +3,21 @@
 % hier:每一帧的层次结构
 % org_imgs:每一帧的图像(resized)
 % adjacent_sp_mat:每一帧各层次sp的相邻矩阵
-function [volume,sp_boxes_set,adjacent_sp_mats,sp_boundary_connectivity_set,sp_flow_sum_set,sp_leaves_set] = create_volumes(hier_set, flow_set, flow2_set,resized_imgs)
+function [volume,sp_boxes_set,adjacent_sp_mats,sp_boundary_connectivity_set,sp_flow_sum_set,sp_leaves_set, sp_pixel_num_set] = create_volumes(hier_set, flow_set, flow2_set,resized_imgs)
 start_frame = 1;
 end_frame = length(hier_set);
 frame_sum = end_frame - start_frame + 1;    % 帧数
-volume = zeros(1500,frame_sum,3);              % 记录每一帧每一个sp属于哪个串
+volume = zeros(1500,frame_sum,3);           % 记录每一帧每一个sp属于哪个串
 adjacent_sp_mats = cell(frame_sum,1);       % 保留所有超像素相邻关系
 sp_boxes_set = cell(frame_sum,1);
 sp_flow_sum_set = cell(frame_sum,1);
 sp_leaves_set = cell(frame_sum,1);
+sp_pixel_num_set = cell(frame_sum,1);
 sp_boundary_connectivity_set = cell(frame_sum,1);
 for i = start_frame:end_frame
+    if i == 15
+        a = 1;
+    end
     curr_hier = hier_set{i};
     if i == start_frame
         [volume,combine_mat,sp_leaves_mat] = grow_volumes(i, volume, curr_hier);
@@ -30,6 +34,7 @@ for i = start_frame:end_frame
     sp_boxes_set{i} = sp_boxes;
     sp_flow_sum_set{i} = [sp_flow_sum,sp_pixel_num];
     sp_leaves_set{i} = sp_leaves_mat;
+    sp_pixel_num_set{i} = sp_pixel_num;
 %     if (i-start_frame+1) >= 50
 %         show_volume(volume, hier_set, 10 , i, resized_imgs, [255,0,0]);
 %         input('next frame?');

@@ -40,7 +40,8 @@ for i = 1:last_one      % generate boxes for each proposal
         cand_min_y = min(all_min_y);
         boxes(f,:) = [cand_max_x,cand_min_x,cand_max_y,cand_min_y];
     end
-    proposal.voxel_num = cand_info(ids(i),5);
+    proposal.cand_id = ids(i);
+    proposal.volume_num = cand_info(ids(i),5);
     proposal.start_frame = start_frame;
     proposal.end_frame = end_frame;
     proposal.boxes = boxes;
