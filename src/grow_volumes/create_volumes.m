@@ -15,9 +15,6 @@ sp_leaves_set = cell(frame_sum,1);
 sp_pixel_num_set = cell(frame_sum,1);
 sp_boundary_connectivity_set = cell(frame_sum,1);
 for i = start_frame:end_frame
-    if i == 15
-        a = 1;
-    end
     curr_hier = hier_set{i};
     if i == start_frame
         [volume,combine_mat,sp_leaves_mat] = grow_volumes(i, volume, curr_hier);

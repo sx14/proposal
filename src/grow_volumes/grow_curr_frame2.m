@@ -1,5 +1,5 @@
 function net = grow_curr_frame2(net, forward_match_sp_ratio, backward_match_sp_ratio,frame)
-threshold = 0.5;
+threshold = 0.6;
 volumes = net;
 % 匹配：遍历last_2_new匹配矩阵的每一行（即前一帧的每一个sp与当前帧所有sp的avg_ratio）
 forward_match_sp_ratio(forward_match_sp_ratio < threshold) = 0;
@@ -11,6 +11,7 @@ forward_match_sp_ratio(~match) = 0;
 backward_match_sp_ratio((~match)') = 0;
 match_ratio = (forward_match_sp_ratio + backward_match_sp_ratio')/2;
 % =====================OK=======================
+% for i = size(match_ratio,1):-1:1   % each sp on last frame
 for i = 1:size(match_ratio,1)   % each sp on last frame
     [max_ratio, ~] = max(match_ratio(i,:));
     if max_ratio == 0

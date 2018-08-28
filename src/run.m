@@ -4,8 +4,8 @@
 function [recall, smT_IoU, time_cost] = run(video_package_path,annotation_package_path,video_dir,mid_result_path,output_path,re_cal)
 video_path = fullfile(video_package_path, video_dir);
 annotation_path = fullfile(annotation_package_path, video_dir);
-generate_trajectory = false;
-generate_mask = true;
+generate_trajectory = true;
+generate_mask = false;
 if exist(fullfile(video_path),'dir')    % validate video path
     [proposals, time_cost, mask_generation_package] = proposal(video_package_path,video_dir,mid_result_path,output_path,re_cal);
     [result,annotations] = evaluate(video_dir,annotation_path,output_path,proposals);

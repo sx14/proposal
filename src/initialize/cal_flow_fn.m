@@ -12,19 +12,20 @@ if exist(resized_video_path,'dir')
 else
     error('cal_flow_fn : video not found.')
 end
+n_frame = length(imgs);
 if strcmp(direction,'forward')
     start_one = 0;
-    last_one = length(imgs)-1;
+    last_one = n_frame-1;
     step = 1;
 elseif strcmp(direction,'backward')
-    start_one = length(imgs)-1;
+    start_one = n_frame-1;
     last_one = 0;
     step = -1;
 else
     error('param : direction is "forward" or "backward".');
 end
 
-flow_set = cell(length(imgs), 1);
+flow_set = cell(n_frame, 1);
 list_file_path = fullfile(flownet_root_path, 'list.txt');
 if exist(list_file_path, 'file')
     delete(list_file_path);

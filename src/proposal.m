@@ -25,7 +25,7 @@ if exist(fullfile(video_path),'dir')    % validate video path
     [org_height, org_width, resized_imgs] = resize_img(video_package_path, resize_root, video_dir);
     t1 = clock;
     resize_time_cost = etime(t1, t0);
-    % forward optical flow estimation
+%     forward optical flow estimation
 %     flow_set = cal_flow_match(fullfile(mid_result_path,'resize'),fullfile(mid_result_path,'flow'),video_dir,'forward');
 %     flow_set = cal_flow(video_dir, flow_root, resized_imgs,'forward');
     flow_set = cal_flow_fn(video_dir, resize_root, flow_root, 'forward');
