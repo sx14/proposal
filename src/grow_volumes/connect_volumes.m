@@ -65,8 +65,6 @@ function [volume_info,volume_frame_sp_mat,new_volume_labels] = connect_volumes(v
         new_volume_info(i,6) = boundary_connectivity1;
     end
     volume_info = cat(1,volume_info,new_volume_info);
-    volume_info(:,5) = volume_info(:,5) ./ volume_info(:,4);
-    volume_info(:,6) = volume_info(:,6) ./ volume_info(:,4);
     volume_frame_sp_mat = cat(1,volume_frame_sp_mat,new_volume_frame_sp_mat);
 end
 

@@ -1,4 +1,4 @@
-function [proposals, mask_generation_packages, long_volume_frame_sp_mat] = connect_proposal_parts(proposal_part_set, mask_generation_packages)
+function [proposals, mask_generation_packages, long_volume_frame_sp_mat] = connect_proposal_parts1(proposal_part_set, mask_generation_packages)
 proposal_sum = 0;
 IoU_threshold = 0.7;
 for i = 1:length(proposal_part_set)
@@ -7,35 +7,40 @@ end
 proposals = cell(proposal_sum, 1);
 mask_generation_packages = cell(proposal_sum, 1);   % ignore now
 long_volume_frame_sp_mat = []; % ignore now
-part1 = proposal_part_set{1};
-for p = 1:length(part1)
-    
+% process the first part set
+part_set1 = proposal_part_set{1};
+next_proposal_pos = 1;
+last_part_proposal_ids = zeros(length(part_set1), 1);
+for p = 1:length(part_set1)
+    part = part_set1{p};
+    if part.end_frame == size(part.boxes, 1)
+        proposals{next_proposal_pos} = part;
+        last_part_proposal_ids(p) = next_proposal_pos;
+        next_proposal_pos = next_proposal_pos + 1;
+    end
 end
-proposals(1:length(p1)) = p1(:);
-last_part_proposal_ids = (1:length(p1))';
-next_proposal_pos = length(p1) + 1;
 for i = 1:length(proposal_part_set) - 1
-    t_2_h_IoU_mat = cal_IoU_mat(proposal_part_set{i}, proposal_part_set{i+1});
-    t_2_h_IoU_mat(t_2_h_IoU_mat < IoU_threshold) = 0;
-    [proposals, last_part_proposal_ids, next_proposal_pos] = connect(proposals, proposal_part_set{i+1}, t_2_h_IoU_mat, last_part_proposal_ids, next_proposal_pos);
+    last_2_next_IoU_mat = cal_IoU_mat(proposal_part_set{i}, proposal_part_set{i+1});
+    last_2_next_IoU_mat(last_2_next_IoU_mat < IoU_threshold) = 0;
+    [proposals, last_part_proposal_ids, next_proposal_pos] = connect(proposals, proposal_part_set{i+1}, last_2_next_IoU_mat, last_part_proposal_ids, next_proposal_pos, i+1);
 end
 proposals = proposals(1:next_proposal_pos-1);
 mask_generation_packages = mask_generation_packages(1:next_proposal_pos-1);
 %% connect next parts of proposals to the existed proposals
 % proposals: existed proposals
-% curr_parts: next parts of proposals
+% curr_part_set: next parts of proposals
 % last_2_next_IoU_mat: D1-last-part; D2-curr-part
 % last_part_proposal_ids: the proposal ids of the last parts of proposals
 % next_proposal_id: the next position for the new proposal
-function [proposals, curr_part_proposal_ids, next_proposal_pos] = connect(proposals, curr_parts, last_2_next_IoU_mat, last_part_proposal_ids, next_proposal_pos)
-curr_part_proposal_ids = zeros(length(curr_parts));
-proposal_connected_info = zeros(length(proposals), 3);   % pid, IOU, length
+function [proposals, curr_part_proposal_ids, next_proposal_pos] = connect(proposals, curr_part_set, last_2_next_IoU_mat, last_part_proposal_ids, next_proposal_pos, part_set_id)
+curr_part_proposal_ids = zeros(length(curr_part_set), 1);
+proposal_connected_info = zeros(length(proposals), 3);   % pid, IoU, length
 [IoUs, matched_last_part_ids] = max(last_2_next_IoU_mat, [], 1);
 for curr_part_id = 1:length(matched_last_part_ids)
     matched_last_part_id = matched_last_part_ids(curr_part_id);
     matched_proposal_id = last_part_proposal_ids(matched_last_part_id);
     IoU = IoUs(curr_part_id);
-    curr_part = curr_parts{curr_part_id};
+    curr_part = curr_part_set{curr_part_id};
     curr_length = curr_part.end_frame - curr_part.start_frame + 1;
     if IoU > proposal_connected_info(curr_part_id, 2) % matched
         if curr_length > proposal_connected_info(curr_part_id, 3) % better part, update
@@ -48,27 +53,27 @@ for curr_part_id = 1:length(matched_last_part_ids)
             % redundant part, discard
         end
     else % maybe a new proposal
-        curr_part_boxes = curr_part.boxes;
-        tail_box = curr_part_boxes(size(curr_part_boxes,1), :);
-        if sum(tail_box) > 0    % new proposal
+        if curr_part.end_frame == size(curr_part.boxes, 1)    % new proposal
+            curr_part.start_frame = (part_set_id - 1) * (get_proposal_part_length() - 1) + 1 + (curr_part.start_frame - 1);
             proposals{next_proposal_pos} = curr_part;
             curr_part_proposal_ids(curr_part_id) = next_proposal_pos;
             next_proposal_pos = next_proposal_pos + 1;
         else
-            % too short, discard
+            % has no tail, discard
         end
     end
 end
 for i = 1:size(proposal_connected_info, 1)
     curr_part_id = proposal_connected_info(i,1);
     if curr_part_id ~= 0    % connect
-        curr_part = curr_parts{curr_part_id};
+        curr_part = curr_part_set{curr_part_id};
         proposal = proposals{i};
         boxes = proposal.boxes;
         curr_boxes = curr_part.boxes;
-        boxes = cat(1, boxes, curr_boxes(2:curr_part.end_frame));
+        boxes = cat(1, boxes, curr_boxes(2:curr_part.end_frame, :));
         proposal.boxes = boxes;
         proposal.end_frame = proposal.end_frame + curr_part.end_frame - 1;
+        proposals{i} = proposal;
     end
 end
 

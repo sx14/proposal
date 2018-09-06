@@ -3,6 +3,7 @@ function [long_volume_info, new_volume_labels] = long_volume_filter(volume,sp_bo
 long_volume_length_ratio = 0.6;
 video_length = length(sp_boundary_connectivity_set);
 min_volume_length = round(video_length * long_volume_length_ratio);
+min_volume_length = 4;
 boundary_connectivity_ths = 1;
 boundary_connectivity_ths2 = 2;
 volume_labels = volume(:,:,1);
