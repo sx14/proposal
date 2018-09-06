@@ -33,12 +33,12 @@ function [proposals,mask_generation_package] = get_trajectory_proposals(video_di
             proposal_part_set{part} = proposal_parts;
             mask_generation_package_set{part} = mask_generation_package;
         end
-        [proposals, ~, ~] = connect_proposal_parts(proposal_part_set, mask_generation_package_set);
+        [proposals, ~, ~] = connect_proposal_parts1(proposal_part_set, mask_generation_package_set);
         
         % resized frame size
         [resized_height,resized_width] = size(hier_set{1}.leaves_part);
         % resize the proposals to the original frame size
-        proposals = fill_empty_boxes(proposals, frame_sum);
+        proposals = fill_empty_boxes_at_tail(proposals, frame_sum);
         proposals = resize_proposals(proposals,org_height,org_width,resized_height,resized_width);
         save(fullfile(proposal_path, proposal_file_name),'proposals');
 %         mask_generation_package.proposal_volume_group = volume_group;
@@ -55,14 +55,11 @@ function [proposals,mask_generation_package] = get_trajectory_proposals(video_di
     mask_generation_package.org_height = org_height;
 end
 
-function proposals = fill_empty_boxes(proposals, frame_sum)
+function proposals = fill_empty_boxes_at_tail(proposals, frame_sum)
     for p = 1:length(proposals)
+        fprintf('pid: %d\n', p);
         proposal = proposals{p};
         boxes = proposal.boxes;
-        if proposal.start_frame > 1
-            fill = zeros(proposal.start_frame - 1, 4);
-            boxes = cat(1, fill, boxes);
-        end
         if proposal.end_frame < frame_sum
             fill = zeros(frame_sum - proposal.end_frame, 4);
             boxes = cat(1, boxes, fill);

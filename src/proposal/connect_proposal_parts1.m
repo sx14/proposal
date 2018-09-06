@@ -24,7 +24,7 @@ for i = 1:length(proposal_part_set) - 1
     last_2_next_IoU_mat(last_2_next_IoU_mat < IoU_threshold) = 0;
     [proposals, last_part_proposal_ids, next_proposal_pos] = connect(proposals, proposal_part_set{i+1}, last_2_next_IoU_mat, last_part_proposal_ids, next_proposal_pos, i+1);
 end
-proposals = proposals(1:next_proposal_pos-1);
+proposals = proposals(1:(next_proposal_pos-1));
 mask_generation_packages = mask_generation_packages(1:next_proposal_pos-1);
 %% connect next parts of proposals to the existed proposals
 % proposals: existed proposals
@@ -32,51 +32,78 @@ mask_generation_packages = mask_generation_packages(1:next_proposal_pos-1);
 % last_2_next_IoU_mat: D1-last-part; D2-curr-part
 % last_part_proposal_ids: the proposal ids of the last parts of proposals
 % next_proposal_id: the next position for the new proposal
-function [proposals, curr_part_proposal_ids, next_proposal_pos] = connect(proposals, curr_part_set, last_2_next_IoU_mat, last_part_proposal_ids, next_proposal_pos, part_set_id)
-curr_part_proposal_ids = zeros(length(curr_part_set), 1);
-proposal_connected_info = zeros(length(proposals), 3);   % pid, IoU, length
-[IoUs, matched_last_part_ids] = max(last_2_next_IoU_mat, [], 1);
-for curr_part_id = 1:length(matched_last_part_ids)
-    matched_last_part_id = matched_last_part_ids(curr_part_id);
-    matched_proposal_id = last_part_proposal_ids(matched_last_part_id);
-    IoU = IoUs(curr_part_id);
-    curr_part = curr_part_set{curr_part_id};
-    curr_length = curr_part.end_frame - curr_part.start_frame + 1;
-    if IoU > proposal_connected_info(curr_part_id, 2) % matched
-        if curr_length > proposal_connected_info(curr_part_id, 3) % better part, update
-            proposal_connected_info(matched_proposal_id,1) = curr_part_id;
-            proposal_connected_info(matched_proposal_id,2) = IoU;
-            proposal_connected_info(matched_proposal_id,3) = curr_length;
-            curr_part_proposal_ids(curr_part_id) = matched_proposal_id;
-        else
-            curr_part_proposal_ids(curr_part_id) = matched_proposal_id;
-            % redundant part, discard
+function [proposals, curr_part_proposal_ids, next_proposal_pos] = connect(proposals, curr_part_set, last_2_curr_IoU_mat, last_part_proposal_ids, next_proposal_pos, part_set_id)
+curr_part_connected_info = zeros(length(curr_part_set), 3);   % pid, IoU, length
+fprintf('curr set id: %d\n', part_set_id);
+[IoUs, matched_curr_part_ids] = max(last_2_curr_IoU_mat, [], 2);
+for last_part_id = 1:length(matched_curr_part_ids)  % for each proposal in last part, last -> curr
+    fprintf('last part id: %d\n', last_part_id);
+    matched_curr_part_id = matched_curr_part_ids(last_part_id);
+    matched_proposal_id = last_part_proposal_ids(last_part_id);
+    if matched_proposal_id == 0
+        continue;
+    end
+    matched_proposal = proposals{matched_proposal_id};
+    curr_IoU = IoUs(last_part_id);
+    
+    if curr_IoU > 0 % allow to connect
+        curr_part = curr_part_set{matched_curr_part_id};
+        curr_part_length = curr_part.end_frame - curr_part.start_frame + 1;
+        curr_part_connected_proposal_id = curr_part_connected_info(matched_curr_part_id, 1);
+        connect_flag = 0;
+        if curr_part_connected_proposal_id > 0 % already connected, check if change
+            connected_proposal = proposals{curr_part_connected_proposal_id};
+            connected_proposal_length = connected_proposal.end_frame - connected_proposal.start_frame + 1;
+            matched_proposal_length = matched_proposal.end_frame - connected_proposal.start_frame + 1;
+            if connected_proposal_length > matched_proposal_length  % change
+                connect_flag = 1;
+            elseif connected_proposal_length == matched_proposal_length  % change
+                if curr_part_length > curr_part_connected_info(matched_curr_part_id, 3)
+                    connect_flag = 1;
+                elseif curr_part_length == curr_part_connected_info(matched_curr_part_id, 3)
+                    if curr_IoU > curr_part_connected_info(matched_curr_part_id, 2)
+                        connect_flag = 1;
+                    end
+                end
+            else
+                % discard
+            end
+        else % not connected yet, connect
+            connect_flag = 1;          
         end
-    else % maybe a new proposal
-        if curr_part.end_frame == size(curr_part.boxes, 1)    % new proposal
-            curr_part.start_frame = (part_set_id - 1) * (get_proposal_part_length() - 1) + 1 + (curr_part.start_frame - 1);
-            proposals{next_proposal_pos} = curr_part;
-            curr_part_proposal_ids(curr_part_id) = next_proposal_pos;
-            next_proposal_pos = next_proposal_pos + 1;
-        else
-            % has no tail, discard
+        if connect_flag > 0
+            curr_part_connected_info(matched_curr_part_id, 1) = matched_proposal_id;
+            curr_part_connected_info(matched_curr_part_id, 2) = curr_IoU;
+            curr_part_connected_info(matched_curr_part_id, 3) = curr_part_length;        
         end
     end
 end
-for i = 1:size(proposal_connected_info, 1)
-    curr_part_id = proposal_connected_info(i,1);
-    if curr_part_id ~= 0    % connect
-        curr_part = curr_part_set{curr_part_id};
-        proposal = proposals{i};
+for curr_part_id = 1:size(curr_part_connected_info, 1)
+    matched_proposal_id = curr_part_connected_info(curr_part_id,1);
+    curr_part = curr_part_set{curr_part_id};
+    if matched_proposal_id ~= 0    % connect        
+        proposal = proposals{matched_proposal_id};
         boxes = proposal.boxes;
         curr_boxes = curr_part.boxes;
-        boxes = cat(1, boxes, curr_boxes(2:curr_part.end_frame, :));
+        boxes = cat(1, boxes, curr_boxes(2:curr_part.end_frame, :)); % head tail overlapped, remove head of curr part
         proposal.boxes = boxes;
         proposal.end_frame = proposal.end_frame + curr_part.end_frame - 1;
-        proposals{i} = proposal;
+        proposals{matched_proposal_id} = proposal;
+    else % new proposal
+        if curr_part.start_frame == 1 || curr_part.end_frame == get_proposal_part_length()
+            curr_part.start_frame = get_proposal_part_length() * (part_set_id - 1) + curr_part.start_frame;
+            curr_part.end_frame = get_proposal_part_length() * (part_set_id - 1) + curr_part.end_frame;
+            curr_boxes = curr_part.boxes;
+            zero_boxes = zeros(get_proposal_part_length() * (part_set_id - 1), 4);
+            curr_boxes = cat(1, zero_boxes, curr_boxes);
+            curr_part.boxes = curr_boxes;
+            proposals{next_proposal_pos} = curr_part;
+            curr_part_connected_info(matched_curr_part_id, 1) = next_proposal_pos;
+            next_proposal_pos = next_proposal_pos + 1;
+        end
     end
 end
-
+curr_part_proposal_ids = curr_part_connected_info(:, 1);
 
 function IoU_mat = cal_IoU_mat(proposal_parts1, proposal_parts2)
 p1_num = length(proposal_parts1);
