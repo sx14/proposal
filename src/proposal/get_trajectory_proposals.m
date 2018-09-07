@@ -57,7 +57,6 @@ end
 
 function proposals = fill_empty_boxes_at_tail(proposals, frame_sum)
     for p = 1:length(proposals)
-        fprintf('pid: %d\n', p);
         proposal = proposals{p};
         boxes = proposal.boxes;
         if proposal.end_frame < frame_sum

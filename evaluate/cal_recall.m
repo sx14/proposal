@@ -7,6 +7,7 @@ hit_all = zeros(ground_truth_object_sum,record_times,3); % 击中每个ground tr
 hit = zeros(ground_truth_object_sum,3);
 for j = 1:max_proposal_num             % 每一个候选轨迹
     if j <= size(proposals,1)
+%         fprintf('pid: %d\n', j);
         proposal = proposals{j,1};
         proposal_end = proposal.end_frame;
         proposal_start = proposal.start_frame;
